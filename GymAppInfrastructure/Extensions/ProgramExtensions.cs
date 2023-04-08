@@ -24,6 +24,7 @@ public static class ProgramExtensions
         services.AddScoped<IExerciseService, ExerciseService>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ISimpleExerciseService, SimpleExerciseService>();
+        services.AddScoped<IUserService, UserService>();
 
         return services;
     }
@@ -32,7 +33,6 @@ public static class ProgramExtensions
     {
         services.AddScoped<IExerciseRepo, ExerciseRepo>();
         services.AddScoped<ISimpleExerciseRepo, SimpleExerciseRepo>();
-        services.AddScoped<IUserRepo, UserRepo>();
 
         return services;
     }
@@ -104,7 +104,7 @@ public static class ProgramExtensions
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
         
-        services.AddIdentity<User, IdentityRole>()
+        services.AddIdentity<User, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<GymAppContext>()
             .AddDefaultTokenProviders();
 

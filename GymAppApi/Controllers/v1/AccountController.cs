@@ -1,4 +1,5 @@
-﻿using GymAppInfrastructure.Dtos.User;
+﻿using GymAppApi.Routes.v1;
+using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ public class AccountController : ControllerBase
         _emailConfirmationService = emailConfirmationService;
     }
 
-    [HttpPost("register")]
+    [HttpPost(ApiRoutes.Account.Register)]
     public async Task<IActionResult> Register([FromBody]RegisterUserDto registerUserDto)
     {
         var result = await _identityService.Register(registerUserDto);
@@ -31,7 +32,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
     
-    [HttpGet("confirmEmail")]
+    [HttpGet(ApiRoutes.Account.ConfirmEmail)]
     public async Task<IActionResult> ConfirmEmail([FromQuery]string userId, string token)
     {
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
@@ -48,7 +49,7 @@ public class AccountController : ControllerBase
         return Ok("Email confirmed successfully");
     }
     
-    [HttpPost("login")]
+    [HttpPost(ApiRoutes.Account.Login)]
     public async Task<IActionResult> Login([FromBody]LoginUserDto loginUserDto)
     {
         var result = await _identityService.Login(loginUserDto);

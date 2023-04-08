@@ -18,12 +18,8 @@ public class ExerciseService : IExerciseService
     
     public async Task CreateExercise(PostExerciseDto postExerciseDto, User user)
     {
-        var maxPosition = GetLastExercisePosition(user.Exercises);
-        if (postExerciseDto.Position < 0)
-        {
-            postExerciseDto.Position = 0;
-        }
-
+        var exercises = await _exerciseRepo.Get(user);
+        var maxPosition = GetLastExercisePosition(exercises);
         if (postExerciseDto.Position > maxPosition + 1)
         {
             postExerciseDto.Position = maxPosition + 1;
@@ -38,8 +34,9 @@ public class ExerciseService : IExerciseService
             await _exerciseRepo.Update(hideExercise);
             return;
         }
+
         var exerciseToAdd = new Exercise(postExerciseDto.ExercisesType, postExerciseDto.Position, user);
-        AdjustTheQueueToNewPosition(user.Exercises, postExerciseDto.Position, maxPosition);
+        AdjustTheQueueToNewPosition(exercises, postExerciseDto.Position, maxPosition);
         await _exerciseRepo.Create(exerciseToAdd);
     }
 
@@ -80,7 +77,11 @@ public class ExerciseService : IExerciseService
     }
 
     private int GetLastExercisePosition(IEnumerable<Exercise> exercises)
-        => exercises.Max(x => x.Position);
+    {
+        if (exercises.Count() == 0)
+            return 0;
+        return exercises.Max(x => x.Position);
+    }
 
     private void AdjustTheQueueToNewPosition(IEnumerable<Exercise> exercises, int oldPosition, int newPosition)
     {

@@ -14,7 +14,7 @@ public class SimpleExerciseRepo : ISimpleExerciseRepo
     }
     
     public async Task<SimpleExercise?> Get(User user, Guid id)
-        => await _gymAppContext.SimpleExercises.FirstOrDefaultAsync(x => x.User == user && x.Id == id);
+        => await _gymAppContext.SimpleExercises.Include(x => x.Series).FirstOrDefaultAsync(x => x.User == user && x.Id == id);
 
     public async Task<IEnumerable<SimpleExercise>> Get(User user)
         => await Task.FromResult(_gymAppContext.SimpleExercises.Where(x => x.User == user));
