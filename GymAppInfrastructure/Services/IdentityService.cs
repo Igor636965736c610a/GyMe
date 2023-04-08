@@ -35,7 +35,6 @@ public class IdentityService : IIdentityService
 
         var newUser = new User
         {
-            Id = Guid.NewGuid(),
             FirstName = registerUserDto.FirstName,
             LastName = registerUserDto.LastName,
             UserName = registerUserDto.UserName,

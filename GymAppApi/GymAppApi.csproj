@@ -20,8 +20,4 @@
       <ProjectReference Include="..\GymAppInfrastructure\GymAppInfrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Routes\v1" />
-    </ItemGroup>
-
 </Project>
