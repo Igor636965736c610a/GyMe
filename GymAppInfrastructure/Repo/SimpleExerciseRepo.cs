@@ -13,11 +13,11 @@ public class SimpleExerciseRepo : ISimpleExerciseRepo
         _gymAppContext = gymAppContext;
     }
     
-    public async Task<SimpleExercise?> Get(User user, Guid id)
-        => await _gymAppContext.SimpleExercises.Include(x => x.Series).FirstOrDefaultAsync(x => x.User == user && x.Id == id);
+    public async Task<SimpleExercise?> Get(Guid id)
+        => await _gymAppContext.SimpleExercises.Include(x => x.Series).FirstOrDefaultAsync(x => x.Id == id);
 
-    public async Task<IEnumerable<SimpleExercise>> Get(User user)
-        => await Task.FromResult(_gymAppContext.SimpleExercises.Where(x => x.User == user));
+    public async Task<List<SimpleExercise>> GetAll(Guid userId)
+        => await _gymAppContext.SimpleExercises.Where(x => x.UserId == userId).Include(x => x.Series).ToListAsync();
 
     public async Task<bool> Create(SimpleExercise exercise)
     {
@@ -27,13 +27,13 @@ public class SimpleExerciseRepo : ISimpleExerciseRepo
 
     public async Task<bool> Update(SimpleExercise exercise)
     {
-        await Task.FromResult(_gymAppContext.SimpleExercises.Update(exercise));
+        _gymAppContext.SimpleExercises.Update(exercise);
         return await UtilsRepo.Save(_gymAppContext);
     }
 
     public async Task<bool> Remove(SimpleExercise exercise)
     {
-        await Task.FromResult(_gymAppContext.SimpleExercises.Remove(exercise));
+        _gymAppContext.SimpleExercises.Remove(exercise);
         return await UtilsRepo.Save(_gymAppContext);
     }
 }
