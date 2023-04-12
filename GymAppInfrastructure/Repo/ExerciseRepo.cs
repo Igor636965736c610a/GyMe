@@ -13,11 +13,11 @@ public class ExerciseRepo : IExerciseRepo
         _gymAppContext = gymAppContext;
     }
     
-    public async Task<Exercise?> Get(User user, ExercisesType exercisesType)
-        => await _gymAppContext.Exercises.FirstOrDefaultAsync(x => x.User == user && x.Shown && x.ExercisesType == exercisesType);
+    public async Task<Exercise?> Get(ExercisesType exercisesType, Guid userId)
+        => await _gymAppContext.Exercises.FirstOrDefaultAsync(x => x.UserId == userId && x.ExercisesType == exercisesType);
 
-    public async Task<IEnumerable<Exercise>> Get(User user)
-        => await Task.FromResult(_gymAppContext.Exercises.Where(x => x.User == user && x.Shown).OrderBy(x => x.Position));
+    public async Task<List<Exercise>> Get(Guid userId)
+        => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position).Include(x => x.ConcreteExercise).ToListAsync();
 
     public async Task<bool> Create(Exercise exercise)
     {
@@ -31,9 +31,15 @@ public class ExerciseRepo : IExerciseRepo
         return await UtilsRepo.Save(_gymAppContext);
     }
 
-    public async Task<bool> Hide(Exercise exercise)
+    public async Task<bool> Update(List<Exercise> exercises)
     {
-        exercise.Shown = false;
-        return await Update(exercise);
+        _gymAppContext.UpdateRange(exercises);
+        return await UtilsRepo.Save(_gymAppContext);
+    }
+
+    public async Task<bool> Remove(Exercise exercise)
+    {
+        _gymAppContext.Remove(exercise);
+        return await UtilsRepo.Save(_gymAppContext);
     }
 }

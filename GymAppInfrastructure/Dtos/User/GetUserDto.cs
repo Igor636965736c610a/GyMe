@@ -5,6 +5,6 @@ public class GetUserDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public List<GetUserDto> Friends { get; set; }
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } 
     public List<GetExerciseDto> ExercisesDto { get; set; }
 }

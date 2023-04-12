@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GymAppInfrastructure.Migrations
 {
     [DbContext(typeof(GymAppContext))]
-    [Migration("20230406193244_Init2")]
-    partial class Init2
+    [Migration("20230412021802_Initial3")]
+    partial class Initial3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,9 +36,6 @@ namespace GymAppInfrastructure.Migrations
 
                     b.Property<int>("Position")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("Shown")
-                        .HasColumnType("boolean");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -110,6 +107,9 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<Guid>("ExerciseId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("SeriesString")
+                        .HasColumnType("text");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -175,17 +175,27 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("UserName")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("GymAppCore.Models.Entities.UserFriend", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FriendId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserId", "FriendId");
+
+                    b.HasIndex("FriendId");
+
+                    b.ToTable("UserFriends");
                 });
 
             modelBuilder.Entity("GymAppCore.Models.Entities.Exercise", b =>
@@ -240,11 +250,23 @@ namespace GymAppInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.User", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.UserFriend", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.User", null)
+                    b.HasOne("GymAppCore.Models.Entities.User", "Friend")
+                        .WithMany("InverseFriends")
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymAppCore.Models.Entities.User", "User")
                         .WithMany("Friends")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Friend");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GymAppCore.Models.Entities.Exercise", b =>
@@ -262,6 +284,8 @@ namespace GymAppInfrastructure.Migrations
                     b.Navigation("Exercises");
 
                     b.Navigation("Friends");
+
+                    b.Navigation("InverseFriends");
 
                     b.Navigation("Premium")
                         .IsRequired();

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GymAppInfrastructure.Migrations
 {
     [DbContext(typeof(GymAppContext))]
-    [Migration("20230406144729_Init")]
-    partial class Init
+    [Migration("20230412021431_Initial2")]
+    partial class Initial2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace GymAppInfrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GymAppCore.Models.Exercise", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.Exercise", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,9 +37,6 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<int>("Position")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("Shown")
-                        .HasColumnType("boolean");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -50,7 +47,7 @@ namespace GymAppInfrastructure.Migrations
                     b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Premium", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.Premium", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +70,7 @@ namespace GymAppInfrastructure.Migrations
                     b.ToTable("Premiums");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Series", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.Series", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,7 +92,7 @@ namespace GymAppInfrastructure.Migrations
                     b.ToTable("Series");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.SimpleExercise", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.SimpleExercise", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,6 +107,9 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<Guid>("ExerciseId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("SeriesString")
+                        .HasColumnType("text");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -122,7 +122,7 @@ namespace GymAppInfrastructure.Migrations
                     b.ToTable("SimpleExercises");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.User", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,22 +175,32 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("UserName")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Exercise", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.UserFriend", b =>
                 {
-                    b.HasOne("GymAppCore.Models.User", "User")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FriendId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserId", "FriendId");
+
+                    b.HasIndex("FriendId");
+
+                    b.ToTable("UserFriend");
+                });
+
+            modelBuilder.Entity("GymAppCore.Models.Entities.Exercise", b =>
+                {
+                    b.HasOne("GymAppCore.Models.Entities.User", "User")
                         .WithMany("Exercises")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -199,20 +209,20 @@ namespace GymAppInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Premium", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.Premium", b =>
                 {
-                    b.HasOne("GymAppCore.Models.User", "User")
+                    b.HasOne("GymAppCore.Models.Entities.User", "User")
                         .WithOne("Premium")
-                        .HasForeignKey("GymAppCore.Models.Premium", "UserId")
+                        .HasForeignKey("GymAppCore.Models.Entities.Premium", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Series", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.Series", b =>
                 {
-                    b.HasOne("GymAppCore.Models.SimpleExercise", "SimpleExercise")
+                    b.HasOne("GymAppCore.Models.Entities.SimpleExercise", "SimpleExercise")
                         .WithMany("Series")
                         .HasForeignKey("SimpleExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -221,15 +231,15 @@ namespace GymAppInfrastructure.Migrations
                     b.Navigation("SimpleExercise");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.SimpleExercise", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.SimpleExercise", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Exercise", "Exercise")
+                    b.HasOne("GymAppCore.Models.Entities.Exercise", "Exercise")
                         .WithMany("ConcreteExercise")
                         .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GymAppCore.Models.User", "User")
+                    b.HasOne("GymAppCore.Models.Entities.User", "User")
                         .WithMany("SimpleExercises")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -240,28 +250,42 @@ namespace GymAppInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.User", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.UserFriend", b =>
                 {
-                    b.HasOne("GymAppCore.Models.User", null)
+                    b.HasOne("GymAppCore.Models.Entities.User", "Friend")
+                        .WithMany("InverseFriends")
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymAppCore.Models.Entities.User", "User")
                         .WithMany("Friends")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Friend");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Exercise", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.Exercise", b =>
                 {
                     b.Navigation("ConcreteExercise");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.SimpleExercise", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.SimpleExercise", b =>
                 {
                     b.Navigation("Series");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.User", b =>
+            modelBuilder.Entity("GymAppCore.Models.Entities.User", b =>
                 {
                     b.Navigation("Exercises");
 
                     b.Navigation("Friends");
+
+                    b.Navigation("InverseFriends");
 
                     b.Navigation("Premium")
                         .IsRequired();
