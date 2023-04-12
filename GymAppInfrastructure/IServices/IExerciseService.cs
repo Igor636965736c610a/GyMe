@@ -5,9 +5,9 @@ namespace GymAppInfrastructure.IServices;
 
 public interface IExerciseService
 {
-    Task CreateExercise(PostExerciseDto postExerciseDto, User user);
-    Task UpdateExercise(User user, ExercisesType exercisesType, PutExerciseDto putExerciseDto);
-    Task HideExercise(User user, ExercisesType exercisesType);
-    Task<GetExerciseDto> GetExercise(User user, ExercisesType exercisesType);
-    Task<IEnumerable<GetExerciseDto>> GetExercises(User user);
+    Task CreateExercise(PostExerciseDto postExerciseDto, Guid userId);
+    Task UpdateExercise(Guid userId, ExercisesType exercisesType, PutExerciseDto putExerciseDto);
+    Task RemoveExercise(Guid userId, ExercisesType exercisesType);
+    Task<GetExerciseDto> GetExercise(Guid userId, ExercisesType exercisesType);
+    Task<IEnumerable<GetExerciseDto>> GetExercises(Guid userId);
 }

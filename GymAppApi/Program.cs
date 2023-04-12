@@ -1,3 +1,4 @@
+using GymAppApi.MiddleWare;
 using GymAppInfrastructure.AutoMapper;
 using GymAppInfrastructure.Extensions;
 using GymAppInfrastructure.Options;
@@ -32,6 +33,7 @@ if (app.Environment.IsDevelopment())
         option.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description);
     });
 }
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

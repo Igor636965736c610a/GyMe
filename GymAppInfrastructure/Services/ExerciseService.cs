@@ -2,6 +2,7 @@
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Dtos.Exercise;
+using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
 
 namespace GymAppInfrastructure.Services;
@@ -16,51 +17,56 @@ public class ExerciseService : IExerciseService
         _exerciseRepo = exerciseRepo;
     }
     
-    public async Task CreateExercise(PostExerciseDto postExerciseDto, User user)
+    public async Task CreateExercise(PostExerciseDto postExerciseDto, Guid userId)
     {
-        var exercises = await _exerciseRepo.Get(user);
-        var maxPosition = GetLastExercisePosition(exercises);
-        if (postExerciseDto.Position > maxPosition + 1)
+        if (postExerciseDto.Position is null)
+            postExerciseDto.Position = 0;
+        
+        var existingExercise = await _exerciseRepo.Get(postExerciseDto.ExercisesType, userId);
+        if (existingExercise is not null)
         {
-            postExerciseDto.Position = maxPosition + 1;
+            throw new InvalidOperationException("Exercise already exist");
         }
         
-        var hideExercise = await _exerciseRepo.Get(user, postExerciseDto.ExercisesType);
-        if (hideExercise is not null)
-        {
-            hideExercise.Shown = true;
-            AdjustTheQueueToNewPosition(user.Exercises, postExerciseDto.Position, maxPosition);
-            hideExercise.Position = postExerciseDto.Position;
-            await _exerciseRepo.Update(hideExercise);
-            return;
-        }
+        var exercises = await _exerciseRepo.Get(userId);
+        var exercise = new Exercise(postExerciseDto.ExercisesType, postExerciseDto.Position.Value, userId);
 
-        var exerciseToAdd = new Exercise(postExerciseDto.ExercisesType, postExerciseDto.Position, user);
-        AdjustTheQueueToNewPosition(exercises, postExerciseDto.Position, maxPosition);
-        await _exerciseRepo.Create(exerciseToAdd);
+        var toUpdate = AddExercise(exercise, exercises);
+        
+        if(!await _exerciseRepo.Create(exercise) || !await _exerciseRepo.Update(toUpdate))
+            throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task UpdateExercise(User user, ExercisesType exercisesType, PutExerciseDto putExerciseDto)
+    public async Task UpdateExercise(Guid userId, ExercisesType exercisesType, PutExerciseDto putExerciseDto)
     {
-        var exercise = await _exerciseRepo.Get(user, exercisesType);
+        var exercise = await _exerciseRepo.Get(exercisesType, userId);
         if (exercise is null)
-            throw new NullReferenceException("Not Found");
+            throw new InvalidOperationException("Not Found");
+        var exercises = await _exerciseRepo.Get(userId);
+        exercises.Remove(exercise);
         exercise.Position = putExerciseDto.Position;
-        await _exerciseRepo.Update(exercise);
+        AddExercise(exercise, exercises);
+        
+        if(!await _exerciseRepo.Update(exercise) || !await _exerciseRepo.Update(exercises))
+            throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task HideExercise(User user, ExercisesType exercisesType)
+    public async Task RemoveExercise(Guid userId, ExercisesType exercisesType)
     {
-        var exercise = await _exerciseRepo.Get(user, exercisesType);
+        var exercises = await _exerciseRepo.Get(userId);
+        
+        var exercise = await _exerciseRepo.Get(exercisesType, userId);
         if (exercise is null)
-            throw new NullReferenceException("Not Found");
-        exercise.Shown = false;
-        await _exerciseRepo.Update(exercise);
+            throw new InvalidOperationException("Not Found");
+        var toUpdate = RemoveExercise(exercise, exercises);
+        
+        if(!await _exerciseRepo.Remove(exercise) || !await _exerciseRepo.Update(toUpdate))
+            throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task<GetExerciseDto> GetExercise(User user, ExercisesType exercisesType)
+    public async Task<GetExerciseDto> GetExercise(Guid userId, ExercisesType exercisesType)
     {
-        var exercise = await _exerciseRepo.Get(user, exercisesType);
+        var exercise = await _exerciseRepo.Get(exercisesType, userId);
         if (exercise is null)
             throw new NullReferenceException("Not Found");
         var exerciseDto = _mapper.Map<Exercise, GetExerciseDto>(exercise);
@@ -68,40 +74,59 @@ public class ExerciseService : IExerciseService
         return exerciseDto;
     }
 
-    public async Task<IEnumerable<GetExerciseDto>> GetExercises(User user)
+    public async Task<IEnumerable<GetExerciseDto>> GetExercises(Guid userId)
     {
-        var exercises = await _exerciseRepo.Get(user);
+        var exercises = await _exerciseRepo.Get(userId);
         var exercisesDto = _mapper.Map<IEnumerable<Exercise>, IEnumerable<GetExerciseDto>>(exercises);
 
         return exercisesDto;
     }
 
-    private int GetLastExercisePosition(IEnumerable<Exercise> exercises)
+    private static List<Exercise> AddExercise(Exercise exercise, List<Exercise> exercises)
     {
-        if (exercises.Count() == 0)
-            return 0;
-        return exercises.Max(x => x.Position);
-    }
+        List<Exercise> output = new();
+        if (exercises.Count == 0)
+            return output;
+        if (exercise.Position < 0)
+        {
+            exercise.Position = 0;
+        }
 
-    private void AdjustTheQueueToNewPosition(IEnumerable<Exercise> exercises, int oldPosition, int newPosition)
+        if (exercise.Position > exercises.Count - 1)
+        {
+            exercise.Position = exercises.Count;
+            return output;
+        }
+
+        foreach (var e in exercises)
+        {
+            if (e.Position >= exercise.Position)
+            {
+                e.Position++;
+                output.Add(e);
+            }
+        }
+
+        return output;
+    }
+    private static List<Exercise> RemoveExercise(Exercise exercise, List<Exercise> exercises)
     {
-        if (newPosition < oldPosition)
+        List<Exercise> output = new();
+        if (exercise.Position > exercises.Count - 1)
         {
-            var elements = exercises.Where(x => x.Position > newPosition && x.Position <= oldPosition);
-            foreach (var p in elements)
+            exercise.Position = exercises.Count;
+            return output;
+        }
+
+        foreach (var e in exercises)
+        {
+            if (e.Position > exercise.Position)
             {
-                p.Position++;
-                _exerciseRepo.Update(p);
+                e.Position--;
+                output.Add(e);
             }
         }
-        else
-        {
-            var elements = exercises.Where(x => x.Position < newPosition && x.Position >= oldPosition);
-            foreach (var p in elements)
-            {
-                p.Position--;
-                _exerciseRepo.Update(p);
-            }
-        }
+
+        return output;
     }
 }

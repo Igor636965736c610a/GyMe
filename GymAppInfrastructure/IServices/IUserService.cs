@@ -6,6 +6,5 @@ namespace GymAppInfrastructure.IServices;
 
 public interface IUserService
 {
-    Task<User?> Get(ClaimsPrincipal claimsPrincipal);
     Task Update(User user, PutUserDto putUserDto);
 }
