@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GymAppInfrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,7 +50,6 @@ namespace GymAppInfrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Shown = table.Column<bool>(type: "boolean", nullable: false),
                     ExercisesType = table.Column<int>(type: "integer", nullable: false),
                     Position = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -92,6 +91,7 @@ namespace GymAppInfrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ExerciseId = table.Column<Guid>(type: "uuid", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    SeriesString = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },

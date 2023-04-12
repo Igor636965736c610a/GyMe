@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
@@ -9,14 +10,14 @@ namespace GymAppInfrastructure.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<User> _userManager;
-
-    public UserService(UserManager<User> userManager)
+    private readonly IUserRepo _userRepo;
+    public UserService(UserManager<User> userManager, IUserRepo userRepo)
     {
         _userManager = userManager;
+        _userRepo = userRepo;
     }
-
-    public async Task<User?> Get(ClaimsPrincipal claimsPrincipal)
-        => await _userManager.GetUserAsync(claimsPrincipal);
+    
+    
 
     public async Task Update(User user, PutUserDto putUserDto)
     {
