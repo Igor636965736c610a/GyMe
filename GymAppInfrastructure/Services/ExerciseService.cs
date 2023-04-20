@@ -86,7 +86,7 @@ public class ExerciseService : IExerciseService
     {
         List<Exercise> output = new();
         if (exercises.Count == 0)
-            return output;
+            return exercises;
         if (exercise.Position < 0)
         {
             exercise.Position = 0;
@@ -95,7 +95,7 @@ public class ExerciseService : IExerciseService
         if (exercise.Position > exercises.Count - 1)
         {
             exercise.Position = exercises.Count;
-            return output;
+            return exercises;
         }
 
         foreach (var e in exercises)
@@ -115,7 +115,7 @@ public class ExerciseService : IExerciseService
         if (exercise.Position > exercises.Count - 1)
         {
             exercise.Position = exercises.Count;
-            return output;
+            return exercises;
         }
 
         foreach (var e in exercises)

@@ -6,5 +6,11 @@ namespace GymAppInfrastructure.IServices;
 
 public interface IUserService
 {
-    Task Update(User user, PutUserDto putUserDto);
+    Task RemoveFriend(Guid user1Id, Guid user2Id);
+    Task RemoveFriendRequest(Guid user1Id, Guid user2Id);
+    Task AddFriend(Guid user1Id, Guid user2Id);
+    Task<GetUserDto> ShowProfile(Guid userId, Guid profileId);
+    Task<List<GetUserDto>> FindUsers(string key, int page, int size);
+    Task<GetUserDto> GetUser(Guid id);
+    Task<IEnumerable<GetUserDto>> GetFriends(Guid userId, int page);
 }

@@ -44,6 +44,21 @@ namespace GymAppInfrastructure.Migrations
                     b.ToTable("Exercises");
                 });
 
+            modelBuilder.Entity("GymAppCore.Models.Entities.FriendRequest", b =>
+                {
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("SenderId", "RecipientId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("FriendRequests");
+                });
+
             modelBuilder.Entity("GymAppCore.Models.Entities.Premium", b =>
                 {
                     b.Property<Guid>("Id")
@@ -166,6 +181,9 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("PrivateAccount")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -204,6 +222,25 @@ namespace GymAppInfrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GymAppCore.Models.Entities.FriendRequest", b =>
+                {
+                    b.HasOne("GymAppCore.Models.Entities.User", "Recipient")
+                        .WithMany("RecipientFriendRequests")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymAppCore.Models.Entities.User", "Sender")
+                        .WithMany("SendFriendRequests")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("GymAppCore.Models.Entities.Premium", b =>
@@ -286,6 +323,10 @@ namespace GymAppInfrastructure.Migrations
 
                     b.Navigation("Premium")
                         .IsRequired();
+
+                    b.Navigation("RecipientFriendRequests");
+
+                    b.Navigation("SendFriendRequests");
 
                     b.Navigation("SimpleExercises");
                 });
