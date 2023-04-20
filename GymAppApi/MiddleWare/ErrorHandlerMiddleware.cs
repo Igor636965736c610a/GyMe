@@ -25,6 +25,7 @@ public class ErrorHandlerMiddleware
             switch(error)
             {
                 
+                
                 default:
                     // unhandled error
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
