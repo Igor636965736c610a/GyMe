@@ -2,5 +2,5 @@
 
 public class PostAddFriend
 {
-    
+    public string UesrToAddId { get; set; }
 }

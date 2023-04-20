@@ -3,6 +3,7 @@ using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Dtos.Exercise;
 using GymAppInfrastructure.Dtos.Series;
 using GymAppInfrastructure.Dtos.SimpleExercise;
+using GymAppInfrastructure.Dtos.User;
 
 namespace GymAppInfrastructure.AutoMapper;
 

@@ -2,5 +2,5 @@
 
 public class DeleteFriendRequest
 {
-    
+    public string UserToDelete { get; set; }
 }
