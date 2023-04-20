@@ -1,6 +1,8 @@
-﻿namespace GymAppInfrastructure.IServices;
+﻿using GymAppInfrastructure.Dtos.User;
 
-public interface IAccoutService
+namespace GymAppInfrastructure.IServices;
+
+public interface IAccountService
 {
-    
+    Task Update(Guid userId, PutUserDto putUserDto);
 }

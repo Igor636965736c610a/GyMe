@@ -11,6 +11,7 @@ public class GymAppContext : DbContext
     public DbSet<Series> Series { get; set; }
     public DbSet<Premium> Premiums { get; set; }
     public DbSet<UserFriend> UserFriends { get; set; }
+    public DbSet<FriendRequest> FriendRequests { get; set; }
 
     public GymAppContext(DbContextOptions<GymAppContext> options)
         : base(options)
@@ -21,17 +22,33 @@ public class GymAppContext : DbContext
     {
         builder.Entity<User>(x => 
             x.HasMany(e => e.Exercises).WithOne(e => e.User).HasForeignKey(e => e.UserId).HasPrincipalKey(e => e.Id));
+        
         builder.Entity<User>(x => 
             x.HasMany(e => e.SimpleExercises).WithOne(e => e.User).HasForeignKey(e => e.UserId).HasPrincipalKey(e => e.Id));
+        
         builder.Entity<User>(x => 
             x.HasOne(e => e.Premium).WithOne(e => e.User).HasForeignKey<Premium>(e => e.UserId));
+        
         builder.Entity<UserFriend>()
             .HasKey(x => new { x.UserId, x.FriendId });
+        
         builder.Entity<UserFriend>().HasOne(e => e.User).WithMany(e => e.Friends).HasForeignKey(e => e.UserId);
+        
         builder.Entity<UserFriend>().HasOne(e => e.Friend).WithMany(e => e.InverseFriends)
             .HasForeignKey(e => e.FriendId);
+        
+        builder.Entity<FriendRequest>()
+            .HasKey(x => new { x.SenderId, x.RecipientId });
+        
+        builder.Entity<FriendRequest>().HasOne(x => x.Sender).WithMany(x => x.SendFriendRequests)
+            .HasForeignKey(x => x.SenderId);
+        
+        builder.Entity<FriendRequest>().HasOne(x => x.Recipient).WithMany(x => x.RecipientFriendRequests)
+            .HasForeignKey(x => x.RecipientId);
+        
         builder.Entity<Exercise>(x => 
             x.HasMany(e => e.ConcreteExercise).WithOne(e => e.Exercise));
+        
         builder.Entity<SimpleExercise>(x => 
             x.HasMany(e => e.Series).WithOne(e => e.SimpleExercise));
     }

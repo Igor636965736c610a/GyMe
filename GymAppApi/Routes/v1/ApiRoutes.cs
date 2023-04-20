@@ -17,4 +17,12 @@ public static class ApiRoutes
         public const string Get = "get";
         public const string Remove = "remove";
     }
+    
+    public static class User
+    {
+        public const string AddFriend = "addFriend";
+        public const string DeleteFriendRequest = "deleteFriendRequest";
+        public const string DeleteFriend = "deleteFriend";
+        public const string GetUser = "getUser";
+    }
 }

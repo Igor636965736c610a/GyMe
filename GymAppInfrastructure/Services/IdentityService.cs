@@ -38,10 +38,14 @@ public class IdentityService : IIdentityService
             FirstName = registerUserDto.FirstName,
             LastName = registerUserDto.LastName,
             UserName = registerUserDto.UserName,
+            PrivateAccount = registerUserDto.PrivateAccount,
             Email = registerUserDto.Email,
             Exercises = new(),
             Premium = new(),
             Friends = new(),
+            InverseFriends = new (),
+            SendFriendRequests = new (),
+            RecipientFriendRequests = new()
         };
         
         var createdUser = await _userManager.CreateAsync(newUser, registerUserDto.Password);
