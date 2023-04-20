@@ -1,6 +1,8 @@
-﻿using GymAppApi.Routes.v1;
+﻿using GymAppApi.BodyRequest.User;
+using GymAppApi.Routes.v1;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymAppApi.Controllers.v1;
@@ -10,16 +12,21 @@ public class AccountController : ControllerBase
 {
     private readonly IIdentityService _identityService;
     private readonly IEmailConfirmationService _emailConfirmationService;
+    private readonly IAccountService _accountService;
 
-    public AccountController(IIdentityService identityService, IEmailConfirmationService emailConfirmationService)
+    public AccountController(IIdentityService identityService, IEmailConfirmationService emailConfirmationService, IAccountService accountService)
     {
         _identityService = identityService;
         _emailConfirmationService = emailConfirmationService;
+        _accountService = accountService;
     }
 
     [HttpPost(ApiRoutes.Account.Register)]
     public async Task<IActionResult> Register([FromBody]RegisterUserDto registerUserDto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
         var result = await _identityService.Register(registerUserDto);
 
         if (!result.Success)
@@ -52,6 +59,9 @@ public class AccountController : ControllerBase
     [HttpPost(ApiRoutes.Account.Login)]
     public async Task<IActionResult> Login([FromBody]LoginUserDto loginUserDto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
         var result = await _identityService.Login(loginUserDto);
 
         if (!result.Success)
@@ -60,5 +70,27 @@ public class AccountController : ControllerBase
         }
         
         return Ok(result);
+    }
+
+    [Authorize]
+    [HttpPut(ApiRoutes.Account.UpdateUser)]
+    public async Task<IActionResult> UpdateUser([FromBody] PutUserBody putUserBody)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+
+        PutUserDto putUserDto = new()
+        {
+            UserName = putUserBody.UserName,
+            FirstName = putUserBody.FirstName,
+            LastName = putUserBody.LastName,
+            PrivateAccount = putUserBody.PrivateAccount
+        };
+
+        await _accountService.Update(userId, putUserDto);
+
+        return Ok();
     }
 }
