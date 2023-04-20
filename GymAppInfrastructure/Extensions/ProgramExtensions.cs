@@ -26,6 +26,7 @@ public static class ProgramExtensions
         services.AddScoped<ISimpleExerciseService, SimpleExerciseService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserRepo, UserRepo>();
+        services.AddScoped<IAccountService, AccountService>();
 
         return services;
     }

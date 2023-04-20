@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
+using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
 
@@ -84,7 +85,7 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<GetUserDto> ShowProfile(Guid userId, Guid profileId)
+    public async Task<ShowProfileDto> ShowProfile(Guid userId, Guid profileId)
     {
         if (userId == profileId)
             throw new InvalidOperationException("Use Account controller to manage your account. It is designed to retrieve information from other users");
@@ -96,7 +97,7 @@ public class UserService : IUserService
             throw new NullReferenceException("User does not exist");
         if (user2.PrivateAccount && await _userRepo.GetFriend(userId, profileId) is null)
         {
-            return new GetUserDto()
+            return new ShowProfileDto()
             {
                 FirstName = user2.FirstName,
                 LastName = user2.LastName,
@@ -105,7 +106,7 @@ public class UserService : IUserService
                 PrivateAccount = user2.PrivateAccount
             };
         }
-        var userDto = _mapper.Map<User, GetUserDto>(user2);
+        var userDto = _mapper.Map<User, ShowProfileDto>(user2);
 
         return userDto;
     }
