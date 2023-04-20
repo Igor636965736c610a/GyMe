@@ -7,6 +7,7 @@ public static class ApiRoutes
         public const string Login = "login";
         public const string Register = "register";
         public const string ConfirmEmail = "confirmEmail";
+        public const string UpdateUser = "update";
     }
 
     public static class Exercise
@@ -24,5 +25,6 @@ public static class ApiRoutes
         public const string DeleteFriendRequest = "deleteFriendRequest";
         public const string DeleteFriend = "deleteFriend";
         public const string GetUser = "getUser";
+        public const string ShowProfile = "showProfile";
     }
 }

@@ -67,6 +67,17 @@ public class UserController : ControllerBase
 
         return Ok(result);
     }
-    
-    
+
+    [HttpGet(ApiRoutes.User.ShowProfile)]
+    public async Task<IActionResult> ShowProfile([FromQuery] string id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var profileId = Guid.Parse(id);
+
+        var result =  await _userService.ShowProfile(userId, profileId);
+
+        return Ok(result);
+    }
 }
