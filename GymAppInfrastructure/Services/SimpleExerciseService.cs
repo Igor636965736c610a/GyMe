@@ -13,13 +13,11 @@ public class SimpleExerciseService : ISimpleExerciseService
     private readonly ISimpleExerciseRepo _simpleExerciseRepo;
     private readonly IMapper _mapper;
     private readonly IExerciseRepo _exerciseRepo;
-    private readonly ISeriesRepo _seriesRepo;
-    public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IMapper mapper, IExerciseRepo exerciseRepo, ISeriesRepo seriesRepo)
+    public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IMapper mapper, IExerciseRepo exerciseRepo)
     {
         _simpleExerciseRepo = simpleExerciseRepo;
         _mapper = mapper;
         _exerciseRepo = exerciseRepo;
-        _seriesRepo = seriesRepo;
     }
     
     public async Task CreateSimpleExercise(PostSimpleExerciseDto postSimpleExerciseDto, Guid userId)
@@ -44,7 +42,6 @@ public class SimpleExerciseService : ISimpleExerciseService
             throw new ForbiddenException("You do not have access to this data");
         var series = UtilsServices.SeriesFromString(putExerciseDto.Series, simpleExercise);
         simpleExercise.Description = putExerciseDto.Description;
-        simpleExercise.Date = putExerciseDto.Date;
         simpleExercise.SeriesString = putExerciseDto.Series;
         simpleExercise.Series = series;
         
