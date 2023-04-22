@@ -35,7 +35,6 @@ public static class ProgramExtensions
     {
         services.AddScoped<IExerciseRepo, ExerciseRepo>();
         services.AddScoped<ISimpleExerciseRepo, SimpleExerciseRepo>();
-        services.AddScoped<ISeriesRepo, SeriesRepo>();
         services.AddScoped<IUserService, UserService>();
 
         return services;
