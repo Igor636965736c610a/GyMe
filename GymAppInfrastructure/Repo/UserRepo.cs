@@ -40,10 +40,10 @@ public class UserRepo : IUserRepo
             .Skip(page*size)
             .Take(size).ToListAsync();
 
-    public async Task<List<User>> GetFriends(Guid id, int page)
+    public async Task<List<User>> GetFriends(Guid id, int page, int size)
         => await _gymAppContext.UserFriends.Where(x => x.UserId == id).Select(x => x.Friend)
-            .Skip(page*10)
-            .Take(10).ToListAsync();
+            .Skip(page*size)
+            .Take(size).ToListAsync();
 
     public async Task<UserFriend?> GetFriend(Guid user1Id, Guid user2Id)
         => await _gymAppContext.UserFriends.FirstOrDefaultAsync(x => x.UserId == user1Id && x.FriendId == user2Id);
