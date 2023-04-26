@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
+using GymAppInfrastructure.Dtos.Exercise;
 using GymAppInfrastructure.Dtos.SimpleExercise;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
@@ -13,18 +14,23 @@ public class SimpleExerciseService : ISimpleExerciseService
     private readonly ISimpleExerciseRepo _simpleExerciseRepo;
     private readonly IMapper _mapper;
     private readonly IExerciseRepo _exerciseRepo;
-    public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IMapper mapper, IExerciseRepo exerciseRepo)
+    private readonly IUserRepo _userRepo;
+    public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IMapper mapper, IExerciseRepo exerciseRepo, IUserRepo userRepo)
     {
         _simpleExerciseRepo = simpleExerciseRepo;
         _mapper = mapper;
         _exerciseRepo = exerciseRepo;
+        _userRepo = userRepo;
     }
     
     public async Task CreateSimpleExercise(PostSimpleExerciseDto postSimpleExerciseDto, Guid userId)
     {
-        var exercise = await _exerciseRepo.Get(postSimpleExerciseDto.ExercisesType, userId);
+        var exercise = await _exerciseRepo.Get(postSimpleExerciseDto.ExerciseId);
         if (exercise is null)
             throw new InvalidOperationException("Exercise does not exist");
+        if(exercise.UserId != userId)
+            throw new ForbiddenException("You do not have the appropriate permissions");
+        
         var simpleExercise = new SimpleExercise(DateTime.UtcNow, postSimpleExerciseDto.Description, userId, exercise, postSimpleExerciseDto.Series);
         var series = UtilsServices.SeriesFromString(postSimpleExerciseDto.Series, simpleExercise);
         simpleExercise.Series = series;
@@ -67,19 +73,37 @@ public class SimpleExerciseService : ISimpleExerciseService
         if (simpleExercise is null)
             throw new NullReferenceException("Not Found");
         if (simpleExercise.UserId != userId)
-            throw new ForbiddenException("You do not have access to this data");
+        {
+            var owner = await _userRepo.Get(simpleExercise.UserId);
+            if (owner.PrivateAccount && await _userRepo.GetFriend(userId, owner.Id) is null)
+                throw new ForbiddenException("You do not have the appropriate permissions");
+        }
 
         var simpleExerciseDto = _mapper.Map<SimpleExercise, GetSimpleExerciseDto>(simpleExercise);
 
         return simpleExerciseDto;
     }
 
-    public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid userId)
+    public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid userId, int page, int size)
     {
-        var simpleExercises = await _simpleExerciseRepo.GetAll(userId);
+        var simpleExercises = await _simpleExerciseRepo.GetAll(userId, page, size);
         var simpleExercisesDto =
             _mapper.Map<IEnumerable<SimpleExercise>, IEnumerable<GetSimpleExerciseDto>>(simpleExercises);
 
         return simpleExercisesDto;
+    }
+    
+    public async Task<IEnumerable<GetSimpleExerciseDto>> GetForeignExercises(Guid jwtClaimId, Guid userId, int page, int size)
+    {
+        var owner = await _userRepo.Get(userId);
+        if (owner is null)
+            throw new InvalidOperationException("User does not exist");
+        if (owner.PrivateAccount && userId != jwtClaimId && await _userRepo.GetFriend(userId, jwtClaimId) is null)
+            throw new ForbiddenException("You do not have the appropriate permissions");
+        
+        var simpleExercises = await _simpleExerciseRepo.GetAll(userId, page, size);
+        var exercisesDto = _mapper.Map<IEnumerable<SimpleExercise>, IEnumerable<GetSimpleExerciseDto>>(simpleExercises);
+
+        return exercisesDto;
     }
 }

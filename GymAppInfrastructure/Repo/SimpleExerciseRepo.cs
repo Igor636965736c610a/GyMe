@@ -16,9 +16,14 @@ public class SimpleExerciseRepo : ISimpleExerciseRepo
     public async Task<SimpleExercise?> Get(Guid id)
         => await _gymAppContext.SimpleExercises.Include(x => x.Series).FirstOrDefaultAsync(x => x.Id == id);
 
+    public async Task<List<SimpleExercise>> GetAll(Guid userId, int page, int size)
+        => await _gymAppContext.SimpleExercises.Where(x => x.UserId == userId).Include(x => x.Series)
+            .Skip(page*size)
+            .Take(size).ToListAsync();
+
     public async Task<List<SimpleExercise>> GetAll(Guid userId)
         => await _gymAppContext.SimpleExercises.Where(x => x.UserId == userId).Include(x => x.Series).ToListAsync();
-
+    
     public async Task<bool> Create(SimpleExercise exercise)
     {
         await _gymAppContext.SimpleExercises.AddAsync(exercise);
