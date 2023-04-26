@@ -85,32 +85,6 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<ShowProfileDto> ShowProfile(Guid userId, Guid profileId)
-    {
-        if (userId == profileId)
-            throw new InvalidOperationException("Use Account controller to manage your account. It is designed to retrieve information from other users");
-        var user1 = await _userRepo.Get(userId);
-        if (user1 is null)
-            throw new InvalidOperationException("Something went wrong");
-        var user2 = await _userRepo.ShowProfile(profileId);
-        if (user2 is null)
-            throw new NullReferenceException("User does not exist");
-        if (user2.PrivateAccount && await _userRepo.GetFriend(userId, profileId) is null)
-        {
-            return new ShowProfileDto()
-            {
-                FirstName = user2.FirstName,
-                LastName = user2.LastName,
-                UserName = user2.UserName,
-                Id = user2.Id,
-                PrivateAccount = user2.PrivateAccount
-            };
-        }
-        var userDto = _mapper.Map<User, ShowProfileDto>(user2);
-
-        return userDto;
-    }
-
     public async Task<List<GetUserDto>> FindUsers(string key, int page, int size)
     {
         var users = await _userRepo.FindUsers(key, page, size);
@@ -131,9 +105,9 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public async Task<IEnumerable<GetUserDto>> GetFriends(Guid userId, int page)
+    public async Task<IEnumerable<GetUserDto>> GetFriends(Guid userId, int page, int size)
     {
-        var friends = await _userRepo.GetFriends(userId, page);
+        var friends = await _userRepo.GetFriends(userId, page, size);
 
         var friendsDto = _mapper.Map<IEnumerable<User>, IEnumerable<GetUserDto>>(friends);
 
