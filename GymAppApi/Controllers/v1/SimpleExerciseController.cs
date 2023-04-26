@@ -72,7 +72,7 @@ public class SimpleExerciseController : ControllerBase
     }
     
     [HttpGet(ApiRoutes.SimpleExercise.GetAll)]
-    public async Task<IActionResult> GetSimpleExercises([FromRoute] int page, int size)
+    public async Task<IActionResult> GetSimpleExercises([FromQuery] int page,[FromQuery] int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -85,7 +85,7 @@ public class SimpleExerciseController : ControllerBase
     }
     
     [HttpGet(ApiRoutes.SimpleExercise.GetAllForeign)]
-    public async Task<IActionResult> GetForeignSimpleExercises([FromQuery] string userId, [FromRoute] int page, int size)
+    public async Task<IActionResult> GetForeignSimpleExercises([FromQuery] string userId,[FromQuery] int page,[FromQuery] int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
