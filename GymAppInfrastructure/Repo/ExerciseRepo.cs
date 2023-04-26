@@ -13,12 +13,22 @@ public class ExerciseRepo : IExerciseRepo
         _gymAppContext = gymAppContext;
     }
     
-    public async Task<Exercise?> Get(ExercisesType exercisesType, Guid userId)
-        => await _gymAppContext.Exercises.FirstOrDefaultAsync(x => x.UserId == userId && x.ExercisesType == exercisesType);
+    public async Task<Exercise?> Get(Guid exerciseId)
+        => await _gymAppContext.Exercises.FirstOrDefaultAsync(x => x.Id == exerciseId);
 
-    public async Task<List<Exercise>> Get(Guid userId)
-        => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position).Include(x => x.ConcreteExercise).ToListAsync();
+    public async Task<Exercise?> Get(Guid userId, ExercisesType exercisesType)
+        => await _gymAppContext.Exercises.FirstOrDefaultAsync(x =>
+            x.UserId == userId && x.ExercisesType == exercisesType);
 
+    public async Task<List<Exercise>> GetAll(Guid userId, int page, int size)
+        => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position)
+            .Include(x => x.ConcreteExercise)
+            .Skip(page * size)
+            .Take(size).ToListAsync();
+
+    public async Task<List<Exercise>> GetAll(Guid userId)
+        => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position).ToListAsync();
+    
     public async Task<bool> Create(Exercise exercise)
     {
         await _gymAppContext.Exercises.AddAsync(exercise);
