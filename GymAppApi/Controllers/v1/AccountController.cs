@@ -40,7 +40,7 @@ public class AccountController : ControllerBase
     }
     
     [HttpGet(ApiRoutes.Account.ConfirmEmail)]
-    public async Task<IActionResult> ConfirmEmail([FromQuery]string userId, string token)
+    public async Task<IActionResult> ConfirmEmail([FromQuery]string userId,[FromQuery] string token)
     {
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
         {

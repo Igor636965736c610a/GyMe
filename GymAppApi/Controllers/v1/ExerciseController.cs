@@ -53,7 +53,7 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.Exercise.GetAll)]
-    public async Task<IActionResult> GetAll([FromRoute] int size, int page)
+    public async Task<IActionResult> GetAll([FromQuery] int size,[FromQuery] int page)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -64,8 +64,8 @@ public class ExerciseController : ControllerBase
         return Ok(exercises);
     }
 
-    [HttpGet()]
-    public async Task<IActionResult> GetAll([FromQuery] string userId, [FromRoute] int size, int page)
+    [HttpGet(ApiRoutes.Exercise.GetAllForeign)]
+    public async Task<IActionResult> GetAll([FromQuery] string userId,[FromQuery] int size,[FromQuery] int page)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -79,7 +79,7 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpPut(ApiRoutes.Exercise.Update)]
-    public async Task<IActionResult> Update([FromBody] PutExerciseBody putExerciseBody, [FromQuery] string exerciseId)
+    public async Task<IActionResult> Update([FromBody] PutExerciseBody putExerciseBody,[FromQuery] string exerciseId)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
