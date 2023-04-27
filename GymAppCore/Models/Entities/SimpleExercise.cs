@@ -15,6 +15,7 @@ public class SimpleExercise
     }
     public Guid Id { get; set; } = Guid.NewGuid();
     public Exercise Exercise { get; set; }
+    public Guid ExerciseId { get; set; }
     public DateTime Date { get; set; }
     public string? SeriesString { get; set; }
     public List<Series> Series { get; set; } = new();
