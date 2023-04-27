@@ -84,16 +84,16 @@ public class SimpleExerciseService : ISimpleExerciseService
         return simpleExerciseDto;
     }
 
-    public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid userId, int page, int size)
+    public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid userId, Guid exerciseId, int page, int size)
     {
-        var simpleExercises = await _simpleExerciseRepo.GetAll(userId, page, size);
+        var simpleExercises = await _simpleExerciseRepo.GetAll(userId, exerciseId, page, size);
         var simpleExercisesDto =
             _mapper.Map<IEnumerable<SimpleExercise>, IEnumerable<GetSimpleExerciseDto>>(simpleExercises);
 
         return simpleExercisesDto;
     }
     
-    public async Task<IEnumerable<GetSimpleExerciseDto>> GetForeignExercises(Guid jwtClaimId, Guid userId, int page, int size)
+    public async Task<IEnumerable<GetSimpleExerciseDto>> GetForeignExercises(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size)
     {
         var owner = await _userRepo.Get(userId);
         if (owner is null)
@@ -101,7 +101,7 @@ public class SimpleExerciseService : ISimpleExerciseService
         if (owner.PrivateAccount && userId != jwtClaimId && await _userRepo.GetFriend(userId, jwtClaimId) is null)
             throw new ForbiddenException("You do not have the appropriate permissions");
         
-        var simpleExercises = await _simpleExerciseRepo.GetAll(userId, page, size);
+        var simpleExercises = await _simpleExerciseRepo.GetAll(userId, exerciseId, page, size);
         var exercisesDto = _mapper.Map<IEnumerable<SimpleExercise>, IEnumerable<GetSimpleExerciseDto>>(simpleExercises);
 
         return exercisesDto;

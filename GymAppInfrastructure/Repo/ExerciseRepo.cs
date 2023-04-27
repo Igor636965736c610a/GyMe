@@ -22,7 +22,6 @@ public class ExerciseRepo : IExerciseRepo
 
     public async Task<List<Exercise>> GetAll(Guid userId, int page, int size)
         => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position)
-            .Include(x => x.ConcreteExercise)
             .Skip(page * size)
             .Take(size).ToListAsync();
 
