@@ -26,6 +26,10 @@ public class GymAppContext : DbContext
         builder.Entity<User>(x => 
             x.HasMany(e => e.SimpleExercises).WithOne(e => e.User).HasForeignKey(e => e.UserId).HasPrincipalKey(e => e.Id));
         
+        builder.Entity<Exercise>(x => 
+            x.HasMany(e => e.ConcreteExercise).WithOne(e => e.Exercise)
+                .HasForeignKey(e => e.ExerciseId).HasPrincipalKey(e => e.Id));
+        
         builder.Entity<User>(x => 
             x.HasOne(e => e.Premium).WithOne(e => e.User).HasForeignKey<Premium>(e => e.UserId));
         

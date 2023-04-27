@@ -5,8 +5,10 @@ namespace GymAppCore.IRepo;
 public interface ISimpleExerciseRepo
 {
     Task<SimpleExercise?> Get(Guid id);
-    Task<List<SimpleExercise>> GetAll(Guid userId, int page, int size);
-    Task<List<SimpleExercise>> GetAll(Guid userId);
+    Task<List<SimpleExercise>> GetAll(Guid userId, Guid exerciseId, int page, int size);
+    Task<List<SimpleExercise>> GetAll(Guid userId, Guid exerciseId);
+    Task<Dictionary<Guid, string?>> GetMaxReps(Guid userId, IEnumerable<Guid> exercisesIds);
+    Task<string?> GetMaxRep(Guid userId, Guid exercisesId);
     Task<bool> Create(SimpleExercise exercise);
     Task<bool> Update(SimpleExercise exercise);
     Task<bool> Remove(SimpleExercise exercise);

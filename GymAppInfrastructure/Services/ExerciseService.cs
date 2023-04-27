@@ -13,11 +13,13 @@ public class ExerciseService : IExerciseService
     private readonly IMapper _mapper;
     private readonly IExerciseRepo _exerciseRepo;
     private readonly IUserRepo _userRepo;
-    public ExerciseService(IMapper autoMapper, IExerciseRepo exerciseRepo, IUserRepo userRepo)
+    private readonly ISimpleExerciseRepo _simpleExerciseRepo;
+    public ExerciseService(IMapper autoMapper, IExerciseRepo exerciseRepo, IUserRepo userRepo, ISimpleExerciseRepo simpleExerciseRepo)
     {
         _mapper = autoMapper;
         _exerciseRepo = exerciseRepo;
         _userRepo = userRepo;
+        _simpleExerciseRepo = simpleExerciseRepo;
     }
     
     public async Task CreateExercise(PostExerciseDto postExerciseDto, Guid userId)
@@ -83,7 +85,16 @@ public class ExerciseService : IExerciseService
             if (owner.PrivateAccount && await _userRepo.GetFriend(userId, owner.Id) is null)
                 throw new ForbiddenException("You do not have the appropriate permissions");
         }
-        var exerciseDto = _mapper.Map<Exercise, GetExerciseDto>(exercise);
+
+        var maxRep = await _simpleExerciseRepo.GetMaxRep(userId, exerciseId);
+        var exerciseDto = new GetExerciseDto()
+        {
+            Id = exercise.Id,
+            ExercisesType = exercise.ExercisesType,
+            MaxRep = maxRep,
+        };
+        
+        //var exerciseDto = _mapper.Map<Exercise, GetExerciseDto>(exercise);
 
         return exerciseDto;
     }
@@ -91,7 +102,14 @@ public class ExerciseService : IExerciseService
     public async Task<IEnumerable<GetExerciseDto>> GetExercises(Guid userId, int page, int size)
     {
         var exercises = await _exerciseRepo.GetAll(userId, page, size);
-        var exercisesDto = _mapper.Map<IEnumerable<Exercise>, IEnumerable<GetExerciseDto>>(exercises);
+        var ids = exercises.Select(x => x.Id);
+        var maxReps = await _simpleExerciseRepo.GetMaxReps(userId, ids);
+        var exercisesDto = exercises.Select(x => new GetExerciseDto()
+        {
+            Id = x.Id,
+            ExercisesType = x.ExercisesType,
+            MaxRep = maxReps[x.Id]
+        });
 
         return exercisesDto;
     }
@@ -105,7 +123,15 @@ public class ExerciseService : IExerciseService
             throw new ForbiddenException("You do not have the appropriate permissions");
         
         var exercises = await _exerciseRepo.GetAll(userId, page, size);
-        var exercisesDto = _mapper.Map<IEnumerable<Exercise>, IEnumerable<GetExerciseDto>>(exercises);
+        var ids = exercises.Select(x => x.Id);
+        var maxReps = await _simpleExerciseRepo.GetMaxReps(userId, ids);
+        var exercisesDto = exercises.Select(x => new GetExerciseDto()
+        {
+            Id = x.Id,
+            ExercisesType = x.ExercisesType,
+            MaxRep = maxReps[x.Id]
+        });
+        //var exercisesDto = _mapper.Map<IEnumerable<Exercise>, IEnumerable<GetExerciseDto>>(exercises);
 
         return exercisesDto;
     }
