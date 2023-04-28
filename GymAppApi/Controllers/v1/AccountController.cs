@@ -93,4 +93,18 @@ public class AccountController : ControllerBase
 
         return Ok();
     }
+
+    [Authorize]
+    [HttpGet(ApiRoutes.Account.GetAccountInformation)]
+    public async Task<IActionResult> GetAccountInformation()
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+
+        var accountInf = await _accountService.GetAccountInf(userId);
+
+        return Ok(accountInf);
+    }
 }
