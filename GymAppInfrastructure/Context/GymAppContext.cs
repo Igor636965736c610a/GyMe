@@ -9,7 +9,6 @@ public class GymAppContext : DbContext
     public DbSet<Exercise> Exercises { get; set; }
     public DbSet<SimpleExercise> SimpleExercises { get; set; }
     public DbSet<Series> Series { get; set; }
-    public DbSet<Premium> Premiums { get; set; }
     public DbSet<UserFriend> UserFriends { get; set; }
     public DbSet<FriendRequest> FriendRequests { get; set; }
 
@@ -29,9 +28,6 @@ public class GymAppContext : DbContext
         builder.Entity<Exercise>(x => 
             x.HasMany(e => e.ConcreteExercise).WithOne(e => e.Exercise)
                 .HasForeignKey(e => e.ExerciseId).HasPrincipalKey(e => e.Id));
-        
-        builder.Entity<User>(x => 
-            x.HasOne(e => e.Premium).WithOne(e => e.User).HasForeignKey<Premium>(e => e.UserId));
         
         builder.Entity<UserFriend>()
             .HasKey(x => new { x.UserId, x.FriendId });

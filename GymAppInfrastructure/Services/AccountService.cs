@@ -1,4 +1,7 @@
-﻿using GymAppCore.IRepo;
+﻿using AutoMapper;
+using GymAppCore.IRepo;
+using GymAppCore.Models.Entities;
+using GymAppInfrastructure.Dtos.Account;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
@@ -8,18 +11,29 @@ namespace GymAppInfrastructure.Services;
 public class AccountService : IAccountService
 {
     private readonly IUserRepo _userRepo;
-    public AccountService(IUserRepo userRepo)
+    private readonly IMapper _mapper;
+    public AccountService(IUserRepo userRepo, IMapper mapper)
     {
         _userRepo = userRepo;
+        _mapper = mapper;
     }
-    
+
+    public async Task<GetAccountDto> GetAccountInf(Guid userId)
+    {
+        var user = await _userRepo.Get(userId);
+        if (user is null)
+            throw new InvalidOperationException("Something went wrong");
+
+        var userDto = _mapper.Map<User, GetAccountDto>(user);
+
+        return userDto;
+    }
+
     public async Task Update(Guid userId, PutUserDto putUserDto)
     {
         var user = await _userRepo.Get(userId);
         if (user is null)
             throw new InvalidOperationException("Something went wrong");
-        if (user.Id != userId)
-            throw new ForbiddenException("Can't update other user");
         
         user.UserName = putUserDto.UserName;
         user.FirstName = putUserDto.FirstName;
