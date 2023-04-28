@@ -14,5 +14,6 @@ public class User : IdentityUser<Guid>
     public List<FriendRequest> RecipientFriendRequests { get; set; }
     public List<Exercise> Exercises { get; set; } 
     public List<SimpleExercise> SimpleExercises { get; set; }
-    public Premium Premium { get; set; }
+    public bool Premium { get; set; } = false;
+    public DateTime? ImportancePremium { get; set; }
 }
