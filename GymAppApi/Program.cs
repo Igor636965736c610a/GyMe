@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using GymAppApi.MiddleWare;
 using GymAppInfrastructure.AutoMapper;
 using GymAppInfrastructure.Extensions;
@@ -7,7 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(x =>
+    {
+        var converter = new JsonStringEnumConverter();
+        x.JsonSerializerOptions.Converters.Add(converter);
+    });
+builder.Services.ConfigureRefit();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDb(builder.Configuration);
 builder.Services.AddServices();
