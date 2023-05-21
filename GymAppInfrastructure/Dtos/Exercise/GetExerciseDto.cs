@@ -9,4 +9,5 @@ public class GetExerciseDto
     public Guid Id { get; set; }
     public ExercisesType ExercisesType { get; set; }
     public string? MaxRep { get; set; }
+    public int? CountOfSimpleExercises { get; set; }
 }

@@ -15,6 +15,7 @@ builder.Services.AddControllers()
         x.JsonSerializerOptions.Converters.Add(converter);
     });
 builder.Services.ConfigureRefit();
+builder.Services.AddCorsPolicy();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDb(builder.Configuration);
 builder.Services.AddServices();

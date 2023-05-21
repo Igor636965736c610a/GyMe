@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Refit;
 
 namespace GymAppInfrastructure.Extensions;
 
@@ -119,6 +120,29 @@ public static class ProgramExtensions
         services.Configure<EmailSenderOptions>(configuration.GetSection("EmailSender"));
         services.AddTransient<IEmailSender, EmailSender>();
 
+        return services;
+    }
+
+    public static IServiceCollection ConfigureRefit(this IServiceCollection services)
+    {
+        services.AddRefitClient<IJokeApiService>()
+            .ConfigureHttpClient(x => x.BaseAddress = new Uri("https://v2.jokeapi.dev/"));
+
+        return services;
+    }
+
+    public static IServiceCollection AddCorsPolicy(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
+        
         return services;
     }
 }
