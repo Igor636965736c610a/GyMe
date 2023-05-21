@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Exercise;
 using GymAppInfrastructure.Dtos.SimpleExercise;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.MyMapper;
 
 
 namespace GymAppInfrastructure.Services;
@@ -87,8 +87,9 @@ public class SimpleExerciseService : ISimpleExerciseService
     public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid userId, Guid exerciseId, int page, int size)
     {
         var simpleExercises = await _simpleExerciseRepo.GetAll(userId, exerciseId, page, size);
-        var simpleExercisesDto =
-            _mapper.Map<IEnumerable<SimpleExercise>, IEnumerable<GetSimpleExerciseDto>>(simpleExercises);
+        var simpleExercisesDto = simpleExercises.Select(GetSimpleExerciseDtoMap.Map);
+            
+        //_mapper.Map<IEnumerable<SimpleExercise>, IEnumerable<GetSimpleExerciseDto>>(simpleExercises);
 
         return simpleExercisesDto;
     }
