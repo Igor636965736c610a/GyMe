@@ -16,4 +16,5 @@ public class Series
     public int NumberOfRepetitions { get; set; }
     public int Weight { get; set; }
     public SimpleExercise SimpleExercise { get; set; }
+    public Guid SimpleExerciseId { get; set; }
 }
