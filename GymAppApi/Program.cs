@@ -43,6 +43,8 @@ if (app.Environment.IsDevelopment())
 }
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
+app.UseMiddleware<DbTransactionMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

@@ -50,6 +50,6 @@ public class GymAppContext : DbContext
             x.HasMany(e => e.ConcreteExercise).WithOne(e => e.Exercise));
         
         builder.Entity<SimpleExercise>(x => 
-            x.HasMany(e => e.Series).WithOne(e => e.SimpleExercise));
+            x.HasMany(e => e.Series).WithOne(e => e.SimpleExercise).HasForeignKey(e => e.SimpleExerciseId).HasPrincipalKey(e => e.Id));
     }
 }
