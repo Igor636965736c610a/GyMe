@@ -3,6 +3,7 @@ using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Dtos.Exercise;
+using GymAppInfrastructure.Dtos.Series;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
 
@@ -13,13 +14,11 @@ public class ExerciseService : IExerciseService
     private readonly IMapper _mapper;
     private readonly IExerciseRepo _exerciseRepo;
     private readonly IUserRepo _userRepo;
-    private readonly ISimpleExerciseRepo _simpleExerciseRepo;
-    public ExerciseService(IMapper autoMapper, IExerciseRepo exerciseRepo, IUserRepo userRepo, ISimpleExerciseRepo simpleExerciseRepo)
+    public ExerciseService(IMapper autoMapper, IExerciseRepo exerciseRepo, IUserRepo userRepo)
     {
         _mapper = autoMapper;
         _exerciseRepo = exerciseRepo;
         _userRepo = userRepo;
-        _simpleExerciseRepo = simpleExerciseRepo;
     }
     
     public async Task CreateExercise(PostExerciseDto postExerciseDto, Guid userId)
@@ -86,15 +85,16 @@ public class ExerciseService : IExerciseService
                 throw new ForbiddenException("You do not have the appropriate permissions");
         }
 
-        var maxRep = await _simpleExerciseRepo.GetMaxRep(userId, exerciseId);
+        var maxRepSeries = await _exerciseRepo.GetMaxRep(exerciseId);
+        GetSeriesDto? maxRepSeriesDto = null;
+        if (maxRepSeries is not null)
+            maxRepSeriesDto = _mapper.Map<Series, GetSeriesDto>(maxRepSeries);
         var exerciseDto = new GetExerciseDto()
         {
             Id = exercise.Id,
             ExercisesType = exercise.ExercisesType,
-            MaxRep = maxRep,
+            MaxRep = maxRepSeriesDto,
         };
-        
-        //var exerciseDto = _mapper.Map<Exercise, GetExerciseDto>(exercise);
 
         return exerciseDto;
     }
@@ -102,16 +102,8 @@ public class ExerciseService : IExerciseService
     public async Task<IEnumerable<GetExerciseDto>> GetExercises(Guid userId, int page, int size)
     {
         var exercises = await _exerciseRepo.GetAll(userId, page, size);
-        var ids = exercises.Select(x => x.Id);
-        var maxReps = await _simpleExerciseRepo.GetMaxReps(userId, ids);
-        var exercisesDto = exercises.Select(x => new GetExerciseDto()
-        {
-            Id = x.Id,
-            ExercisesType = x.ExercisesType,
-            MaxRep = maxReps[x.Id]
-        });
-
-        return exercisesDto;
+        
+        return await UtilGetExercises(exercises);
     }
 
     public async Task<IEnumerable<GetExerciseDto>> GetForeignExercises(Guid jwtClaimId, Guid userId, int page, int size)
@@ -121,19 +113,10 @@ public class ExerciseService : IExerciseService
             throw new InvalidOperationException("User does not exist");
         if (owner.PrivateAccount && userId != jwtClaimId && await _userRepo.GetFriend(userId, jwtClaimId) is null)
             throw new ForbiddenException("You do not have the appropriate permissions");
-        
-        var exercises = await _exerciseRepo.GetAll(userId, page, size);
-        var ids = exercises.Select(x => x.Id);
-        var maxReps = await _simpleExerciseRepo.GetMaxReps(userId, ids);
-        var exercisesDto = exercises.Select(x => new GetExerciseDto()
-        {
-            Id = x.Id,
-            ExercisesType = x.ExercisesType,
-            MaxRep = maxReps[x.Id]
-        });
-        //var exercisesDto = _mapper.Map<IEnumerable<Exercise>, IEnumerable<GetExerciseDto>>(exercises);
 
-        return exercisesDto;
+        var exercises = await _exerciseRepo.GetAll(userId, page, size);
+
+        return await UtilGetExercises(exercises);
     }
 
     private static List<Exercise> AddExercise(Exercise exercise, List<Exercise> exercises)
@@ -182,5 +165,20 @@ public class ExerciseService : IExerciseService
         }
 
         return output;
+    }
+
+    private async Task<IEnumerable<GetExerciseDto>> UtilGetExercises(List<Exercise> exercises)
+    {
+        var ids = exercises.Select(x => x.Id);
+        var maxReps = await _exerciseRepo.GetMaxReps(ids);
+        var maxRepsDto = maxReps.ToDictionary(x => x.Key, x => _mapper.Map<Series, GetSeriesDto>(x.Value));
+        var exercisesDto = exercises.Select(x => new GetExerciseDto()
+        {
+            Id = x.Id,
+            ExercisesType = x.ExercisesType,
+            MaxRep = maxRepsDto[x.Id]
+        });
+
+        return exercisesDto;
     }
 }
