@@ -14,7 +14,14 @@ public static class GetSimpleExerciseDtoMap
             ExerciseId = simpleExercise.ExerciseId,
             Series = simpleExercise.Series.Select(GetSeriesDtoMap.Map),
             Description = simpleExercise.Description,
-            SeriesString = simpleExercise.SeriesString
+            SeriesString = simpleExercise.SeriesString,
+            MaxRep = simpleExercise.Series.OrderByDescending(x => x.Weight).ThenByDescending(x => x.NumberOfRepetitions).First().Weight,
+            Score = simpleExercise.Series.Sum(x => (int)Math.Round(x.Weight / (1.0278 - 0.0278 * x.NumberOfRepetitions), 2, MidpointRounding.AwayFromZero)),
+            NumberOfRepetitions = simpleExercise.Series.Sum(x => x.NumberOfRepetitions),
+            NumberOfSeries = simpleExercise.Series.Count,
+            SumOfKilograms = simpleExercise.Series.Sum(x => x.Weight),
+            AverageNumberOfRepetitionsPerSeries = (int)Math.Round(simpleExercise.Series.Average(x => x.NumberOfRepetitions), 2, MidpointRounding.AwayFromZero),
+            AverageWeight = (int)Math.Round(simpleExercise.Series.Average(x => x.Weight), 2, MidpointRounding.AwayFromZero)
         };
     }
 }

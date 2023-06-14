@@ -28,52 +28,47 @@ public class ExerciseRepo : IExerciseRepo
     public async Task<List<Exercise>> GetAll(Guid userId)
         => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position).ToListAsync();
     
-    public async Task<Dictionary<Guid, SimpleExercise?>> GetMaxRep(IEnumerable<Guid> exercisesId)
+    public async Task<Dictionary<Guid, Series>> GetMaxReps(IEnumerable<Guid> exercisesId)
         => await _gymAppContext.Series
             .Where(x => exercisesId.Contains(x.SimpleExercise.ExerciseId))
-            .OrderByDescending(s => s.Weight)
-            .ThenByDescending(s => s.NumberOfRepetitions)
             .GroupBy(x => x.SimpleExercise.ExerciseId)
             .Select(x => new
             {
-                SimpleExercise = x.Select(y => y.SimpleExercise).FirstOrDefault(),
-                exerciseId = x.Key
+                Value = x.OrderByDescending(e => e.Weight).ThenByDescending(e => e.NumberOfRepetitions).First(),
+                x.Key
             })
-            .ToDictionaryAsync(x => x.exerciseId, x => x.SimpleExercise);
-    public async Task<SimpleExercise?> GetMaxRep(Guid exerciseId)
+            .ToDictionaryAsync(x => x.Key, x => x.Value);
+    
+    public async Task<Series?> GetMaxRep(Guid exerciseId)
         => await _gymAppContext.Series
             .Where(s => s.SimpleExercise.ExerciseId == exerciseId)
             .OrderByDescending(s => s.Weight)
             .ThenByDescending(s => s.NumberOfRepetitions)
-            .Select(s => s.SimpleExercise)
             .FirstOrDefaultAsync();
+
+    public async Task<IEnumerable<int>> GetScore(Guid exerciseId, int size,
+        Func<IEnumerable<Series>, int> calculate)
+        => await _gymAppContext.Series
+            .Where(x => x.SimpleExercise.ExerciseId == exerciseId)
+            .GroupBy(x => x.SimpleExercise)
+            .OrderBy(x => x.Key.Date)
+            .Take(size)
+            .Select(x => calculate(x))
+            .ToListAsync();
     
-    public async Task<Dictionary<Exercise, int>> GetScoresss(IEnumerable<Guid> exercisesId, int size,
+    public async Task<Dictionary<Guid, IEnumerable<int>>> GetScores(IEnumerable<Guid> exercisesId, int size,
         Func<IEnumerable<Series>, int> calculate)
         => await _gymAppContext.Series
             .Where(x => exercisesId.Contains(x.SimpleExercise.ExerciseId))
-            .GroupBy(x => x.SimpleExercise.Exercise)
+            .GroupBy(x => x.SimpleExercise)
+            .GroupBy(x => x.Key.ExerciseId)
             .Select(x => new
             {
-                Score = x.GroupBy(y => y.SimpleExercise).OrderBy(z => z.Key.Date).Take(size).Sum(t => calculate(t)),
-                Exercise = x.Key
-            }).ToDictionaryAsync(x => x.Exercise, x => x.Score);
-            
-    
-    public async Task<Dictionary<Exercise, int>> GetScoress(IEnumerable<Guid> exercisesId, int size,
-        Func<IEnumerable<Series>, int> calculate)
-        => await _gymAppContext.SimpleExercises
-            .Where(x => exercisesId.Contains(x.ExerciseId))
-            .Include(x => x.Exercise)
-            .GroupBy(x => x.Exercise)
-            .ToDictionaryAsync(
-                g => g.Key,
-                g => g
-                    .OrderBy(x => x.Date)
-                    .Take(size)
-                    .Sum(x => calculate(x.Series))
-            );
-    
+                Value = x.OrderBy(e => e.Key.Date).Take(size),
+                x.Key
+            })
+            .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
+
     public async Task<bool> Create(Exercise exercise)
     {
         await _gymAppContext.Exercises.AddAsync(exercise);

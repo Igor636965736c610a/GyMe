@@ -16,4 +16,5 @@ public class GetSimpleExerciseDto
     public int? NumberOfSeries { get; set; }
     public int? SumOfKilograms { get; set; }
     public int? AverageNumberOfRepetitionsPerSeries { get; set; }
+    public int? AverageWeight { get; set; }
 }
