@@ -1,31 +1,32 @@
 ﻿using GymAppInfrastructure.Context;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GymAppApi.MiddleWare;
 
 public class DbTransactionMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly GymAppContext _dbContext;
 
-    public DbTransactionMiddleware(RequestDelegate next)
+    public DbTransactionMiddleware(RequestDelegate next, GymAppContext dbContext)
     {
         _next = next;
+        _dbContext = dbContext;
     }
 
-    public async Task Invoke(HttpContext httpContext, GymAppContext context)
+    public async Task InvokeAsync(HttpContext context)
     {
-        var strategy = context.Database.CreateExecutionStrategy(); 
-        await strategy.ExecuteAsync<object, object>(null!, operation: async (dbctx, state, cancel) =>
+        await using IDbContextTransaction transaction = await _dbContext.Database.BeginTransactionAsync();
+        try
         {
-            // start the transaction
-            await using var transaction = await context.Database.BeginTransactionAsync();
+            await _next(context);
 
-            // invoke next middleware 
-            await _next(httpContext);
-
-            // commit the transaction
             await transaction.CommitAsync();
-
-            return null!;
-        }, null);
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }
