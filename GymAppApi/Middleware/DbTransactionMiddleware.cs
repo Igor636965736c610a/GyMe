@@ -1,32 +1,30 @@
 ﻿using GymAppInfrastructure.Context;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace GymAppApi.MiddleWare;
+namespace GymAppApi.Middleware;
 
-public class DbTransactionMiddleware
+public class DbTransactionMiddleware : IMiddleware
 {
-    private readonly RequestDelegate _next;
     private readonly GymAppContext _dbContext;
 
-    public DbTransactionMiddleware(RequestDelegate next, GymAppContext dbContext)
+    public DbTransactionMiddleware(GymAppContext dbContext)
     {
-        _next = next;
         _dbContext = dbContext;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         await using IDbContextTransaction transaction = await _dbContext.Database.BeginTransactionAsync();
         try
         {
-            await _next(context);
+            await next(context);
 
             await transaction.CommitAsync();
         }
         catch (Exception)
         {
             await transaction.RollbackAsync();
-            throw;
+            throw; //mój exception se zrobie jakiś 
         }
     }
 }
