@@ -12,13 +12,11 @@ namespace GymAppInfrastructure.Services;
 public class SimpleExerciseService : ISimpleExerciseService
 {
     private readonly ISimpleExerciseRepo _simpleExerciseRepo;
-    private readonly IMapper _mapper;
     private readonly IExerciseRepo _exerciseRepo;
     private readonly IUserRepo _userRepo;
-    public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IMapper mapper, IExerciseRepo exerciseRepo, IUserRepo userRepo)
+    public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IExerciseRepo exerciseRepo, IUserRepo userRepo)
     {
         _simpleExerciseRepo = simpleExerciseRepo;
-        _mapper = mapper;
         _exerciseRepo = exerciseRepo;
         _userRepo = userRepo;
     }
@@ -79,14 +77,14 @@ public class SimpleExerciseService : ISimpleExerciseService
                 throw new ForbiddenException("You do not have the appropriate permissions");
         }
 
-        var simpleExerciseDto = _mapper.Map<SimpleExercise, GetSimpleExerciseDto>(simpleExercise);
+        var simpleExerciseDto = GetSimpleExerciseDtoMap.Map(simpleExercise);
 
         return simpleExerciseDto;
     }
 
     public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid userId, Guid exerciseId, int page, int size)
     {
-        return await UtilGetExercises(userId, exerciseId, page, size);
+        return await UtilGetSimpleExercises(userId, exerciseId, page, size);
     }
     
     public async Task<IEnumerable<GetSimpleExerciseDto>> GetForeignSimpleExercises(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size)
@@ -97,14 +95,14 @@ public class SimpleExerciseService : ISimpleExerciseService
         if (owner.PrivateAccount && userId != jwtClaimId && await _userRepo.GetFriend(userId, jwtClaimId) is null)
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        return await UtilGetExercises(userId, exerciseId, page, size);
+        return await UtilGetSimpleExercises(userId, exerciseId, page, size);
     }
 
-    private async Task<IEnumerable<GetSimpleExerciseDto>> UtilGetExercises(Guid userId, Guid exerciseId, int page, int size)
+    private async Task<IEnumerable<GetSimpleExerciseDto>> UtilGetSimpleExercises(Guid userId, Guid exerciseId, int page, int size)
     {
         var simpleExercises = await _simpleExerciseRepo.GetAll(userId, exerciseId, page, size);
-        var exercisesDto = _mapper.Map<IEnumerable<SimpleExercise>, IEnumerable<GetSimpleExerciseDto>>(simpleExercises);
+        var simpleExercisesDto = simpleExercises.Select(x => GetSimpleExerciseDtoMap.Map(x));
 
-        return exercisesDto;
+        return simpleExercisesDto;
     }
 }
