@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
-using GymAppApi.MiddleWare;
+using GymAppApi.Middleware;
+using GymAppApi.Middleware.Extension;
 using GymAppInfrastructure.AutoMapper;
 using GymAppInfrastructure.Extensions;
 using GymAppInfrastructure.Options;
@@ -20,6 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDb(builder.Configuration);
 builder.Services.AddServices();
 builder.Services.AddRepositories();
+builder.Services.AddMiddlewares();
 builder.Services.AddEmailSender(builder.Configuration);
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddMvcModel();
