@@ -26,7 +26,7 @@ public static class ProgramExtensions
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ISimpleExerciseService, SimpleExerciseService>();
         services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IUserRepo, UserRepo>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAccountService, AccountService>();
 
         return services;
@@ -36,7 +36,7 @@ public static class ProgramExtensions
     {
         services.AddScoped<IExerciseRepo, ExerciseRepo>();
         services.AddScoped<ISimpleExerciseRepo, SimpleExerciseRepo>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserRepo, UserRepo>();
 
         return services;
     }
