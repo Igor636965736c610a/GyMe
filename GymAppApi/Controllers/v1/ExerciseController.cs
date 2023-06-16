@@ -52,7 +52,7 @@ public class ExerciseController : ControllerBase
         return Ok(exercise);
     }
 
-    [HttpGet(ApiRoutes.Exercise.GetAllForeign)]
+    [HttpGet(ApiRoutes.Exercise.GetAll)]
     public async Task<IActionResult> GetAll([FromQuery] string userId,[FromQuery] int page,[FromQuery] int size)
     {
         if (!ModelState.IsValid)

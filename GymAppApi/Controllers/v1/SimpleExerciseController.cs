@@ -71,7 +71,7 @@ public class SimpleExerciseController : ControllerBase
         return Ok(result);
     }
     
-    [HttpGet(ApiRoutes.SimpleExercise.GetAllForeign)]
+    [HttpGet(ApiRoutes.SimpleExercise.GetAll)]
     public async Task<IActionResult> GetForeignSimpleExercises([FromQuery] string exerciseId, [FromQuery] string userId,[FromQuery] int page,[FromQuery] int size)
     {
         if (!ModelState.IsValid)
