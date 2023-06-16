@@ -71,20 +71,6 @@ public class SimpleExerciseController : ControllerBase
         return Ok(result);
     }
     
-    [HttpGet(ApiRoutes.SimpleExercise.GetAll)]
-    public async Task<IActionResult> GetSimpleExercises([FromQuery] string exerciseId, [FromQuery] int page,[FromQuery] int size)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-            
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var parseExerciseId = Guid.Parse(exerciseId);
-
-        var result =  await _simpleExerciseService.GetSimpleExercises(userId, parseExerciseId, page, size);
-
-        return Ok(result);
-    }
-    
     [HttpGet(ApiRoutes.SimpleExercise.GetAllForeign)]
     public async Task<IActionResult> GetForeignSimpleExercises([FromQuery] string exerciseId, [FromQuery] string userId,[FromQuery] int page,[FromQuery] int size)
     {
@@ -95,7 +81,7 @@ public class SimpleExerciseController : ControllerBase
         var id = Guid.Parse(userId);
         var parseExerciseId = Guid.Parse(exerciseId);
 
-        var result =  await _simpleExerciseService.GetForeignSimpleExercises(jwtId, parseExerciseId, id, page, size);
+        var result =  await _simpleExerciseService.GetSimpleExercises(jwtId, parseExerciseId, id, page, size);
 
         return Ok(result);
     }
