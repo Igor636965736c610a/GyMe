@@ -9,6 +9,5 @@ public interface ISimpleExerciseService
     Task UpdateSimpleExercise(Guid userId, Guid id, PutSimpleExerciseDto putExerciseDto);
     Task RemoveSimpleExercise(Guid userId, Guid id);
     Task<GetSimpleExerciseDto> GetSimpleExercise(Guid userId, Guid id);
-    Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid userId, Guid exerciseId, int page, int size);
-    Task<IEnumerable<GetSimpleExerciseDto>> GetForeignSimpleExercises(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size);
+    Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size);
 }

@@ -78,12 +78,10 @@ public class ExerciseService : IExerciseService
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
             throw new NullReferenceException("Not Found");
-        if (exercise.UserId != userId)
-        {
-            var owner = await _userRepo.Get(exercise.UserId);
-            if (owner.PrivateAccount && await _userRepo.GetFriend(userId, owner.Id) is null)
+        var owner = await _userRepo.Get(exercise.UserId);
+        
+        if (owner!.PrivateAccount && owner.Id != userId && await _userRepo.GetFriend(userId, userId) is null)
                 throw new ForbiddenException("You do not have the appropriate permissions");
-        }
 
         var maxRepSeries = await _exerciseRepo.GetMaxRep(exerciseId);
         GetSeriesDto? maxRepSeriesDto = null;
@@ -99,14 +97,7 @@ public class ExerciseService : IExerciseService
         return exerciseDto;
     }
 
-    public async Task<IEnumerable<GetExerciseDto>> GetExercises(Guid userId, int page, int size)
-    {
-        var exercises = await _exerciseRepo.GetAll(userId, page, size);
-        
-        return await UtilGetExercises(exercises);
-    }
-
-    public async Task<IEnumerable<GetExerciseDto>> GetForeignExercises(Guid jwtClaimId, Guid userId, int page, int size)
+    public async Task<IEnumerable<GetExerciseDto>> GetExercises(Guid jwtClaimId, Guid userId, int page, int size)
     {
         var owner = await _userRepo.Get(userId);
         if (owner is null)
