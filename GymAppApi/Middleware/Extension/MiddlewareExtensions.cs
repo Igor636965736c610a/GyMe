@@ -4,8 +4,8 @@ public static class MiddlewareExtensions
 {
     public static IServiceCollection AddMiddlewares(this IServiceCollection services)
     {
-        services.AddScoped<IMiddleware, DbTransactionMiddleware>();
-        services.AddScoped<IMiddleware, ErrorHandlerMiddleware>();
+        services.AddScoped<DbTransactionMiddleware>();
+        services.AddScoped<ErrorHandlerMiddleware>();
 
         return services;
     }

@@ -31,12 +31,12 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete(ApiRoutes.User.DeleteFriendRequest)]
-    public async Task<IActionResult> DeleteFriendRequest([FromBody] DeleteFriendRequest deleteFriendRequest)
+    public async Task<IActionResult> DeleteFriendRequest([FromRoute] string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var friendRequestToDeleteId = Guid.Parse(deleteFriendRequest.UserToDelete);
+        var friendRequestToDeleteId = Guid.Parse(id);
 
         await _userService.RemoveFriendRequest(userId, friendRequestToDeleteId);
 
@@ -44,12 +44,12 @@ public class UserController : ControllerBase
     }
     
     [HttpDelete(ApiRoutes.User.DeleteFriend)]
-    public async Task<IActionResult> DeleteFriend([FromBody] DeleteFriend deleteFriend)
+    public async Task<IActionResult> DeleteFriend([FromRoute] string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var friendRequestToDeleteId = Guid.Parse(deleteFriend.UserToDelete);
+        var friendRequestToDeleteId = Guid.Parse(id);
 
         await _userService.RemoveFriend(userId, friendRequestToDeleteId);
 
@@ -57,7 +57,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.User.GetUser)]
-    public async Task<IActionResult> GetUser([FromQuery] string id)
+    public async Task<IActionResult> GetUser([FromRoute] string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
