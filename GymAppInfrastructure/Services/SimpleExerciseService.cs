@@ -70,24 +70,17 @@ public class SimpleExerciseService : ISimpleExerciseService
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
             throw new NullReferenceException("Not Found");
-        if (simpleExercise.UserId != userId)
-        {
-            var owner = await _userRepo.Get(simpleExercise.UserId);
-            if (owner.PrivateAccount && await _userRepo.GetFriend(userId, owner.Id) is null)
-                throw new ForbiddenException("You do not have the appropriate permissions");
-        }
+        var owner = await _userRepo.Get(simpleExercise.UserId);
+        
+        if (owner!.PrivateAccount && owner.Id != userId && await _userRepo.GetFriend(userId, userId) is null)
+            throw new ForbiddenException("You do not have the appropriate permissions");
 
         var simpleExerciseDto = GetSimpleExerciseDtoMap.Map(simpleExercise);
 
         return simpleExerciseDto;
     }
 
-    public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid userId, Guid exerciseId, int page, int size)
-    {
-        return await UtilGetSimpleExercises(userId, exerciseId, page, size);
-    }
-    
-    public async Task<IEnumerable<GetSimpleExerciseDto>> GetForeignSimpleExercises(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size)
+    public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size)
     {
         var owner = await _userRepo.Get(userId);
         if (owner is null)
@@ -95,11 +88,6 @@ public class SimpleExerciseService : ISimpleExerciseService
         if (owner.PrivateAccount && userId != jwtClaimId && await _userRepo.GetFriend(userId, jwtClaimId) is null)
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        return await UtilGetSimpleExercises(userId, exerciseId, page, size);
-    }
-
-    private async Task<IEnumerable<GetSimpleExerciseDto>> UtilGetSimpleExercises(Guid userId, Guid exerciseId, int page, int size)
-    {
         var simpleExercises = await _simpleExerciseRepo.GetAll(userId, exerciseId, page, size);
         var simpleExercisesDto = simpleExercises.Select(x => GetSimpleExerciseDtoMap.Map(x));
 

@@ -52,18 +52,6 @@ public class ExerciseController : ControllerBase
         return Ok(exercise);
     }
 
-    [HttpGet(ApiRoutes.Exercise.GetAll)]
-    public async Task<IActionResult> GetAll([FromQuery] int page,[FromQuery] int size)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var exercises = await _exerciseService.GetExercises(userId, page, size);
-        
-        return Ok(exercises);
-    }
-
     [HttpGet(ApiRoutes.Exercise.GetAllForeign)]
     public async Task<IActionResult> GetAll([FromQuery] string userId,[FromQuery] int page,[FromQuery] int size)
     {
@@ -73,7 +61,7 @@ public class ExerciseController : ControllerBase
         var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var id =  Guid.Parse(userId);
 
-        var exercises = await _exerciseService.GetForeignExercises(jwtId, id, page, size);
+        var exercises = await _exerciseService.GetExercises(jwtId, id, page, size);
 
         return Ok(exercises);
     }
