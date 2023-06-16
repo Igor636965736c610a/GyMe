@@ -90,7 +90,7 @@ public class ExerciseService : IExerciseService
         var exerciseDto = new GetExerciseDto()
         {
             Id = exercise.Id,
-            ExercisesType = exercise.ExercisesType,
+            ExercisesType = _mapper.Map<ExercisesType, ExercisesTypeDto>(exercise.ExercisesType),
             MaxRep = maxRepSeriesDto,
         };
 
@@ -107,7 +107,16 @@ public class ExerciseService : IExerciseService
 
         var exercises = await _exerciseRepo.GetAll(userId, page, size);
 
-        return await UtilGetExercises(exercises);
+        var ids = exercises.Select(x => x.Id);
+        var maxReps = await _exerciseRepo.GetMaxReps(ids);
+        var exercisesDto = exercises.Select(x => new GetExerciseDto()
+        {
+            Id = x.Id,
+            ExercisesType = _mapper.Map<ExercisesType, ExercisesTypeDto>(x.ExercisesType),
+            MaxRep = _mapper.Map<Series, GetSeriesDto>(maxReps[x.Id])
+        });
+
+        return exercisesDto;
     }
 
     private static List<Exercise> AddExercise(Exercise exercise, List<Exercise> exercises)
@@ -156,20 +165,5 @@ public class ExerciseService : IExerciseService
         }
 
         return output;
-    }
-
-    private async Task<IEnumerable<GetExerciseDto>> UtilGetExercises(List<Exercise> exercises)
-    {
-        var ids = exercises.Select(x => x.Id);
-        var maxReps = await _exerciseRepo.GetMaxReps(ids);
-        var maxRepsDto = maxReps.ToDictionary(x => x.Key, x => _mapper.Map<Series, GetSeriesDto>(x.Value));
-        var exercisesDto = exercises.Select(x => new GetExerciseDto()
-        {
-            Id = x.Id,
-            ExercisesType = x.ExercisesType,
-            MaxRep = maxRepsDto[x.Id]
-        });
-
-        return exercisesDto;
     }
 }
