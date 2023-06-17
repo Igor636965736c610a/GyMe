@@ -18,12 +18,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost(ApiRoutes.User.AddFriend)]
-    public async Task<IActionResult> AddFriend([FromBody]PostAddFriend postAddFriend)
+    public async Task<IActionResult> AddFriend([FromRoute]string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var userToAddId = Guid.Parse(postAddFriend.UesrToAddId);
+        var userToAddId = Guid.Parse(id);
 
         await _userService.AddFriend(userId, userToAddId);
 
