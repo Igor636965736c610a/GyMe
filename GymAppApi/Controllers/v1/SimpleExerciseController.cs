@@ -38,13 +38,13 @@ public class SimpleExerciseController : ControllerBase
     }
 
     [HttpPut(ApiRoutes.SimpleExercise.Update)]
-    public async Task<IActionResult> UpdateSimpleExercise([FromBody] PutSimpleExerciseBody putSimpleExerciseBody)
+    public async Task<IActionResult> UpdateSimpleExercise([FromRoute] string id, [FromBody] PutSimpleExerciseBody putSimpleExerciseBody)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
             
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var exerciseId = Guid.Parse(putSimpleExerciseBody.ExerciseId);
+        var exerciseId = Guid.Parse(id);
 
         PutSimpleExerciseDto putSimpleExerciseDto = new()
         {
@@ -58,13 +58,13 @@ public class SimpleExerciseController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.SimpleExercise.Get)]
-    public async Task<IActionResult> GetSimpleExercise([FromQuery] string exerciseId)
+    public async Task<IActionResult> GetSimpleExercise([FromRoute] string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
             
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var guidExerciseId = Guid.Parse(exerciseId);
+        var guidExerciseId = Guid.Parse(id);
 
         var result =  await _simpleExerciseService.GetSimpleExercise(userId, guidExerciseId);
 
@@ -87,7 +87,7 @@ public class SimpleExerciseController : ControllerBase
     }
 
     [HttpDelete(ApiRoutes.SimpleExercise.Remove)]
-    public async Task<IActionResult> RemoveSimpleExercise([FromQuery] string id)
+    public async Task<IActionResult> RemoveSimpleExercise([FromRoute] string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

@@ -14,15 +14,15 @@ public static class ApiRoutes
     public static class Exercise
     {
         public const string Create = "create";
-        public const string Update = "update";
-        public const string GetAll = "getAll";
-        public const string Get = "get";
-        public const string Remove = "remove";
+        public const string Update = "update/{id}";
+        public const string GetAll = "get";
+        public const string Get = "get/{id}";
+        public const string Remove = "remove/{id}";
     }
     
     public static class User
     {
-        public const string AddFriend = "addFriend";
+        public const string AddFriend = "addFriend/{id}";
         public const string DeleteFriendRequest = "deleteFriendRequest{id}";
         public const string DeleteFriend = "deleteFriend{id}";
         public const string GetUser = "get{id}";
@@ -31,9 +31,9 @@ public static class ApiRoutes
     public static class SimpleExercise
     {
         public const string Create = "create";
-        public const string Update = "update";
-        public const string GetAll = "getAll";
-        public const string Get = "get";
-        public const string Remove = "remove";
+        public const string Update = "update/{id}";
+        public const string GetAll = "get";
+        public const string Get = "get/{id}";
+        public const string Remove = "remove/{id}";
     }
 }
