@@ -81,7 +81,7 @@ public class SimpleExerciseController : ControllerBase
         var id = Guid.Parse(userId);
         var parseExerciseId = Guid.Parse(exerciseId);
 
-        var result =  await _simpleExerciseService.GetSimpleExercises(jwtId, parseExerciseId, id, page, size);
+        var result =  await _simpleExerciseService.GetSimpleExercises(jwtId, id, parseExerciseId, page, size);
 
         return Ok(result);
     }

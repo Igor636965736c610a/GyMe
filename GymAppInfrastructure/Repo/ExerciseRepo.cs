@@ -27,15 +27,15 @@ public class ExerciseRepo : IExerciseRepo
 
     public async Task<List<Exercise>> GetAll(Guid userId)
         => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position).ToListAsync();
-    
+
     public async Task<Dictionary<Guid, Series>> GetMaxReps(IEnumerable<Guid> exercisesId)
-        => await _gymAppContext.Series
-            .Where(x => exercisesId.Contains(x.SimpleExercise.ExerciseId))
-            .GroupBy(x => x.SimpleExercise.ExerciseId)
+        => await _gymAppContext.Exercises
+            .Where(x => exercisesId.Contains(x.Id))
             .Select(x => new
             {
-                Value = x.OrderByDescending(e => e.Weight).ThenByDescending(e => e.NumberOfRepetitions).First(),
-                x.Key
+                Value = x.ConcreteExercise.SelectMany(e => e.Series).OrderByDescending(e => e.Weight)
+                    .ThenByDescending(e => e.NumberOfRepetitions).First(),
+                Key = x.Id
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value);
     
@@ -55,19 +55,30 @@ public class ExerciseRepo : IExerciseRepo
             .Take(size)
             .Select(x => calculate(x))
             .ToListAsync();
-    
+
     public async Task<Dictionary<Guid, IEnumerable<int>>> GetScores(IEnumerable<Guid> exercisesId, int size,
         Func<IEnumerable<Series>, int> calculate)
-        => await _gymAppContext.Series
-            .Where(x => exercisesId.Contains(x.SimpleExercise.ExerciseId))
-            .GroupBy(x => x.SimpleExercise)
-            .GroupBy(x => x.Key.ExerciseId)
+        => await _gymAppContext.Exercises
+            .Where(x => exercisesId.Contains(x.Id))
             .Select(x => new
             {
-                Value = x.OrderBy(e => e.Key.Date).Take(size),
-                x.Key
+                Value = x.ConcreteExercise.OrderBy(e => e.Date).Take(size).Select(e => e.Series),
+                Key = x.Id
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
+
+    //public async Task<Dictionary<Guid, IEnumerable<int>>> GetScores(IEnumerable<Guid> exercisesId, int size,
+    //    Func<IEnumerable<Series>, int> calculate)
+    //    => await _gymAppContext.Series
+    //        .Where(x => exercisesId.Contains(x.SimpleExercise.ExerciseId))
+    //        .GroupBy(x => x.SimpleExercise)
+    //        .GroupBy(x => x.Key.ExerciseId)
+    //        .Select(x => new
+    //        {
+    //            Value = x.OrderBy(e => e.Key.Date).Take(size),
+    //            x.Key
+    //        })
+    //        .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
 
     public async Task<bool> Create(Exercise exercise)
     {
