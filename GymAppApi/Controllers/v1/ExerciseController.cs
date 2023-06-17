@@ -39,15 +39,15 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.Exercise.Get)]
-    public async Task<IActionResult> Get([FromQuery] string exerciseId)
+    public async Task<IActionResult> Get([FromRoute] string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var id = Guid.Parse(exerciseId);
+        var exerciseId = Guid.Parse(id);
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         
-        var exercise = await _exerciseService.GetExercise(userId, id);
+        var exercise = await _exerciseService.GetExercise(userId, exerciseId);
         
         return Ok(exercise);
     }
@@ -67,33 +67,33 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpPut(ApiRoutes.Exercise.Update)]
-    public async Task<IActionResult> Update([FromBody] PutExerciseBody putExerciseBody,[FromQuery] string exerciseId)
+    public async Task<IActionResult> Update([FromBody] PutExerciseBody putExerciseBody,[FromRoute] string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var id = Guid.Parse(exerciseId);
+        var exerciseId = Guid.Parse(id);
         
         PutExerciseDto putExerciseDto = new()
         {
             Position = putExerciseBody.Position
         };
-        await _exerciseService.UpdateExercise(userId, id, putExerciseDto);
+        await _exerciseService.UpdateExercise(userId, exerciseId, putExerciseDto);
         
         return Ok();
     }
 
     [HttpDelete(ApiRoutes.Exercise.Remove)]
-    public async Task<IActionResult> Remove([FromQuery] string exerciseId)
+    public async Task<IActionResult> Remove([FromRoute] string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-        var id = Guid.Parse(exerciseId);
+        var exerciseId = Guid.Parse(id);
         
-        await _exerciseService.RemoveExercise(userId, id);
+        await _exerciseService.RemoveExercise(userId, exerciseId);
         
         return Ok();
     }
