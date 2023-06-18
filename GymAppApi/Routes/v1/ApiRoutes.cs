@@ -23,8 +23,8 @@ public static class ApiRoutes
     public static class User
     {
         public const string AddFriend = "addFriend/{id}";
-        public const string DeleteFriendRequest = "deleteFriendRequest{id}";
-        public const string DeleteFriend = "deleteFriend{id}";
+        public const string DeleteFriendRequest = "deleteFriendRequest/{id}";
+        public const string DeleteFriend = "deleteFriend/{id}";
         public const string GetUser = "get{id}";
     }
     
