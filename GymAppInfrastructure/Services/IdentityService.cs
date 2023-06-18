@@ -130,7 +130,8 @@ public class IdentityService : IIdentityService
         return new AuthenticationLoginResult
         {
             Success = true,
-            Token = tokenHandler.WriteToken(token)
+            Token = tokenHandler.WriteToken(token),
+            UserId = user.Id
         };
     }
 }

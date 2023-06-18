@@ -67,19 +67,6 @@ public class ExerciseRepo : IExerciseRepo
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
 
-    //public async Task<Dictionary<Guid, IEnumerable<int>>> GetScores(IEnumerable<Guid> exercisesId, int size,
-    //    Func<IEnumerable<Series>, int> calculate)
-    //    => await _gymAppContext.Series
-    //        .Where(x => exercisesId.Contains(x.SimpleExercise.ExerciseId))
-    //        .GroupBy(x => x.SimpleExercise)
-    //        .GroupBy(x => x.Key.ExerciseId)
-    //        .Select(x => new
-    //        {
-    //            Value = x.OrderBy(e => e.Key.Date).Take(size),
-    //            x.Key
-    //        })
-    //        .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
-
     public async Task<bool> Create(Exercise exercise)
     {
         await _gymAppContext.Exercises.AddAsync(exercise);
