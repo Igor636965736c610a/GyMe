@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymAppInfrastructure.Repo;
 
-public class UserRepo : IUserRepo
+internal class UserRepo : IUserRepo
 {
     private readonly GymAppContext _gymAppContext;
     public UserRepo(GymAppContext gymAppContext)

@@ -33,7 +33,7 @@ public class ExerciseController : ControllerBase
             Position = postExerciseBody.Position
         };
 
-        await _exerciseService.CreateExercise(postExerciseDto, userId);
+        await _exerciseService.Create(postExerciseDto, userId);
 
         return Ok();
     }
@@ -47,7 +47,7 @@ public class ExerciseController : ControllerBase
         var exerciseId = Guid.Parse(id);
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         
-        var exercise = await _exerciseService.GetExercise(userId, exerciseId);
+        var exercise = await _exerciseService.Get(userId, exerciseId);
         
         return Ok(exercise);
     }
@@ -61,7 +61,7 @@ public class ExerciseController : ControllerBase
         var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var id =  Guid.Parse(userId);
 
-        var exercises = await _exerciseService.GetExercises(jwtId, id, page, size);
+        var exercises = await _exerciseService.Get(jwtId, id, page, size);
 
         return Ok(exercises);
     }
@@ -79,7 +79,7 @@ public class ExerciseController : ControllerBase
         {
             Position = putExerciseBody.Position
         };
-        await _exerciseService.UpdateExercise(userId, exerciseId, putExerciseDto);
+        await _exerciseService.Update(userId, exerciseId, putExerciseDto);
         
         return Ok();
     }
@@ -93,7 +93,7 @@ public class ExerciseController : ControllerBase
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var exerciseId = Guid.Parse(id);
         
-        await _exerciseService.RemoveExercise(userId, exerciseId);
+        await _exerciseService.Remove(userId, exerciseId);
         
         return Ok();
     }

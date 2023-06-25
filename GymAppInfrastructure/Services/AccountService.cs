@@ -8,7 +8,7 @@ using GymAppInfrastructure.IServices;
 
 namespace GymAppInfrastructure.Services;
 
-public class AccountService : IAccountService
+internal class AccountService : IAccountService
 {
     private readonly IUserRepo _userRepo;
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ public class AccountService : IAccountService
         _mapper = mapper;
     }
 
-    public async Task<GetAccountDto> GetAccountInf(Guid userId)
+    public async Task<GetAccountDto> GetInf(Guid userId)
     {
         var user = await _userRepo.Get(userId);
         if (user is null)

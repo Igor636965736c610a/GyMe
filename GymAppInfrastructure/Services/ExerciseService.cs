@@ -9,7 +9,7 @@ using GymAppInfrastructure.IServices;
 
 namespace GymAppInfrastructure.Services;
 
-public class ExerciseService : IExerciseService
+internal class ExerciseService : IExerciseService
 {
     private readonly IMapper _mapper;
     private readonly IExerciseRepo _exerciseRepo;
@@ -21,7 +21,7 @@ public class ExerciseService : IExerciseService
         _userRepo = userRepo;
     }
     
-    public async Task CreateExercise(PostExerciseDto postExerciseDto, Guid userId)
+    public async Task Create(PostExerciseDto postExerciseDto, Guid userId)
     {
         if (postExerciseDto.Position is null)
             postExerciseDto.Position = 0;
@@ -41,7 +41,7 @@ public class ExerciseService : IExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task UpdateExercise(Guid userId, Guid exerciseId, PutExerciseDto putExerciseDto)
+    public async Task Update(Guid userId, Guid exerciseId, PutExerciseDto putExerciseDto)
     {
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
@@ -58,7 +58,7 @@ public class ExerciseService : IExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task RemoveExercise(Guid userId, Guid exerciseId)
+    public async Task Remove(Guid userId, Guid exerciseId)
     {
         var exercises = await _exerciseRepo.GetAll(userId);
         var exercise = await _exerciseRepo.Get(exerciseId);
@@ -73,14 +73,14 @@ public class ExerciseService : IExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task<GetExerciseDto> GetExercise(Guid userId, Guid exerciseId)
+    public async Task<GetExerciseDto> Get(Guid userId, Guid exerciseId)
     {
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
             throw new NullReferenceException("Not Found");
         var owner = await _userRepo.Get(exercise.UserId);
         
-        if (owner!.PrivateAccount && owner.Id != userId && await _userRepo.GetFriend(userId, userId) is null)
+        if (owner!.PrivateAccount && owner.Id != userId && await _userRepo.GetFriend(userId, owner.Id) is null)
                 throw new ForbiddenException("You do not have the appropriate permissions");
 
         var maxRepSeries = await _exerciseRepo.GetMaxRep(exerciseId);
@@ -97,7 +97,7 @@ public class ExerciseService : IExerciseService
         return exerciseDto;
     }
 
-    public async Task<IEnumerable<GetExerciseDto>> GetExercises(Guid jwtClaimId, Guid userId, int page, int size)
+    public async Task<IEnumerable<GetExerciseDto>> Get(Guid jwtClaimId, Guid userId, int page, int size)
     {
         var owner = await _userRepo.Get(userId);
         if (owner is null)

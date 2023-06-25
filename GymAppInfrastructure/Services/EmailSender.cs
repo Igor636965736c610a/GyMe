@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace GymAppInfrastructure.Services;
 
-public class EmailSender : IEmailSender
+internal class EmailSender : IEmailSender
 {
     private readonly EmailSenderOptions _emailSenderOptions;
 
