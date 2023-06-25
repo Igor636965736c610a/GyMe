@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymAppInfrastructure.Repo;
 
-public class ExerciseRepo : IExerciseRepo
+internal class ExerciseRepo : IExerciseRepo
 {
     private readonly GymAppContext _gymAppContext;
     public ExerciseRepo(GymAppContext gymAppContext)
@@ -19,6 +19,10 @@ public class ExerciseRepo : IExerciseRepo
     public async Task<Exercise?> Get(Guid userId, ExercisesType exercisesType)
         => await _gymAppContext.Exercises.FirstOrDefaultAsync(x =>
             x.UserId == userId && x.ExercisesType == exercisesType);
+
+    public async Task<IEnumerable<Exercise>> GetAll(IEnumerable<Guid> exerciseIds)
+        => await _gymAppContext.Exercises.Where(x => exerciseIds.Contains(x.Id))
+            .ToListAsync();
 
     public async Task<List<Exercise>> GetAll(Guid userId, int page, int size)
         => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position)
@@ -46,23 +50,22 @@ public class ExerciseRepo : IExerciseRepo
             .ThenByDescending(s => s.NumberOfRepetitions)
             .FirstOrDefaultAsync();
 
-    public async Task<IEnumerable<int>> GetScore(Guid exerciseId, int size,
+    public async Task<IEnumerable<int>?> GetScore(Guid exerciseId, int period,
         Func<IEnumerable<Series>, int> calculate)
-        => await _gymAppContext.Series
-            .Where(x => x.SimpleExercise.ExerciseId == exerciseId)
-            .GroupBy(x => x.SimpleExercise)
-            .OrderBy(x => x.Key.Date)
-            .Take(size)
-            .Select(x => calculate(x))
-            .ToListAsync();
+        => await _gymAppContext.Exercises
+            .Where(x => x.Id == exerciseId)
+            .Select(x => x.ConcreteExercise.OrderBy(e => e.Date).Take(period).Select(e => calculate(e.Series)))
+            .FirstOrDefaultAsync();
+    
+            
 
-    public async Task<Dictionary<Guid, IEnumerable<int>>> GetScores(IEnumerable<Guid> exercisesId, int size,
+    public async Task<Dictionary<Guid, IEnumerable<int>>?> GetScores(IEnumerable<Guid> exercisesId, int period,
         Func<IEnumerable<Series>, int> calculate)
         => await _gymAppContext.Exercises
             .Where(x => exercisesId.Contains(x.Id))
             .Select(x => new
             {
-                Value = x.ConcreteExercise.OrderBy(e => e.Date).Take(size).Select(e => e.Series),
+                Value = x.ConcreteExercise.OrderBy(e => e.Date).Take(period).Select(e => e.Series),
                 Key = x.Id
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));

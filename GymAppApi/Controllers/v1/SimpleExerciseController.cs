@@ -32,7 +32,7 @@ public class SimpleExerciseController : ControllerBase
             Description = postSimpleExerciseBody.Description
         };
 
-        await _simpleExerciseService.CreateSimpleExercise(postSimpleExerciseDto, userId);
+        await _simpleExerciseService.Create(postSimpleExerciseDto, userId);
 
         return Ok();
     }
@@ -52,7 +52,7 @@ public class SimpleExerciseController : ControllerBase
             Description = putSimpleExerciseBody.Description
         };
 
-        await _simpleExerciseService.UpdateSimpleExercise(userId, exerciseId, putSimpleExerciseDto);
+        await _simpleExerciseService.Update(userId, exerciseId, putSimpleExerciseDto);
         
         return Ok();
     }
@@ -66,7 +66,7 @@ public class SimpleExerciseController : ControllerBase
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var guidExerciseId = Guid.Parse(id);
 
-        var result =  await _simpleExerciseService.GetSimpleExercise(userId, guidExerciseId);
+        var result =  await _simpleExerciseService.Get(userId, guidExerciseId);
 
         return Ok(result);
     }
@@ -81,7 +81,7 @@ public class SimpleExerciseController : ControllerBase
         var id = Guid.Parse(userId);
         var parseExerciseId = Guid.Parse(exerciseId);
 
-        var result =  await _simpleExerciseService.GetSimpleExercises(jwtId, id, parseExerciseId, page, size);
+        var result =  await _simpleExerciseService.Get(jwtId, id, parseExerciseId, page, size);
 
         return Ok(result);
     }
@@ -95,7 +95,7 @@ public class SimpleExerciseController : ControllerBase
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var exerciseId = Guid.Parse(id);
 
-        await _simpleExerciseService.RemoveSimpleExercise(userId, exerciseId);
+        await _simpleExerciseService.Remove(userId, exerciseId);
 
         return Ok();
     }

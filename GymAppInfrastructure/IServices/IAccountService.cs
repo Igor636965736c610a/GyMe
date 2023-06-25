@@ -5,6 +5,6 @@ namespace GymAppInfrastructure.IServices;
 
 public interface IAccountService
 {
-    Task<GetAccountDto> GetAccountInf(Guid userId);
+    Task<GetAccountDto> GetInf(Guid userId);
     Task Update(Guid userId, PutUserDto putUserDto);
 }

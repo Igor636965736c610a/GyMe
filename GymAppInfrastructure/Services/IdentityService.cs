@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace GymAppInfrastructure.Services;
 
-public class IdentityService : IIdentityService
+internal class IdentityService : IIdentityService
 {
     private readonly UserManager<User> _userManager;
     private readonly JwtSettings _jwtSettings;

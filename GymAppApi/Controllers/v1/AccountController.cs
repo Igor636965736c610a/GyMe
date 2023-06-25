@@ -103,7 +103,7 @@ public class AccountController : ControllerBase
 
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
 
-        var accountInf = await _accountService.GetAccountInf(userId);
+        var accountInf = await _accountService.GetInf(userId);
 
         return Ok(accountInf);
     }

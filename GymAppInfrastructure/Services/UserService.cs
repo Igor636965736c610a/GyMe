@@ -7,7 +7,7 @@ using GymAppInfrastructure.IServices;
 
 namespace GymAppInfrastructure.Services;
 
-public class UserService : IUserService
+internal class UserService : IUserService
 {
     private readonly IUserRepo _userRepo;
     private readonly IMapper _mapper;

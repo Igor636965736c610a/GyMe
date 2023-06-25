@@ -28,6 +28,7 @@ public static class ProgramExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IChartService, ChartService>();
 
         return services;
     }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymAppInfrastructure.Repo;
 
-public class SimpleExerciseRepo : ISimpleExerciseRepo
+internal class SimpleExerciseRepo : ISimpleExerciseRepo
 {
     private readonly GymAppContext _gymAppContext;
     public SimpleExerciseRepo(GymAppContext gymAppContext)
@@ -41,7 +41,4 @@ public class SimpleExerciseRepo : ISimpleExerciseRepo
         _gymAppContext.SimpleExercises.Remove(exercise);
         return await UtilsRepo.Save(_gymAppContext);
     }
-
-    public static int CalculateScore(int weight, int reps)
-        => (int)Math.Round(weight / (1.0278 - 0.0278 * reps), 2, MidpointRounding.AwayFromZero);
 }

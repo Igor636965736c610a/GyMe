@@ -3,7 +3,7 @@ using GymAppInfrastructure.IServices;
 
 namespace GymAppInfrastructure.Services;
 
-public class EmailConfirmationService : IEmailConfirmationService
+internal class EmailConfirmationService : IEmailConfirmationService
 {
     private readonly IEmailSender _emailSender;
 
