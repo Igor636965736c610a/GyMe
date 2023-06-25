@@ -7,8 +7,6 @@ using GymAppInfrastructure.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers()
     .AddJsonOptions(x =>
     {
@@ -26,6 +24,15 @@ builder.Services.AddEmailSender(builder.Configuration);
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddMvcModel();
 builder.Services.AddSingleton(AutoMapperConfig.Initialize());
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToAccessDenied =
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.FromResult<object>(null!);
+        };
+});
 var swaggerOptions = new SwaggerOptions();
 builder.Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
 
@@ -43,6 +50,7 @@ if (app.Environment.IsDevelopment())
         option.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description);
     });
 }
+
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseMiddleware<DbTransactionMiddleware>();

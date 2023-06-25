@@ -5,9 +5,9 @@ namespace GymAppInfrastructure.IServices;
 
 public interface ISimpleExerciseService
 {
-    Task CreateSimpleExercise(PostSimpleExerciseDto postSimpleExerciseDto, Guid userId);
-    Task UpdateSimpleExercise(Guid userId, Guid id, PutSimpleExerciseDto putExerciseDto);
-    Task RemoveSimpleExercise(Guid userId, Guid id);
-    Task<GetSimpleExerciseDto> GetSimpleExercise(Guid userId, Guid id);
-    Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size);
+    Task Create(PostSimpleExerciseDto postSimpleExerciseDto, Guid userId);
+    Task Update(Guid userId, Guid id, PutSimpleExerciseDto putExerciseDto);
+    Task Remove(Guid userId, Guid id);
+    Task<GetSimpleExerciseDto> Get(Guid userId, Guid id);
+    Task<IEnumerable<GetSimpleExerciseDto>> Get(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size);
 }

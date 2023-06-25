@@ -9,7 +9,7 @@ using GymAppInfrastructure.MyMapper;
 
 namespace GymAppInfrastructure.Services;
 
-public class SimpleExerciseService : ISimpleExerciseService
+internal class SimpleExerciseService : ISimpleExerciseService
 {
     private readonly ISimpleExerciseRepo _simpleExerciseRepo;
     private readonly IExerciseRepo _exerciseRepo;
@@ -21,7 +21,7 @@ public class SimpleExerciseService : ISimpleExerciseService
         _userRepo = userRepo;
     }
     
-    public async Task CreateSimpleExercise(PostSimpleExerciseDto postSimpleExerciseDto, Guid userId)
+    public async Task Create(PostSimpleExerciseDto postSimpleExerciseDto, Guid userId)
     {
         var exercise = await _exerciseRepo.Get(postSimpleExerciseDto.ExerciseId);
         if (exercise is null)
@@ -37,7 +37,7 @@ public class SimpleExerciseService : ISimpleExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task UpdateSimpleExercise(Guid userId, Guid id, PutSimpleExerciseDto putExerciseDto)
+    public async Task Update(Guid userId, Guid id, PutSimpleExerciseDto putExerciseDto)
     {
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
@@ -53,7 +53,7 @@ public class SimpleExerciseService : ISimpleExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task RemoveSimpleExercise(Guid userId, Guid id)
+    public async Task Remove(Guid userId, Guid id)
     {
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
@@ -65,7 +65,7 @@ public class SimpleExerciseService : ISimpleExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task<GetSimpleExerciseDto> GetSimpleExercise(Guid userId, Guid id)
+    public async Task<GetSimpleExerciseDto> Get(Guid userId, Guid id)
     {
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
@@ -80,7 +80,7 @@ public class SimpleExerciseService : ISimpleExerciseService
         return simpleExerciseDto;
     }
 
-    public async Task<IEnumerable<GetSimpleExerciseDto>> GetSimpleExercises(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size)
+    public async Task<IEnumerable<GetSimpleExerciseDto>> Get(Guid jwtClaimId, Guid userId, Guid exerciseId, int page, int size)
     {
         var owner = await _userRepo.Get(userId);
         if (owner is null)
