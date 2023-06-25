@@ -36,4 +36,10 @@ public static class ApiRoutes
         public const string Get = "get/{id}";
         public const string Remove = "remove/{id}";
     }
+    
+    public static class Chart
+    {
+        public const string Get = "get/{exerciseId}";
+        public const string GetAll = "get/exercisesId";
+    }
 }
