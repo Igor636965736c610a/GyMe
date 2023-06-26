@@ -43,4 +43,13 @@ internal class AccountService : IAccountService
         if (!result)
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
+
+    public async Task Remove(Guid userId)
+    {
+        var user = await _userRepo.Get(userId);
+        if (user is null)
+            throw new InvalidOperationException("Something went wrong");
+
+        await _userRepo.RemoveUser(user);
+    }
 }

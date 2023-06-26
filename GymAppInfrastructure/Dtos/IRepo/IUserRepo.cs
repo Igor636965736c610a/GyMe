@@ -16,4 +16,5 @@ public interface IUserRepo
     Task<bool> RemoveFriend(UserFriend userFriend);
     Task<bool> RemoveFriend(List<UserFriend> userFriend);
     Task<bool> Update(User user);
+    Task<bool> RemoveUser(User user);
 }

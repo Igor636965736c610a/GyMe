@@ -1,5 +1,6 @@
 ﻿using GymAppInfrastructure.ApiResponses;
 using GymAppInfrastructure.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymAppApi.Controllers.v1;
@@ -13,6 +14,7 @@ public class MtdController : ControllerBase
         _jokeApi = jokeApi;
     }
 
+    [AllowAnonymous]
     [HttpGet("get")]
     public async Task<IActionResult> GetJoke()
     {
