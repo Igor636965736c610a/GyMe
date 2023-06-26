@@ -1,19 +1,21 @@
 ﻿using GymAppApi.Routes.v1;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Options;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymAppApi.Controllers.v1;
 
+[Authorize]
 [Route("[controller]")]
 public class ChartController : ControllerBase
 {
     private readonly IChartService _chartService;
-
     public ChartController(IChartService chartService)
     {
         _chartService = chartService;
     }
+    
 
     [HttpGet(ApiRoutes.Chart.Get)]
     public async Task<IActionResult> GetChart([FromRoute]string exerciseId, [FromQuery]ChartOption option, [FromQuery]int period)

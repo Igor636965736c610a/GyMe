@@ -3,6 +3,7 @@ using GymAppApi.Routes.v1;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymAppApi.Controllers.v1;
@@ -21,6 +22,7 @@ public class AccountController : ControllerBase
         _accountService = accountService;
     }
 
+    [AllowAnonymous]
     [HttpPost(ApiRoutes.Account.Register)]
     public async Task<IActionResult> Register([FromBody]RegisterUserDto registerUserDto)
     {
@@ -39,6 +41,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
     
+    [AllowAnonymous]
     [HttpGet(ApiRoutes.Account.ConfirmEmail)]
     public async Task<IActionResult> ConfirmEmail([FromQuery]string userId,[FromQuery] string token)
     {
@@ -56,6 +59,7 @@ public class AccountController : ControllerBase
         return Ok("Email confirmed successfully");
     }
     
+    [AllowAnonymous]
     [HttpPost(ApiRoutes.Account.Login)]
     public async Task<IActionResult> Login([FromBody]LoginUserDto loginUserDto)
     {
@@ -90,6 +94,20 @@ public class AccountController : ControllerBase
         };
 
         await _accountService.Update(userId, putUserDto);
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpDelete(ApiRoutes.Account.RemoveUser)]
+    public async Task<IActionResult> RemoveUser()
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+
+        await _accountService.Remove(userId);
 
         return Ok();
     }
