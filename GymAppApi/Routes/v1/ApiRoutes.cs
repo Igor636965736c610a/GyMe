@@ -9,6 +9,7 @@ public static class ApiRoutes
         public const string Register = "register";
         public const string ConfirmEmail = "confirmEmail";
         public const string UpdateUser = "update";
+        public const string RemoveUser = "remove";
     }
 
     public static class Exercise
