@@ -7,4 +7,5 @@ public interface IAccountService
 {
     Task<GetAccountDto> GetInf(Guid userId);
     Task Update(Guid userId, PutUserDto putUserDto);
+    Task Remove(Guid userId);
 }

@@ -71,4 +71,10 @@ internal class UserRepo : IUserRepo
         _gymAppContext.Users.Update(user);
         return await UtilsRepo.Save(_gymAppContext);
     }
+
+    public async Task<bool> RemoveUser(User user)
+    {
+        _gymAppContext.Users.Remove(user);
+        return await UtilsRepo.Save(_gymAppContext);
+    }
 }
