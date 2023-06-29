@@ -2,9 +2,12 @@
 using GymAppApi.Routes.v1;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Bcpg;
 
 namespace GymAppApi.Controllers.v1;
 
@@ -12,13 +15,11 @@ namespace GymAppApi.Controllers.v1;
 public class AccountController : ControllerBase
 {
     private readonly IIdentityService _identityService;
-    private readonly IEmailConfirmationService _emailConfirmationService;
     private readonly IAccountService _accountService;
 
-    public AccountController(IIdentityService identityService, IEmailConfirmationService emailConfirmationService, IAccountService accountService)
+    public AccountController(IIdentityService identityService, IAccountService accountService)
     {
         _identityService = identityService;
-        _emailConfirmationService = emailConfirmationService;
         _accountService = accountService;
     }
 
@@ -28,29 +29,34 @@ public class AccountController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        
-        var result = await _identityService.Register(registerUserDto);
+
+        Func<string, string, string> createCallbackUrl = (userIdParam, codeParam)
+            => Request.Scheme + "://" + Request.Host + Url.Action("ConfirmEmail", "Account", new
+            {
+                userId = userIdParam,
+                code = codeParam
+            });
+            
+        var result = await _identityService.Register(registerUserDto, createCallbackUrl);
 
         if (!result.Success)
         {
             return BadRequest(result.Errors);
         }
 
-        await _emailConfirmationService.SendConfirmationEmailAsync(registerUserDto.Email, result.callbackUrlEmailToken);
-
         return Ok(result);
     }
     
     [AllowAnonymous]
     [HttpGet(ApiRoutes.Account.ConfirmEmail)]
-    public async Task<IActionResult> ConfirmEmail([FromQuery]string userId,[FromQuery] string token)
+    public async Task<IActionResult> ConfirmEmail([FromQuery]string userId,[FromQuery] string code)
     {
-        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
         {
             return BadRequest("Invalid token or user id");
         }
 
-        var result = await _identityService.ConfirmEmail(userId, token);
+        var result = await _identityService.ConfirmEmail(userId, code);
         if (!result)
         {
             return BadRequest("Failed to confirm email");
