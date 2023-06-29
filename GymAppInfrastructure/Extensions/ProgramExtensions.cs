@@ -21,7 +21,6 @@ public static class ProgramExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IEmailConfirmationService, EmailConfirmationService>();
         services.AddScoped<IExerciseService, ExerciseService>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ISimpleExerciseService, SimpleExerciseService>();
@@ -116,14 +115,6 @@ public static class ProgramExtensions
         return services;
     }
 
-    public static IServiceCollection AddEmailSender(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.Configure<EmailSenderOptions>(configuration.GetSection("EmailSender"));
-        services.AddTransient<IEmailSender, EmailSender>();
-
-        return services;
-    }
-
     public static IServiceCollection ConfigureRefit(this IServiceCollection services)
     {
         services.AddRefitClient<IJokeApiService>()
@@ -144,6 +135,13 @@ public static class ProgramExtensions
             });
         });
         
+        return services;
+    }
+
+    public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<EmailOptions>(configuration.GetSection("EmailOptions"));
+
         return services;
     }
 }

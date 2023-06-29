@@ -27,6 +27,7 @@ public static class ApiRoutes
         public const string DeleteFriendRequest = "deleteFriendRequest/{id}";
         public const string DeleteFriend = "deleteFriend/{id}";
         public const string GetUser = "get{id}";
+        public const string GetFriends = "getFriends";
     }
     
     public static class SimpleExercise
