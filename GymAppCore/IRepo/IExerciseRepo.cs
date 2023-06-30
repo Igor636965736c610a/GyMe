@@ -9,11 +9,14 @@ public interface IExerciseRepo
     Task<IEnumerable<Exercise>> GetAll(IEnumerable<Guid> exerciseIds);
     Task<List<Exercise>> GetAll(Guid userId, int page, int size);
     Task<List<Exercise>> GetAll(Guid userId);
+    Task<List<Exercise>> GetAll(Guid userId, IEnumerable<ExercisesType> exercisesType);
     Task<Dictionary<Guid, Series>> GetMaxReps(IEnumerable<Guid> exercisesId);
     Task<Series?> GetMaxRep(Guid exerciseId);
     Task<IEnumerable<int>?> GetScore(Guid exerciseId, int period,
         Func<IEnumerable<Series>, int> calculate);
     Task<Dictionary<Guid, IEnumerable<int>>?> GetScores(IEnumerable<Guid> exercisesId, int period,
+        Func<IEnumerable<Series>, int> calculate);
+    Task<Dictionary<string, IEnumerable<int>>?> GetScores(IEnumerable<ExercisesType> exercisesId, int period,
         Func<IEnumerable<Series>, int> calculate);
     Task<bool> Create(Exercise exercise);
     Task<bool> Update(Exercise exercise);

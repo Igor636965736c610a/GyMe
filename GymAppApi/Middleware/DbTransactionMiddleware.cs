@@ -25,7 +25,7 @@ public class DbTransactionMiddleware : IMiddleware
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            throw new DbCommitException("DbTransaction", ex); //mój exception se zrobie jakiś 
+            throw; //new DbCommitException("DbTransaction", ex); //mój exception se zrobie jakiś 
         }
     }
 }
