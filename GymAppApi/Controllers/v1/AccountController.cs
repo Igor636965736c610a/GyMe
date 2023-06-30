@@ -141,9 +141,9 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
 
-        await _accountService.Remove(userId);
+        await _accountService.Remove(jwtId);
 
         return Ok();
     }
@@ -155,9 +155,9 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
 
-        var accountInf = await _accountService.GetInf(userId);
+        var accountInf = await _accountService.GetInf(jwtId);
 
         return Ok(accountInf);
     }

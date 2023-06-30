@@ -23,10 +23,10 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var userToAddId = Guid.Parse(id);
 
-        await _userService.AddFriend(userId, userToAddId);
+        await _userService.AddFriend(jwtId, userToAddId);
 
         return Ok();
     }
@@ -36,10 +36,10 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var friendRequestToDeleteId = Guid.Parse(id);
 
-        await _userService.RemoveFriendRequest(userId, friendRequestToDeleteId);
+        await _userService.RemoveFriendRequest(jwtId, friendRequestToDeleteId);
 
         return Ok();
     }
@@ -49,10 +49,10 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var friendRequestToDeleteId = Guid.Parse(id);
 
-        await _userService.RemoveFriend(userId, friendRequestToDeleteId);
+        await _userService.RemoveFriend(jwtId, friendRequestToDeleteId);
 
         return Ok();
     }
@@ -62,9 +62,11 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+        
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var userId = Guid.Parse(id);
 
-        var result = await _userService.GetUser(userId);
+        var result = await _userService.GetUser(jwtId, userId);
 
         return Ok(result);
     }
@@ -74,9 +76,10 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
 
-        var friends = await _userService.GetFriends(userId, page, size);
+        var friends = await _userService.GetFriends(jwtId, page, size);
 
         return Ok(friends);
     }

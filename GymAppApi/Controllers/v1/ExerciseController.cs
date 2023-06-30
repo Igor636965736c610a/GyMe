@@ -25,7 +25,7 @@ public class ExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
 
         PostExerciseDto postExerciseDto = new()
         {
@@ -33,7 +33,7 @@ public class ExerciseController : ControllerBase
             Position = postExerciseBody.Position
         };
 
-        await _exerciseService.Create(postExerciseDto, userId);
+        await _exerciseService.Create(postExerciseDto, jwtId);
 
         return Ok();
     }
@@ -45,9 +45,9 @@ public class ExerciseController : ControllerBase
             return BadRequest(ModelState);
 
         var exerciseId = Guid.Parse(id);
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         
-        var exercise = await _exerciseService.Get(userId, exerciseId);
+        var exercise = await _exerciseService.Get(jwtId, exerciseId);
         
         return Ok(exercise);
     }
@@ -72,14 +72,14 @@ public class ExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var exerciseId = Guid.Parse(id);
         
         PutExerciseDto putExerciseDto = new()
         {
             Position = putExerciseBody.Position
         };
-        await _exerciseService.Update(userId, exerciseId, putExerciseDto);
+        await _exerciseService.Update(jwtId, exerciseId, putExerciseDto);
         
         return Ok();
     }
@@ -90,10 +90,10 @@ public class ExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var exerciseId = Guid.Parse(id);
         
-        await _exerciseService.Remove(userId, exerciseId);
+        await _exerciseService.Remove(jwtId, exerciseId);
         
         return Ok();
     }

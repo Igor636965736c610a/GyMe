@@ -21,15 +21,15 @@ internal class SimpleExerciseService : ISimpleExerciseService
         _userRepo = userRepo;
     }
     
-    public async Task Create(PostSimpleExerciseDto postSimpleExerciseDto, Guid userId)
+    public async Task Create(PostSimpleExerciseDto postSimpleExerciseDto, Guid jwtId)
     {
         var exercise = await _exerciseRepo.Get(postSimpleExerciseDto.ExerciseId);
         if (exercise is null)
             throw new InvalidOperationException("Exercise does not exist");
-        if(exercise.UserId != userId)
+        if(exercise.UserId != jwtId)
             throw new ForbiddenException("You do not have the appropriate permissions");
         
-        var simpleExercise = new SimpleExercise(DateTime.UtcNow, postSimpleExerciseDto.Description, userId, exercise, postSimpleExerciseDto.Series);
+        var simpleExercise = new SimpleExercise(DateTime.UtcNow, postSimpleExerciseDto.Description, jwtId, exercise, postSimpleExerciseDto.Series);
         var series = UtilsServices.SeriesFromString(postSimpleExerciseDto.Series, simpleExercise);
         simpleExercise.Series = series;
         
@@ -37,12 +37,12 @@ internal class SimpleExerciseService : ISimpleExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task Update(Guid userId, Guid id, PutSimpleExerciseDto putExerciseDto)
+    public async Task Update(Guid jwtId, Guid id, PutSimpleExerciseDto putExerciseDto)
     {
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
             throw new InvalidOperationException("Not Found");
-        if (simpleExercise.UserId != userId)
+        if (simpleExercise.UserId != jwtId)
             throw new ForbiddenException("You do not have access to this data");
         var series = UtilsServices.SeriesFromString(putExerciseDto.Series, simpleExercise);
         simpleExercise.Description = putExerciseDto.Description;
@@ -53,12 +53,12 @@ internal class SimpleExerciseService : ISimpleExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task Remove(Guid userId, Guid id)
+    public async Task Remove(Guid jwtId, Guid id)
     {
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
             throw new NullReferenceException("Not Found");
-        if (simpleExercise.UserId != userId)
+        if (simpleExercise.UserId != jwtId)
             throw new ForbiddenException("You do not have access to this data");
 
         if(!await _simpleExerciseRepo.Remove(simpleExercise))
