@@ -101,8 +101,11 @@ internal class UserService : IUserService
             throw new NullReferenceException("User does not exist");
         
         var userDto = _mapper.Map<User, GetUserDto>(user);
-        
-        if (await _userRepo.GetFriend(jwtId, id) is not null)
+
+        if (jwtId == id)
+        {
+        }
+        else if (await _userRepo.GetFriend(jwtId, id) is not null)
         {
             userDto.FriendStatus = FriendStatus.Friends;
         }
