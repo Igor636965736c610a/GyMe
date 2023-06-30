@@ -1,13 +1,12 @@
-﻿using GymAppApi.BodyRequest.User;
+﻿using System.Security.Claims;
+using GymAppApi.BodyRequest.User;
 using GymAppApi.Routes.v1;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Options;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Org.BouncyCastle.Bcpg;
 
 namespace GymAppApi.Controllers.v1;
 
@@ -81,6 +80,37 @@ public class AccountController : ControllerBase
         
         return Ok(result);
     }
+    
+    //public IActionResult ExternalLoginFacebook()
+    //{
+    //    var authenticationProperties = new AuthenticationProperties
+    //    {
+    //        RedirectUri = Url.Action("ExternalLoginCallback", "Account")
+    //    };
+    //    return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
+    //}
+    //
+    //[AllowAnonymous]
+    //public async Task<IActionResult> ExternalLoginCallback()
+    //{
+    //    var authenticateResult = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+    //    if (!authenticateResult.Succeeded)
+    //    {
+    //        // Obsłuż błąd logowania/rejestracji
+    //        return RedirectToAction("Login", "Account");
+    //    }
+//
+    //    // Pobierz dane użytkownika z authenticateResult.Principal.Claims i utwórz konto użytkownika
+    //    // Przykład:
+    //    var userId = authenticateResult.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+    //    var email = authenticateResult.Principal.FindFirstValue(ClaimTypes.Email);
+    //    var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
+//
+    //    // Zaimplementuj swoją logikę rejestracji użytkownika
+//
+    //    // Przekieruj do strony po zalogowaniu
+    //    return Ok(); //RedirectToAction("Index", "Home");
+    //}
 
     [Authorize]
     [HttpPut(ApiRoutes.Account.UpdateUser)]
