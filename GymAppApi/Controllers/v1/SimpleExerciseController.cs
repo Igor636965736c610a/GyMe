@@ -23,7 +23,7 @@ public class SimpleExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
             
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
 
         PostSimpleExerciseDto postSimpleExerciseDto = new()
         {
@@ -32,7 +32,7 @@ public class SimpleExerciseController : ControllerBase
             Description = postSimpleExerciseBody.Description
         };
 
-        await _simpleExerciseService.Create(postSimpleExerciseDto, userId);
+        await _simpleExerciseService.Create(postSimpleExerciseDto, jwtId);
 
         return Ok();
     }
@@ -43,7 +43,7 @@ public class SimpleExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
             
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var exerciseId = Guid.Parse(id);
 
         PutSimpleExerciseDto putSimpleExerciseDto = new()
@@ -52,7 +52,7 @@ public class SimpleExerciseController : ControllerBase
             Description = putSimpleExerciseBody.Description
         };
 
-        await _simpleExerciseService.Update(userId, exerciseId, putSimpleExerciseDto);
+        await _simpleExerciseService.Update(jwtId, exerciseId, putSimpleExerciseDto);
         
         return Ok();
     }
@@ -63,10 +63,10 @@ public class SimpleExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
             
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var guidExerciseId = Guid.Parse(id);
 
-        var result =  await _simpleExerciseService.Get(userId, guidExerciseId);
+        var result =  await _simpleExerciseService.Get(jwtId, guidExerciseId);
 
         return Ok(result);
     }
@@ -92,10 +92,10 @@ public class SimpleExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
             
-        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+        var jwtId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
         var exerciseId = Guid.Parse(id);
 
-        await _simpleExerciseService.Remove(userId, exerciseId);
+        await _simpleExerciseService.Remove(jwtId, exerciseId);
 
         return Ok();
     }
