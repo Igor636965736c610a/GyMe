@@ -79,7 +79,7 @@ internal class ExerciseRepo : IExerciseRepo
             .Select(x => new
             {
                 Value = x.ConcreteExercise.OrderBy(e => e.Date).Take(period).Select(e => e.Series),
-                Key = x.ExercisesType.ToString()
+                Key = nameof(x.ExercisesType)
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
 
