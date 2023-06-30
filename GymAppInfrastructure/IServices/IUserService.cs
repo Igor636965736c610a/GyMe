@@ -10,6 +10,6 @@ public interface IUserService
     Task RemoveFriendRequest(Guid user1Id, Guid user2Id);
     Task AddFriend(Guid user1Id, Guid user2Id);
     Task<List<GetUserDto>> FindUsers(string key, int page, int size);
-    Task<GetUserDto> GetUser(Guid id);
+    Task<GetUserDto> GetUser(Guid jwtId ,Guid id);
     Task<IEnumerable<GetUserDto>> GetFriends(Guid userId, int page, int size);
 }

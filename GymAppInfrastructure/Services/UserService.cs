@@ -4,6 +4,7 @@ using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.Options;
 
 namespace GymAppInfrastructure.Services;
 
@@ -27,12 +28,11 @@ internal class UserService : IUserService
             throw new InvalidOperationException("something went wrong");
         if (friend2 is null)
             throw new InvalidOperationException("you don't have this friend");
-        if (!await _userRepo.RemoveFriend(new List<UserFriend>()
-            {
-                friend1,
-                friend2
-            }))
-            throw new SaveChangesDbException("Something went wrong while saving database changes");
+        await _userRepo.RemoveFriend(new List<UserFriend>()
+        {
+            friend1,
+            friend2
+        });
     }
 
     public async Task RemoveFriendRequest(Guid user1Id, Guid user2Id)
@@ -60,11 +60,11 @@ internal class UserService : IUserService
         {
             if (await _userRepo.GetFriendRequest(user1Id, user2Id) is not null)
                 return;
-            if (!await _userRepo.AddFriendRequest(new FriendRequest{
-                    SenderId = user1Id,
-                    RecipientId = user2Id }))
-                throw new SaveChangesDbException("Something went wrong while saving database changes");
-            return;
+            await _userRepo.AddFriendRequest(new FriendRequest
+            {
+                SenderId = user1Id,
+                RecipientId = user2Id
+            });
         }
         else
         {
@@ -94,14 +94,31 @@ internal class UserService : IUserService
         return usersDto;
     }
 
-    public async Task<GetUserDto> GetUser(Guid id)
+    public async Task<GetUserDto> GetUser(Guid jwtId ,Guid id)
     {
         var user = await _userRepo.Get(id);
         if(user is null)
             throw new NullReferenceException("User does not exist");
         
         var userDto = _mapper.Map<User, GetUserDto>(user);
-
+        
+        if (await _userRepo.GetFriend(jwtId, id) is not null)
+        {
+            userDto.FriendStatus = FriendStatus.Friends;
+        }
+        else if(await _userRepo.GetFriendRequest(jwtId, id) is not null)
+        {
+            userDto.FriendStatus = FriendStatus.Invited;
+        }
+        else if(await _userRepo.GetFriendRequest(id, jwtId) is not null)
+        {
+            userDto.FriendStatus = FriendStatus.BeInvited;
+        }
+        else
+        {
+            userDto.FriendStatus = FriendStatus.Strangers;
+        }
+        
         return userDto;
     }
 

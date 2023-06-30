@@ -18,9 +18,9 @@ internal class AccountService : IAccountService
         _mapper = mapper;
     }
 
-    public async Task<GetAccountDto> GetInf(Guid userId)
+    public async Task<GetAccountDto> GetInf(Guid jwtId)
     {
-        var user = await _userRepo.Get(userId);
+        var user = await _userRepo.Get(jwtId);
         if (user is null)
             throw new InvalidOperationException("Something went wrong");
 
@@ -29,9 +29,9 @@ internal class AccountService : IAccountService
         return userDto;
     }
 
-    public async Task Update(Guid userId, PutUserDto putUserDto)
+    public async Task Update(Guid jwtId, PutUserDto putUserDto)
     {
-        var user = await _userRepo.Get(userId);
+        var user = await _userRepo.Get(jwtId);
         if (user is null)
             throw new InvalidOperationException("Something went wrong");
         
@@ -44,9 +44,9 @@ internal class AccountService : IAccountService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task Remove(Guid userId)
+    public async Task Remove(Guid jwtId)
     {
-        var user = await _userRepo.Get(userId);
+        var user = await _userRepo.Get(jwtId);
         if (user is null)
             throw new InvalidOperationException("Something went wrong");
 
