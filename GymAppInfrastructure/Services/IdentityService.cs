@@ -1,13 +1,17 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Text;
 using FluentEmail.Core;
 using FluentEmail.Mailgun;
+using GymAppCore.IRepo;
 using GymAppCore.Models;
 using GymAppCore.Models.Entities;
+using GymAppInfrastructure.Dtos.Authorization;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Options;
+using GymAppInfrastructure.ResetPasswordModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -22,25 +26,54 @@ namespace GymAppInfrastructure.Services;
 internal class IdentityService : IIdentityService
 {
     private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
     private readonly JwtSettings _jwtSettings;
     private readonly EmailOptions _emailOptions;
-    public IdentityService(UserManager<User> userManager, JwtSettings jwtSettings, IOptionsSnapshot<EmailOptions> emailOptions)
+    private readonly IUserRepo _userRepo;
+    public IdentityService(UserManager<User> userManager, JwtSettings jwtSettings, IOptionsSnapshot<EmailOptions> emailOptions, IUserRepo userRepo, SignInManager<User> signInManager)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;
         _emailOptions = emailOptions.Value;
+        _userRepo = userRepo;
+        _signInManager = signInManager;
     }
     
-    public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, Func<string, string, string> generateCallbackToken)
+    public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, Func<string, string, string> generateCallbackToken, Func<string, string, string> resetPassword)
     {
         var existingUser = await _userManager.FindByEmailAsync(registerUserDto.Email);
 
         if (existingUser is not null)
         {
-            return new AuthenticationRegisterResult
+            if (existingUser.AccountProvider == "App")
             {
-                Errors = new[] { "User with this email address already exist" }
-            };
+                return new AuthenticationRegisterResult
+                {
+                    Errors = new[] { "User with this email address already exist" }
+                };
+            }
+            else
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
+                var callback = resetPassword(token, existingUser.Email);
+                var resetSentResult = await SendEmail(callback, existingUser.Email);
+                if (!resetSentResult)
+                {
+                    return new AuthenticationRegisterResult
+                    {
+                        Success = false,
+                        Errors = new List<string> { "Something went wrong, try different login options" }
+                    };
+                }
+                else
+                {
+                    return new AuthenticationRegisterResult
+                    {
+                        Success = true,
+                        Messages = new List<string> { $"You are already registered by {existingUser.AccountProvider}. We have sent an email to your gmail to set your password" }
+                    };
+                }
+            }
         }
 
         var newUser = new User
@@ -95,7 +128,13 @@ internal class IdentityService : IIdentityService
             UserId = newUser.Id,
             Success = authResult.Success,
             Token = authResult.Token,
+            Messages = new List<string> { "email verification link has been sent" }
         };
+    }
+
+    public Task CreateExternalUser(ResetPassword model)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<AuthenticationLoginResult> Login(LoginUserDto loginUserDto)
@@ -134,6 +173,26 @@ internal class IdentityService : IIdentityService
         var result = await _userManager.ConfirmEmailAsync(user, code);
 
         return result.Succeeded;
+    }
+
+    public async Task<ResetPasswordResult> ResetPassword(ResetPassword model)
+    {
+        var existingUser = await _userManager.FindByEmailAsync(model.Email);
+        if (existingUser is null)
+            throw new InvalidOperationException();
+        var resetPassResult = await _userManager.ResetPasswordAsync(existingUser, model.Token, model.Password);
+        if (!resetPassResult.Succeeded)
+            return new ResetPasswordResult()
+            {
+                Success = false,
+                Errors = resetPassResult.Errors.Select(x => x.Description)
+            };
+        existingUser.AccountProvider = "App";
+        await _userRepo.Update(existingUser);
+        return new ResetPasswordResult()
+        {
+            Success = true
+        };
     }
 
     private AuthenticationLoginResult GenerateAuthenticationResultForUser(User user)
