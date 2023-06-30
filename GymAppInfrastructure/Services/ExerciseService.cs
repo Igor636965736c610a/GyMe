@@ -21,20 +21,20 @@ internal class ExerciseService : IExerciseService
         _userRepo = userRepo;
     }
     
-    public async Task Create(PostExerciseDto postExerciseDto, Guid userId)
+    public async Task Create(PostExerciseDto postExerciseDto, Guid jwtId)
     {
         if (postExerciseDto.Position is null)
             postExerciseDto.Position = 0;
 
         var exerciseType = (ExercisesType)postExerciseDto.ExercisesType;
-        var existingExercise = await _exerciseRepo.Get(userId, exerciseType);
+        var existingExercise = await _exerciseRepo.Get(jwtId, exerciseType);
         if (existingExercise is not null)
         {
             throw new InvalidOperationException("Exercise already exist");
         }
         
-        var exercises = await _exerciseRepo.GetAll(userId);
-        var exercise = new Exercise(exerciseType, postExerciseDto.Position.Value, userId);
+        var exercises = await _exerciseRepo.GetAll(jwtId);
+        var exercise = new Exercise(exerciseType, postExerciseDto.Position.Value, jwtId);
 
         var toUpdate = AddExercise(exercise, exercises);
         
@@ -42,15 +42,15 @@ internal class ExerciseService : IExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task Update(Guid userId, Guid exerciseId, PutExerciseDto putExerciseDto)
+    public async Task Update(Guid jwtId, Guid exerciseId, PutExerciseDto putExerciseDto)
     {
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
             throw new InvalidOperationException("Not Found");
-        if(exercise.UserId != userId)
+        if(exercise.UserId != jwtId)
             throw new ForbiddenException("You do not have the appropriate permissions");
         
-        var exercises = await _exerciseRepo.GetAll(userId);
+        var exercises = await _exerciseRepo.GetAll(jwtId);
         exercises.Remove(exercise);
         exercise.Position = putExerciseDto.Position;
         AddExercise(exercise, exercises);
@@ -59,13 +59,13 @@ internal class ExerciseService : IExerciseService
             throw new SaveChangesDbException("something went wrong while saving database changes");
     }
 
-    public async Task Remove(Guid userId, Guid exerciseId)
+    public async Task Remove(Guid jwtId, Guid exerciseId)
     {
-        var exercises = await _exerciseRepo.GetAll(userId);
+        var exercises = await _exerciseRepo.GetAll(jwtId);
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
             throw new InvalidOperationException("Not Found");
-        if (exercise.UserId != userId)
+        if (exercise.UserId != jwtId)
             throw new ForbiddenException("You do not have the appropriate permissions");
         
         var toUpdate = RemoveExercise(exercise, exercises);

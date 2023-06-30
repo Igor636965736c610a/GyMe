@@ -1,4 +1,5 @@
 ﻿using GymAppInfrastructure.Dtos.Exercise;
+using GymAppInfrastructure.Options;
 
 public class GetUserDto
 {
@@ -6,5 +7,6 @@ public class GetUserDto
     public string LastName { get; set; }
     public string UserName { get; set; }
     public bool PrivateAccount { get; set; }
+    public FriendStatus? FriendStatus { get; set; } = null;
     public Guid Id { get; set; } 
 }
