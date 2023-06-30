@@ -46,7 +46,7 @@ public static class ProgramExtensions
         var jwtSettings = new JwtSettings();
         configuration.Bind(nameof(jwtSettings), jwtSettings);
         services.AddSingleton(jwtSettings);
-        
+
         services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

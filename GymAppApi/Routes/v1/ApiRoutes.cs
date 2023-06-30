@@ -41,7 +41,9 @@ public static class ApiRoutes
     
     public static class Chart
     {
-        public const string Get = "get/{exerciseId}";
-        public const string GetAll = "get/exercisesId";
+        public const string GetById = "getById/{exerciseId}";
+        public const string GetByType = "getByType/{userId}/{exerciseType}";
+        public const string GetAllByIds = "getAllByIds";
+        public const string GetAllByTypes = "getAllByTypes";
     }
 }
