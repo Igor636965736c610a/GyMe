@@ -37,9 +37,9 @@ internal class ExerciseService : IExerciseService
         var exercise = new Exercise(exerciseType, postExerciseDto.Position.Value, jwtId);
 
         var toUpdate = AddExercise(exercise, exercises);
-        
-        if(!await _exerciseRepo.Create(exercise) || !await _exerciseRepo.Update(toUpdate))
-            throw new SaveChangesDbException("something went wrong while saving database changes");
+
+        await _exerciseRepo.Create(exercise);
+        await _exerciseRepo.Update(toUpdate);
     }
 
     public async Task Update(Guid jwtId, Guid exerciseId, PutExerciseDto putExerciseDto)
@@ -54,9 +54,9 @@ internal class ExerciseService : IExerciseService
         exercises.Remove(exercise);
         exercise.Position = putExerciseDto.Position;
         AddExercise(exercise, exercises);
-        
-        if(!await _exerciseRepo.Update(exercise) || !await _exerciseRepo.Update(exercises))
-            throw new SaveChangesDbException("something went wrong while saving database changes");
+
+        await _exerciseRepo.Update(exercise);
+        await _exerciseRepo.Update(exercises);
     }
 
     public async Task Remove(Guid jwtId, Guid exerciseId)
@@ -69,9 +69,9 @@ internal class ExerciseService : IExerciseService
             throw new ForbiddenException("You do not have the appropriate permissions");
         
         var toUpdate = RemoveExercise(exercise, exercises);
-        
-        if(!await _exerciseRepo.Remove(exercise) || !await _exerciseRepo.Update(toUpdate))
-            throw new SaveChangesDbException("something went wrong while saving database changes");
+
+        await _exerciseRepo.Remove(exercise);
+        await _exerciseRepo.Update(toUpdate);
     }
 
     public async Task<GetExerciseDto> Get(Guid userId, Guid exerciseId)
