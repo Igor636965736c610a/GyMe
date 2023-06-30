@@ -3,9 +3,11 @@ using GymAppApi.BodyRequest.User;
 using GymAppApi.Routes.v1;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.ResetPasswordModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymAppApi.Controllers.v1;
@@ -36,7 +38,14 @@ public class AccountController : ControllerBase
                 code = codeParam
             });
             
-        var result = await _identityService.Register(registerUserDto, createCallbackUrl);
+        Func<string, string, string> resetPassword = (token, email)
+            => Request.Scheme + "://" + Request.Host + Url.Action("ResetPassword", "Account", new
+        {
+            token = token,
+            email = email
+        });
+        
+        var result = await _identityService.Register(registerUserDto, createCallbackUrl, resetPassword);
 
         if (!result.Success)
         {
@@ -44,6 +53,33 @@ public class AccountController : ControllerBase
         }
 
         return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword(string token, string email)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var model = new ResetPassword { Token = token, Email = email };
+
+        return Ok(new
+        {
+            model
+        });
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword(ResetPassword model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var response = await _identityService.ResetPassword(model);
+
+        if (!response.Success)
+            return BadRequest(response.Errors);
+        return Ok(response);
     }
     
     [AllowAnonymous]
@@ -81,30 +117,29 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
     
-    //public IActionResult ExternalLoginFacebook()
-    //{
-    //    var authenticationProperties = new AuthenticationProperties
-    //    {
-    //        RedirectUri = Url.Action("ExternalLoginCallback", "Account")
-    //    };
-    //    return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
-    //}
-    //
+    public IActionResult ExternalLoginFacebook()
+    {
+        var authenticationProperties = new AuthenticationProperties
+        {
+            RedirectUri = Url.Action("", "Account")
+        };
+        return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
+    }
+    
     //[AllowAnonymous]
     //public async Task<IActionResult> ExternalLoginCallback()
     //{
     //    var authenticateResult = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
     //    if (!authenticateResult.Succeeded)
     //    {
-    //        // Obsłuż błąd logowania/rejestracji
     //        return RedirectToAction("Login", "Account");
     //    }
-//
-    //    // Pobierz dane użytkownika z authenticateResult.Principal.Claims i utwórz konto użytkownika
-    //    // Przykład:
+    //    
+    //    await _identityService CreateExternalUser();
     //    var userId = authenticateResult.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
     //    var email = authenticateResult.Principal.FindFirstValue(ClaimTypes.Email);
     //    var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
+    //    var surname = authenticateResult.Principal.FindFirstValue(ClaimTypes.Surname);
 //
     //    // Zaimplementuj swoją logikę rejestracji użytkownika
 //
