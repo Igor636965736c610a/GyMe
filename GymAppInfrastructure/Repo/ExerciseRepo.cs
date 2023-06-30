@@ -32,6 +32,9 @@ internal class ExerciseRepo : IExerciseRepo
     public async Task<List<Exercise>> GetAll(Guid userId)
         => await _gymAppContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position).ToListAsync();
 
+    public async Task<List<Exercise>> GetAll(Guid userId, IEnumerable<ExercisesType> exercisesType)
+        => await _gymAppContext.Exercises.Where(x => x.UserId == userId && exercisesType.Contains(x.ExercisesType)).OrderBy(x => x.Position).ToListAsync();
+
     public async Task<Dictionary<Guid, Series>> GetMaxReps(IEnumerable<Guid> exercisesId)
         => await _gymAppContext.Exercises
             .Where(x => exercisesId.Contains(x.Id))
@@ -70,7 +73,17 @@ internal class ExerciseRepo : IExerciseRepo
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
 
-    public async Task<bool> Create(Exercise exercise)
+    public async Task<Dictionary<string, IEnumerable<int>>?> GetScores(IEnumerable<ExercisesType> exercisesId, int period, Func<IEnumerable<Series>, int> calculate)
+        => await _gymAppContext.Exercises
+            .Where(x => exercisesId.Contains(x.ExercisesType))
+            .Select(x => new
+            {
+                Value = x.ConcreteExercise.OrderBy(e => e.Date).Take(period).Select(e => e.Series),
+                Key = x.ExercisesType.ToString()
+            })
+            .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
+
+        public async Task<bool> Create(Exercise exercise)
     {
         await _gymAppContext.Exercises.AddAsync(exercise);
         return await UtilsRepo.Save(_gymAppContext);
