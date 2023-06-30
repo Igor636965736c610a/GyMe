@@ -33,7 +33,7 @@ public class ChartController : ControllerBase
     }
     
     [HttpGet(ApiRoutes.Chart.GetByType)]
-    public async Task<IActionResult> GetChart([FromRoute]ExercisesTypeDto exercisesType, [FromRoute]string userId, [FromQuery]ChartOption option, [FromQuery]int period)
+    public async Task<IActionResult> GetChart([FromRoute]string userId, [FromQuery]ExercisesTypeDto exercisesType, [FromQuery]ChartOption option, [FromQuery]int period)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

@@ -1,9 +1,9 @@
-﻿using GymAppCore.Models.Entities;
+﻿using GymAppInfrastructure.Dtos.Exercise;
 
 namespace GymAppApi.BodyRequest.Exercise;
 
 public class PostExerciseBody
 {
-    public ExercisesType ExercisesType { get; set; }
+    public ExercisesTypeDto ExercisesType { get; set; }
     public int? Position { get; set; }
 }
