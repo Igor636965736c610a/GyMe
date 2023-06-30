@@ -64,6 +64,10 @@ public static class ProgramExtensions
                 RequireExpirationTime = false,
                 ValidateLifetime = true
             };
+        }).AddFacebook(facebookOptions =>
+        {
+            facebookOptions.AppId = configuration["FacebookOptions:AppId"];
+            facebookOptions.AppSecret = configuration["FacebookOptions:AppSecret"];
         });
 
         return services;
@@ -141,6 +145,7 @@ public static class ProgramExtensions
     public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<EmailOptions>(configuration.GetSection("EmailOptions"));
+        services.Configure<FacebookOptions>(configuration.GetSection("FacebookOptions"));
 
         return services;
     }

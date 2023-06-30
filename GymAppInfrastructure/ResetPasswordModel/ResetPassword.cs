@@ -1,6 +1,14 @@
-﻿namespace GymAppInfrastructure.ResetPasswordModel;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class x
+namespace GymAppInfrastructure.ResetPasswordModel;
+
+public class ResetPassword
 {
+    public string Password { get; set; }
     
+    [Compare("Password")]
+    public string ConfirmPassword { get; set; }
+
+    public string Email { get; set; }
+    public string Token { get; set; }
 }

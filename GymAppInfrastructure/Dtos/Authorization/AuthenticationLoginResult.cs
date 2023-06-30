@@ -1,4 +1,4 @@
-﻿namespace GymAppCore.Models;
+﻿namespace GymAppInfrastructure.Dtos.Authorization;
 
 public class AuthenticationLoginResult
 {
