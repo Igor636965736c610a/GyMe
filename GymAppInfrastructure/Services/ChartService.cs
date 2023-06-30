@@ -2,7 +2,6 @@
 using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Context;
 using GymAppInfrastructure.Dtos.Exercise;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
@@ -27,7 +26,7 @@ internal class ChartService : IChartService
     {
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
-            throw new InvalidOperationException();
+            return new List<int>();
         var owner = await _userRepo.Get(exercise.UserId);
         if(owner!.Id != jwtId && owner.PrivateAccount && await _userRepo.GetFriend(jwtId, owner.Id) is null)
             throw new ForbiddenException("You do not have the appropriate permissions");
@@ -43,7 +42,7 @@ internal class ChartService : IChartService
         var exerciseType = _mapper.Map<ExercisesTypeDto, ExercisesType>(exercisesTypeDto);
         var exercise = await _exerciseRepo.Get(userUd, exerciseType);
         if (exercise is null)
-            throw new InvalidOperationException();
+            return new List<int>();
         var owner = await _userRepo.Get(exercise.UserId);
         if(owner!.Id != jwtId && owner.PrivateAccount && await _userRepo.GetFriend(jwtId, owner.Id) is null)
             throw new ForbiddenException("You do not have the appropriate permissions");
