@@ -39,9 +39,8 @@ internal class AccountService : IAccountService
         user.FirstName = putUserDto.FirstName;
         user.LastName = putUserDto.LastName;
         user.PrivateAccount = putUserDto.PrivateAccount;
-        var result = await _userRepo.Update(user);
-        if (!result)
-            throw new SaveChangesDbException("something went wrong while saving database changes");
+        
+        await _userRepo.Update(user);
     }
 
     public async Task Remove(Guid jwtId)

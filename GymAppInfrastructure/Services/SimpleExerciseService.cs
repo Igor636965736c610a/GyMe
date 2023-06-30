@@ -32,9 +32,8 @@ internal class SimpleExerciseService : ISimpleExerciseService
         var simpleExercise = new SimpleExercise(DateTime.UtcNow, postSimpleExerciseDto.Description, jwtId, exercise, postSimpleExerciseDto.Series);
         var series = UtilsServices.SeriesFromString(postSimpleExerciseDto.Series, simpleExercise);
         simpleExercise.Series = series;
-        
-        if (!await _simpleExerciseRepo.Create(simpleExercise))
-            throw new SaveChangesDbException("something went wrong while saving database changes");
+
+        await _simpleExerciseRepo.Create(simpleExercise);
     }
 
     public async Task Update(Guid jwtId, Guid id, PutSimpleExerciseDto putExerciseDto)
@@ -48,9 +47,8 @@ internal class SimpleExerciseService : ISimpleExerciseService
         simpleExercise.Description = putExerciseDto.Description;
         simpleExercise.SeriesString = putExerciseDto.Series;
         simpleExercise.Series = series;
-        
-        if(!await _simpleExerciseRepo.Update(simpleExercise))
-            throw new SaveChangesDbException("something went wrong while saving database changes");
+
+        await _simpleExerciseRepo.Update(simpleExercise);
     }
 
     public async Task Remove(Guid jwtId, Guid id)
@@ -61,8 +59,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
         if (simpleExercise.UserId != jwtId)
             throw new ForbiddenException("You do not have access to this data");
 
-        if(!await _simpleExerciseRepo.Remove(simpleExercise))
-            throw new SaveChangesDbException("something went wrong while saving database changes");
+        await _simpleExerciseRepo.Remove(simpleExercise);
     }
 
     public async Task<GetSimpleExerciseDto> Get(Guid userId, Guid id)
