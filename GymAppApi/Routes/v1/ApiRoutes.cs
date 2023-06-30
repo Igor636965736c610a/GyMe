@@ -42,7 +42,7 @@ public static class ApiRoutes
     public static class Chart
     {
         public const string GetById = "getById/{exerciseId}";
-        public const string GetByType = "getByType/{userId}/{exerciseType}";
+        public const string GetByType = "getByType/{userId}";
         public const string GetAllByIds = "getAllByIds";
         public const string GetAllByTypes = "getAllByTypes";
     }

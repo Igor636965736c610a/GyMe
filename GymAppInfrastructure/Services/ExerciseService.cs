@@ -25,15 +25,16 @@ internal class ExerciseService : IExerciseService
     {
         if (postExerciseDto.Position is null)
             postExerciseDto.Position = 0;
-        
-        var existingExercise = await _exerciseRepo.Get(userId, postExerciseDto.ExercisesType);
+
+        var exerciseType = (ExercisesType)postExerciseDto.ExercisesType;
+        var existingExercise = await _exerciseRepo.Get(userId, exerciseType);
         if (existingExercise is not null)
         {
             throw new InvalidOperationException("Exercise already exist");
         }
         
         var exercises = await _exerciseRepo.GetAll(userId);
-        var exercise = new Exercise(postExerciseDto.ExercisesType, postExerciseDto.Position.Value, userId);
+        var exercise = new Exercise(exerciseType, postExerciseDto.Position.Value, userId);
 
         var toUpdate = AddExercise(exercise, exercises);
         
