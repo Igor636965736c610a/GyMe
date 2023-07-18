@@ -1,4 +1,5 @@
 ﻿using GymAppCore.Models.Entities;
+using GymAppInfrastructure.Exceptions;
 
 namespace GymAppInfrastructure.Services;
 
@@ -35,6 +36,5 @@ internal static class UtilsServices
         }
 
         return output;
-
     }
 }

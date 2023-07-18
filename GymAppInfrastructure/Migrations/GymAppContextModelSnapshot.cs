@@ -120,6 +120,10 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<string>("AccountProvider")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("text");
 
@@ -175,6 +179,9 @@ namespace GymAppInfrastructure.Migrations
 
                     b.Property<string>("UserName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("Valid")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

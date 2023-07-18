@@ -5,9 +5,12 @@ public static class ApiRoutes
     public static class Account
     {
         public const string Login = "login";
+        public const string ExternalLogin = "externalLogin";
+        public const string HandleExternalLogin = "handleExternalLogin";
         public const string GetAccountInformation = "get";
         public const string Register = "register";
         public const string ConfirmEmail = "confirmEmail";
+        public const string ActivateUser = "activateUser";
         public const string UpdateUser = "update";
         public const string RemoveUser = "remove";
     }
