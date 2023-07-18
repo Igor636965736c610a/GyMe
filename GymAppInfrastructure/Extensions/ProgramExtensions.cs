@@ -190,10 +190,10 @@ public static class ProgramExtensions
     public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
     {
         var emailOptions = new EmailOptions();
-        configuration.Bind(nameof(emailOptions), emailOptions);
+        configuration.GetSection(nameof(EmailOptions)).Bind(emailOptions);
         services.AddSingleton(emailOptions);
         var facebookOptions = new FacebookOptions();
-        configuration.Bind(nameof(facebookOptions), facebookOptions);
+        configuration.GetSection(nameof(FacebookOptions)).Bind(facebookOptions);
         services.AddSingleton(facebookOptions);
 
         return services;
