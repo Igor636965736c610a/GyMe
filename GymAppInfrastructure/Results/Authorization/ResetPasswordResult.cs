@@ -1,5 +1,4 @@
-﻿namespace GymAppInfrastructure.Dtos.Authorization;
-
+﻿namespace GymAppInfrastructure.Results.Authorization;
 public class ResetPasswordResult
 {
     public bool Success { get; set; }

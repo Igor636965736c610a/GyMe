@@ -7,13 +7,16 @@ using FluentEmail.Mailgun;
 using GymAppCore.IRepo;
 using GymAppCore.Models;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Authorization;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Options;
-using GymAppInfrastructure.ResetPasswordModel;
+using GymAppInfrastructure.Results;
+using GymAppInfrastructure.Results.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -26,54 +29,35 @@ namespace GymAppInfrastructure.Services;
 internal class IdentityService : IIdentityService
 {
     private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
     private readonly JwtSettings _jwtSettings;
     private readonly EmailOptions _emailOptions;
     private readonly IUserRepo _userRepo;
-    public IdentityService(UserManager<User> userManager, JwtSettings jwtSettings, IOptionsSnapshot<EmailOptions> emailOptions, IUserRepo userRepo, SignInManager<User> signInManager)
+    public IdentityService(UserManager<User> userManager, JwtSettings jwtSettings, IOptionsSnapshot<EmailOptions> emailOptions, IUserRepo userRepo, SignInManager<User> signInManager, FacebookOptions facebookOptions)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;
         _emailOptions = emailOptions.Value;
         _userRepo = userRepo;
-        _signInManager = signInManager;
     }
     
-    public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, Func<string, string, string> generateCallbackToken, Func<string, string, string> resetPassword)
+    public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, Func<string, string, string> generateCallbackToken)
     {
         var existingUser = await _userManager.FindByEmailAsync(registerUserDto.Email);
 
         if (existingUser is not null)
         {
-            if (existingUser.AccountProvider == "App")
+            if (existingUser.AccountProvider.Contains("App"))
             {
                 return new AuthenticationRegisterResult
                 {
                     Errors = new[] { "User with this email address already exist" }
                 };
             }
-            else
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
-                var callback = resetPassword(token, existingUser.Email);
-                var resetSentResult = await SendEmail(callback, existingUser.Email);
-                if (!resetSentResult)
-                {
-                    return new AuthenticationRegisterResult
-                    {
-                        Success = false,
-                        Errors = new List<string> { "Something went wrong, try different login options" }
-                    };
-                }
-                else
-                {
-                    return new AuthenticationRegisterResult
-                    {
-                        Success = true,
-                        Messages = new List<string> { $"You are already registered by {existingUser.AccountProvider}. We have sent an email to your gmail to set your password" }
-                    };
-                }
-            }
+            await _userManager.AddPasswordAsync(existingUser, registerUserDto.Password);
+            existingUser.AccountProvider += " App";
+            await _userRepo.Update(existingUser);
+            
+            return await AuthenticateUser(existingUser, generateCallbackToken);
         }
 
         var newUser = new User
@@ -87,6 +71,7 @@ internal class IdentityService : IIdentityService
             EmailConfirmed = false,
             Exercises = new(),
             Premium = new(),
+            Valid = true,
             Friends = new(),
             InverseFriends = new (),
             SendFriendRequests = new (),
@@ -102,39 +87,8 @@ internal class IdentityService : IIdentityService
                 Errors = createdUser.Errors.Select(x => x.Description)
             };
         }
-        
-        var authResult =  GenerateAuthenticationResultForUser(newUser);
 
-        var emailBody = "Please confirm your address <a href=\"#URL#\"> Click here </a> ";
-        var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-        var callbackUrl = generateCallbackToken(newUser.Id.ToString(), emailToken);
-        var body = emailBody.Replace("#URL#",
-            callbackUrl);
-
-        var result = await SendEmail(body, newUser.Email);
-        if (!result)
-        {
-            return new AuthenticationRegisterResult
-            {
-                UserId = newUser.Id,
-                Success = authResult.Success,
-                Token = authResult.Token,
-                Errors = new List<string> { "email verification link has not been sent" }
-            };
-        }
-
-        return new AuthenticationRegisterResult
-        {
-            UserId = newUser.Id,
-            Success = authResult.Success,
-            Token = authResult.Token,
-            Messages = new List<string> { "email verification link has been sent" }
-        };
-    }
-
-    public Task CreateExternalUser(ResetPassword model)
-    {
-        throw new NotImplementedException();
+        return await AuthenticateUser(newUser, generateCallbackToken);
     }
 
     public async Task<AuthenticationLoginResult> Login(LoginUserDto loginUserDto)
@@ -162,6 +116,54 @@ internal class IdentityService : IIdentityService
         return GenerateAuthenticationResultForUser(user);
     }
 
+    public async Task<AuthenticationLoginResult> ExternalLogin(string? email, string? nameSurname)
+    {
+        if (email is null || nameSurname is null)
+            throw new InvalidOperationException("Something went wrong");
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is not null)
+        {
+            if (!user.AccountProvider.Contains("Fb"))
+                user.AccountProvider += " Fb";
+            
+            return GenerateAuthenticationResultForUser(user);
+        }
+
+        var name = nameSurname.Split(" ").First();
+        var surname = nameSurname.Split(" ").Last();
+
+        var newUser = new User
+        {
+            Id = Guid.NewGuid(),
+            FirstName = name,
+            LastName = surname,
+            UserName = null,
+            PrivateAccount = true,
+            Email = email,
+            EmailConfirmed = false,
+            Exercises = new(),
+            Premium = new(),
+            Valid = false,
+            Friends = new(),
+            InverseFriends = new(),
+            SendFriendRequests = new(),
+            RecipientFriendRequests = new()
+        };
+        
+        var createdUser = await _userManager.CreateAsync(newUser);
+
+        if (!createdUser.Succeeded)
+        {
+            return new AuthenticationLoginResult()
+            {
+                Errors = createdUser.Errors.Select(x => x.Description)
+            };
+        }
+
+        return GenerateAuthenticationResultForUser(newUser);
+    }
+
     public async Task<bool> ConfirmEmail(string userId, string code)
     {
         var user = await _userManager.FindByIdAsync(userId);
@@ -173,6 +175,25 @@ internal class IdentityService : IIdentityService
         var result = await _userManager.ConfirmEmailAsync(user, code);
 
         return result.Succeeded;
+    }
+
+    public async Task ActivateUser(Guid jwtId, string userName)
+    {
+        var user = await _userRepo.Get(jwtId);
+        if (user == null)
+        {
+            throw new NullReferenceException("User not found");
+        }
+
+        if (userName.Length < 2)
+            throw new InvalidOperationException("username must contain at least 2 characters");
+        var userWithTheSameUsername = await _userRepo.Get(userName);
+        if (userWithTheSameUsername is not null)
+            throw new InvalidOperationException("User with that username already exist");
+
+        user.UserName = userName;
+        user.Valid = true;
+        await _userRepo.Update(user);
     }
 
     public async Task<ResetPasswordResult> ResetPassword(ResetPassword model)
@@ -187,7 +208,8 @@ internal class IdentityService : IIdentityService
                 Success = false,
                 Errors = resetPassResult.Errors.Select(x => x.Description)
             };
-        existingUser.AccountProvider = "App";
+        if (!existingUser.AccountProvider.Contains("App"))
+            existingUser.AccountProvider += "App";
         await _userRepo.Update(existingUser);
         return new ResetPasswordResult()
         {
@@ -195,7 +217,51 @@ internal class IdentityService : IIdentityService
         };
     }
 
+    private async Task<AuthenticationRegisterResult> AuthenticateUser(User user, Func<string, string, string> generateCallbackToken)
+    {
+        var token = GenerateToken(user);
+
+        var emailBody = "Please confirm your address <a href=\"#URL#\"> Click here </a> ";
+        var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var callbackUrl = generateCallbackToken(user.Id.ToString(), emailToken);
+        var body = emailBody.Replace("#URL#",
+            callbackUrl);
+
+        var result = await SendEmail(body, user.Email);
+        if (!result)
+        {
+            return new AuthenticationRegisterResult
+            {
+                UserId = user.Id,
+                Success = true,
+                Token = token,
+                Errors = new List<string> { "email verification link has not been sent" }
+            };
+        }
+
+        return new AuthenticationRegisterResult
+        {
+            UserId = user.Id,
+            Success = true,
+            Token = token,
+            Messages = new List<string> { "email verification link has been sent" }
+        };
+    }
+
     private AuthenticationLoginResult GenerateAuthenticationResultForUser(User user)
+    {
+        var token = GenerateToken(user);
+
+        return new AuthenticationLoginResult
+        {
+            Success = true,
+            ValidUser = user.Valid,
+            Token = token,
+            UserId = user.Id
+        };
+    }
+
+    private string GenerateToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
@@ -206,7 +272,7 @@ internal class IdentityService : IIdentityService
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("id", user.Id.ToString())
+                new Claim("id", user.Id.ToString()),
             }),
             Expires = DateTime.UtcNow.AddHours(2),
             SigningCredentials =
@@ -214,13 +280,7 @@ internal class IdentityService : IIdentityService
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
-
-        return new AuthenticationLoginResult
-        {
-            Success = true,
-            Token = tokenHandler.WriteToken(token),
-            UserId = user.Id
-        };
+        return tokenHandler.WriteToken(token);
     }
 
     private async Task<bool> SendEmail(string body, string email)
@@ -239,25 +299,5 @@ internal class IdentityService : IIdentityService
         var response = await emailToSend.SendAsync();
 
         return response.Successful;
-        //var options = new RestClientOptions("https://api.mailgun.net/v3")
-        //{
-        //    Authenticator = new HttpBasicAuthenticator("api",  "41bffed40acd5e661cba79b9a4dc477e-e5475b88-df79e86f") //"41bffed40acd5e661cba79b9a4dc477e-e5475b88-df79e86f"
-        //};
-        //RestClient client = new RestClient(options);
-        //    
-        //var request = new RestRequest("", Method.Post);
-
-        //request.AddParameter("domain",
-        //    "https://api.mailgun.net/v3/sandbox3b809dd3c13d4c7aa661ced28d9de67b.mailgun.org");
-        //request.Resource = "{domain}/messages";
-        //request.AddParameter("from", "Igor Miekina <igormiekina@sandbox3b809dd3c13d4c7aa661ced28d9de67b.mailgun.org>");
-        //request.AddParameter("to", email);
-        //request.AddParameter("subject", "Email Verification ");
-        //request.AddParameter("text", body);
-        //request.Method = Method.Post;
-
-        //var response = await client.ExecuteAsync(request);
-
-        //return response.IsSuccessful;
     }
 }
