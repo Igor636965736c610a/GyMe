@@ -125,13 +125,12 @@ public class AccountController : ControllerBase
                 { "LoginProvider", "Facebook" }
             }
         };
-        Console.WriteLine("y");
         return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
     }
 
     [AllowAnonymous]
     [HttpGet(ApiRoutes.Account.HandleExternalLogin)]
-    public async Task<IActionResult> HandleFacebookLoginCallback(string code)
+    public async Task<IActionResult> HandleFacebookLoginCallback()
     {
         var authenticateResult = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
         if (!authenticateResult.Succeeded)
