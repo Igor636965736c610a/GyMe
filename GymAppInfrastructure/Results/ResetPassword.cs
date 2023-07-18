@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GymAppInfrastructure.ResetPasswordModel;
+namespace GymAppInfrastructure.Results;
 
 public class ResetPassword
 {

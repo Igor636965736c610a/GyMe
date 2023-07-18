@@ -3,12 +3,13 @@ using GymAppApi.BodyRequest.User;
 using GymAppApi.Routes.v1;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.ResetPasswordModel;
+using GymAppInfrastructure.Results;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace GymAppApi.Controllers.v1;
 
@@ -37,15 +38,8 @@ public class AccountController : ControllerBase
                 userId = userIdParam,
                 code = codeParam
             });
-            
-        Func<string, string, string> resetPassword = (token, email)
-            => Request.Scheme + "://" + Request.Host + Url.Action("ResetPassword", "Account", new
-        {
-            token = token,
-            email = email
-        });
-        
-        var result = await _identityService.Register(registerUserDto, createCallbackUrl, resetPassword);
+
+        var result = await _identityService.Register(registerUserDto, createCallbackUrl);
 
         if (!result.Success)
         {
@@ -54,33 +48,35 @@ public class AccountController : ControllerBase
 
         return Ok(result);
     }
-
-    [HttpPost]
-    public async Task<IActionResult> ResetPassword(string token, string email)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var model = new ResetPassword { Token = token, Email = email };
-
-        return Ok(new
-        {
-            model
-        });
-    }
     
-    [HttpPost]
-    public async Task<IActionResult> ResetPassword(ResetPassword model)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var response = await _identityService.ResetPassword(model);
-
-        if (!response.Success)
-            return BadRequest(response.Errors);
-        return Ok(response);
-    }
+    //[AllowAnonymous]
+    //[HttpPost]
+    //public async Task<IActionResult> ResetPassword(string token, string email)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
+//
+    //    var model = new ResetPassword { Token = token, Email = email };
+//
+    //    return Ok(new
+    //    {
+    //        model
+    //    });
+    //}
+    //
+    //[AllowAnonymous]
+    //[HttpPost]
+    //public async Task<IActionResult> ResetPassword(ResetPassword model)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
+//
+    //    var response = await _identityService.ResetPassword(model);
+//
+    //    if (!response.Success)
+    //        return BadRequest(response.Errors);
+    //    return Ok(response);
+    //}
     
     [AllowAnonymous]
     [HttpGet(ApiRoutes.Account.ConfirmEmail)]
@@ -117,35 +113,39 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
     
+    [AllowAnonymous]
+    [HttpGet(ApiRoutes.Account.ExternalLogin)]
     public IActionResult ExternalLoginFacebook()
     {
         var authenticationProperties = new AuthenticationProperties
         {
-            RedirectUri = Url.Action("", "Account")
+            RedirectUri = Url.Action(nameof(HandleFacebookLoginCallback), "Account"),
+            Items =
+            {
+                { "LoginProvider", "Facebook" }
+            }
         };
+        Console.WriteLine("y");
         return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
     }
-    
-    //[AllowAnonymous]
-    //public async Task<IActionResult> ExternalLoginCallback()
-    //{
-    //    var authenticateResult = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
-    //    if (!authenticateResult.Succeeded)
-    //    {
-    //        return RedirectToAction("Login", "Account");
-    //    }
-    //    
-    //    await _identityService CreateExternalUser();
-    //    var userId = authenticateResult.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-    //    var email = authenticateResult.Principal.FindFirstValue(ClaimTypes.Email);
-    //    var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
-    //    var surname = authenticateResult.Principal.FindFirstValue(ClaimTypes.Surname);
-//
-    //    // Zaimplementuj swoją logikę rejestracji użytkownika
-//
-    //    // Przekieruj do strony po zalogowaniu
-    //    return Ok(); //RedirectToAction("Index", "Home");
-    //}
+
+    [AllowAnonymous]
+    [HttpGet(ApiRoutes.Account.HandleExternalLogin)]
+    public async Task<IActionResult> HandleFacebookLoginCallback(string code)
+    {
+        var authenticateResult = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+        if (!authenticateResult.Succeeded)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var email = authenticateResult.Principal.FindFirstValue(ClaimTypes.Email);
+        var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
+
+        var result = await _identityService.ExternalLogin(email, name);
+
+        return Ok(result);
+    }
 
     [Authorize]
     [HttpPut(ApiRoutes.Account.UpdateUser)]
@@ -155,7 +155,7 @@ public class AccountController : ControllerBase
             return BadRequest(ModelState);
 
         var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
-
+        
         PutUserDto putUserDto = new()
         {
             UserName = putUserBody.UserName,
@@ -165,6 +165,20 @@ public class AccountController : ControllerBase
         };
 
         await _accountService.Update(userId, putUserDto);
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost(ApiRoutes.Account.ActivateUser)]
+    public async Task<IActionResult> ActivateUser([FromQuery] string userName)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = Guid.Parse(UtilsControllers.GetUserIdFromClaim(HttpContext));
+
+        await _identityService.ActivateUser(userId, userName);
 
         return Ok();
     }
