@@ -35,6 +35,9 @@ internal class UserRepo : IUserRepo
     public async Task<User?> Get(Guid id)
         => await _gymAppContext.Users.FirstOrDefaultAsync(x => x.Id == id);
 
+    public async Task<User?> Get(string userName)
+        => await _gymAppContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+
     public async Task<List<User>> FindUsers(string key, int page, int size)
         => await _gymAppContext.Users.Where(x => $"{x.FirstName}{x.LastName}".Contains(key) || x.UserName.Contains(key))
             .Skip(page*size)

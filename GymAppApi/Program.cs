@@ -4,6 +4,7 @@ using GymAppApi.Middleware.Extension;
 using GymAppInfrastructure.AutoMapper;
 using GymAppInfrastructure.Extensions;
 using GymAppInfrastructure.Options;
+using GymAppInfrastructure.Requirements;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,26 +14,19 @@ builder.Services.AddControllers()
         var converter = new JsonStringEnumConverter();
         x.JsonSerializerOptions.Converters.Add(converter);
     });
+builder.Services.BindOptions(builder.Configuration);
+builder.Services.AddDb(builder.Configuration);
 builder.Services.ConfigureRefit();
 builder.Services.AddCorsPolicy();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDb(builder.Configuration);
 builder.Services.AddServices();
 builder.Services.AddRepositories();
-builder.Services.BindOptions(builder.Configuration);
 builder.Services.AddMiddlewares();
 builder.Services.AddAuthentication(builder.Configuration);
+builder.Services.AddAutorizationSet();
 builder.Services.AddMvcModel();
 builder.Services.AddSingleton(AutoMapperConfig.Initialize());
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Events.OnRedirectToAccessDenied =
-        options.Events.OnRedirectToLogin = context =>
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.FromResult<object>(null!);
-        };
-});
+builder.Services.AddCookies();
 var swaggerOptions = new SwaggerOptions();
 builder.Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
 

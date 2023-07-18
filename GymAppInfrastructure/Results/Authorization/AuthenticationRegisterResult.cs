@@ -1,5 +1,4 @@
-﻿namespace GymAppInfrastructure.Dtos.Authorization;
-
+﻿namespace GymAppInfrastructure.Results.Authorization;
 public class AuthenticationRegisterResult
 {
     public Guid UserId { get; set; }
