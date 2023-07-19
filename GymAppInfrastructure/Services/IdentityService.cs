@@ -53,6 +53,8 @@ internal class IdentityService : IIdentityService
                     Errors = new[] { "User with this email address already exist" }
                 };
             }
+            
+            //To będzie jako reset password docelowo
             await _userManager.AddPasswordAsync(existingUser, registerUserDto.Password);
             existingUser.AccountProvider += " App";
             await _userRepo.Update(existingUser);
@@ -138,7 +140,7 @@ internal class IdentityService : IIdentityService
             Id = Guid.NewGuid(),
             FirstName = name,
             LastName = surname,
-            UserName = null,
+            UserName = Guid.NewGuid().ToString(),
             PrivateAccount = true,
             Email = email,
             EmailConfirmed = false,
