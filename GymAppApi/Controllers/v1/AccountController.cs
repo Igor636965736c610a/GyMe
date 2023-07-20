@@ -146,7 +146,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
+    [Authorize(Policy = "SSO")]
     [HttpPut(ApiRoutes.Account.UpdateUser)]
     public async Task<IActionResult> UpdateUser([FromBody] PutUserBody putUserBody)
     {
@@ -168,7 +168,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Policy = "SSO")]
     [HttpPost(ApiRoutes.Account.ActivateUser)]
     public async Task<IActionResult> ActivateUser([FromQuery] string userName)
     {
@@ -182,7 +182,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Policy = "SSO")]
     [HttpDelete(ApiRoutes.Account.RemoveUser)]
     public async Task<IActionResult> RemoveUser()
     {
@@ -196,7 +196,8 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Policy = "SSO")]
+    //[Authorize]
     [HttpGet(ApiRoutes.Account.GetAccountInformation)]
     public async Task<IActionResult> GetAccountInformation()
     {
