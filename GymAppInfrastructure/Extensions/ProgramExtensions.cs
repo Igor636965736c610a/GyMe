@@ -13,6 +13,7 @@ using GymAppInfrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,8 @@ public static class ProgramExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IChartService, ChartService>();
+        services.AddSingleton<IAuthorizationRequirement, SourceRequirement>();
+        services.AddSingleton<IAuthorizationHandler, SourceRequirementHandler>();
 
         return services;
     }
@@ -92,7 +95,7 @@ public static class ProgramExtensions
     {
         services.AddAuthorization(options =>
         {
-            options.AddPolicy("source", policyBuilder =>
+            options.AddPolicy("SSO", policyBuilder =>
             {
                 policyBuilder.Requirements.Add(new SourceRequirement());
             });

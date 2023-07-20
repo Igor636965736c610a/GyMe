@@ -5,6 +5,7 @@ using GymAppInfrastructure.AutoMapper;
 using GymAppInfrastructure.Extensions;
 using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Requirements;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
