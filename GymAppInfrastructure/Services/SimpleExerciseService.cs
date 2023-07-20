@@ -26,7 +26,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
         var exercise = await _exerciseRepo.Get(postSimpleExerciseDto.ExerciseId);
         if (exercise is null)
             throw new InvalidOperationException("Exercise does not exist");
-        if(exercise.UserId != jwtId)
+        if (exercise.UserId != jwtId)
             throw new ForbiddenException("You do not have the appropriate permissions");
         
         var simpleExercise = new SimpleExercise(DateTime.UtcNow, postSimpleExerciseDto.Description, jwtId, exercise, postSimpleExerciseDto.Series);

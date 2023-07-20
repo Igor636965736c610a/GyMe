@@ -58,8 +58,6 @@ internal class IdentityService : IIdentityService
             await _userManager.AddPasswordAsync(existingUser, registerUserDto.Password);
             existingUser.AccountProvider += " App";
             await _userRepo.Update(existingUser);
-            
-            return await AuthenticateUser(existingUser, generateCallbackToken);
         }
 
         var newUser = new User
@@ -187,6 +185,9 @@ internal class IdentityService : IIdentityService
             throw new NullReferenceException("User not found");
         }
 
+        if (user.Valid)
+            throw new InvalidOperationException("User is already Activate");
+
         if (userName.Length < 2)
             throw new InvalidOperationException("username must contain at least 2 characters");
         var userWithTheSameUsername = await _userRepo.Get(userName);
@@ -196,9 +197,11 @@ internal class IdentityService : IIdentityService
         user.UserName = userName;
         user.Valid = true;
         await _userRepo.Update(user);
+        
+        //generate jwt
     }
 
-    public async Task<ResetPasswordResult> ResetPassword(ResetPassword model)
+    public async Task<ResetPasswordResult> ResetPassword(ResetPassword model) //fb provider && confirm email
     {
         var existingUser = await _userManager.FindByEmailAsync(model.Email);
         if (existingUser is null)
@@ -275,6 +278,7 @@ internal class IdentityService : IIdentityService
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("id", user.Id.ToString()),
+                new Claim("validAccount", user.Valid.ToString())
             }),
             Expires = DateTime.UtcNow.AddHours(2),
             SigningCredentials =
