@@ -77,6 +77,7 @@ public class AccountController : ControllerBase
     //        return BadRequest(response.Errors);
     //    return Ok(response);
     //}
+    //
     
     [AllowAnonymous]
     [HttpGet(ApiRoutes.Account.ConfirmEmail)]
