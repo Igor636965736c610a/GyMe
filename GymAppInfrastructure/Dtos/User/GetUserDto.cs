@@ -7,7 +7,6 @@ public class GetUserDto
     public string LastName { get; set; }
     public string UserName { get; set; }
     public bool PrivateAccount { get; set; }
-    public bool Valid { get; set; }
     public FriendStatus? FriendStatus { get; set; } = null;
     public Guid Id { get; set; } 
 }

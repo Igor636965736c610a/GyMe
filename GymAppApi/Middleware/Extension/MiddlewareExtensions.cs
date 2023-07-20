@@ -6,6 +6,7 @@ public static class MiddlewareExtensions
     {
         services.AddScoped<DbTransactionMiddleware>();
         services.AddScoped<ErrorHandlerMiddleware>();
+        services.AddScoped<ValidAccountMiddleware>();
 
         return services;
     }
