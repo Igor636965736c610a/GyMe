@@ -88,7 +88,7 @@ public static class ProgramExtensions
         return services;
     }
 
-    public static IServiceCollection AddAutorizationSet(this IServiceCollection services)
+    public static IServiceCollection AddAuthorizationSet(this IServiceCollection services)
     {
         services.AddAuthorization(options =>
         {

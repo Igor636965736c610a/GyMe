@@ -16,6 +16,7 @@ public class SourceRequirementHandler : AuthorizationHandler<SourceRequirement>
         if (claim is not null)
             context.Succeed(requirement);
 
+        Console.WriteLine("dupsko");
         return Task.CompletedTask;
     }
 }
