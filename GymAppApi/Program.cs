@@ -23,7 +23,7 @@ builder.Services.AddServices();
 builder.Services.AddRepositories();
 builder.Services.AddMiddlewares();
 builder.Services.AddAuthentication(builder.Configuration);
-builder.Services.AddAutorizationSet();
+builder.Services.AddAuthorizationSet();
 builder.Services.AddMvcModel();
 builder.Services.AddSingleton(AutoMapperConfig.Initialize());
 builder.Services.AddCookies();
