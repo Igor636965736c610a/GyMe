@@ -278,7 +278,8 @@ internal class IdentityService : IIdentityService
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("id", user.Id.ToString()),
-                new Claim("validAccount", user.Valid.ToString())
+                new Claim("validAccount", user.Valid.ToString()),
+                new Claim("SSO", "SSO")
             }),
             Expires = DateTime.UtcNow.AddHours(2),
             SigningCredentials =

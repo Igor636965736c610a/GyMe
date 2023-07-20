@@ -47,6 +47,8 @@ public class ValidAccountMiddleware : IMiddleware
             });
             await response.WriteAsync(result);
         }
+
+        await next(context);
     }
 
     private bool CheckPermissionsControllers(string? controllerName, string? actionName)

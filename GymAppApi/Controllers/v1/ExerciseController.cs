@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymAppApi.Controllers.v1;
 
-[Authorize]
+[Authorize(Policy = "SSO")]
 [Route("[controller]")]
 public class ExerciseController : ControllerBase
 {
