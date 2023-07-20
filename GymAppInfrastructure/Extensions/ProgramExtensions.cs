@@ -36,8 +36,6 @@ public static class ProgramExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IChartService, ChartService>();
-        services.AddSingleton<IAuthorizationRequirement, SourceRequirement>();
-        services.AddSingleton<IAuthorizationHandler, SourceRequirementHandler>();
 
         return services;
     }
@@ -93,6 +91,8 @@ public static class ProgramExtensions
 
     public static IServiceCollection AddAuthorizationSet(this IServiceCollection services)
     {
+        services.AddSingleton<IAuthorizationRequirement, SourceRequirement>();
+        services.AddSingleton<IAuthorizationHandler, SourceRequirementHandler>();
         services.AddAuthorization(options =>
         {
             options.AddPolicy("SSO", policyBuilder =>
