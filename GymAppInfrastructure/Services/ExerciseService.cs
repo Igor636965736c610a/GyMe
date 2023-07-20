@@ -29,9 +29,7 @@ internal class ExerciseService : IExerciseService
         var exerciseType = (ExercisesType)postExerciseDto.ExercisesType;
         var existingExercise = await _exerciseRepo.Get(jwtId, exerciseType);
         if (existingExercise is not null)
-        {
             throw new InvalidOperationException("Exercise already exist");
-        }
         
         var exercises = await _exerciseRepo.GetAll(jwtId);
         var exercise = new Exercise(exerciseType, postExerciseDto.Position.Value, jwtId);
