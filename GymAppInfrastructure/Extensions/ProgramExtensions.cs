@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
-using FluentEmail.Core;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Context;
@@ -10,7 +9,6 @@ using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Repo;
 using GymAppInfrastructure.Requirements;
 using GymAppInfrastructure.Services;
-using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Refit;
-using FacebookOptions = GymAppInfrastructure.Options.FacebookOptions;
 
 namespace GymAppInfrastructure.Extensions;
 
@@ -195,8 +192,8 @@ public static class ProgramExtensions
         var emailOptions = new EmailOptions();
         configuration.GetSection(nameof(EmailOptions)).Bind(emailOptions);
         services.AddSingleton(emailOptions);
-        var facebookOptions = new FacebookOptions();
-        configuration.GetSection(nameof(FacebookOptions)).Bind(facebookOptions);
+        var facebookOptions = new MyFacebookOptions();
+        configuration.GetSection(nameof(MyFacebookOptions)).Bind(facebookOptions);
         services.AddSingleton(facebookOptions);
 
         return services;

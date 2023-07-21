@@ -32,7 +32,7 @@ internal class IdentityService : IIdentityService
     private readonly JwtSettings _jwtSettings;
     private readonly EmailOptions _emailOptions;
     private readonly IUserRepo _userRepo;
-    public IdentityService(UserManager<User> userManager, JwtSettings jwtSettings, IOptionsSnapshot<EmailOptions> emailOptions, IUserRepo userRepo, SignInManager<User> signInManager, FacebookOptions facebookOptions)
+    public IdentityService(UserManager<User> userManager, JwtSettings jwtSettings, IOptionsSnapshot<EmailOptions> emailOptions, IUserRepo userRepo, SignInManager<User> signInManager, MyFacebookOptions myFacebookOptions)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;
