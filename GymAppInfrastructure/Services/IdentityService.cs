@@ -70,7 +70,7 @@ internal class IdentityService : IIdentityService
             return new AuthenticationRegisterResult
             {
                 Success = true,
-                Errors = new[] { "You are already registered into our app by facebook. We have sent a password token to your e-mail address" }
+                Messages = new[] { "You are already registered into our app by facebook. We have sent a password token to your e-mail address" }
             };
         }
 
