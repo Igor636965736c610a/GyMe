@@ -49,35 +49,36 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
     
-    //[AllowAnonymous]
-    //[HttpPost]
-    //public async Task<IActionResult> ResetPassword(string token, string email)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(ModelState);
-//
-    //    var model = new ResetPassword { Token = token, Email = email };
-//
-    //    return Ok(new
-    //    {
-    //        model
-    //    });
-    //}
-    //
-    //[AllowAnonymous]
-    //[HttpPost]
-    //public async Task<IActionResult> ResetPassword(ResetPassword model)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(ModelState);
-//
-    //    var response = await _identityService.ResetPassword(model);
-//
-    //    if (!response.Success)
-    //        return BadRequest(response.Errors);
-    //    return Ok(response);
-    //}
-    //
+    [AllowAnonymous]
+    [HttpPost(ApiRoutes.Account.SendResetPasswordToken)]
+    public async Task<IActionResult> SendResetPasswordToken([FromQuery] string email)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var response = await _identityService.SendResetPasswordToken(email);
+
+        if(!response)
+            return StatusCode(500,"Password reset token has not been sent");
+        
+        return Ok("Password reset token has been sent");
+    }
+    
+    [AllowAnonymous]
+    [HttpPost(ApiRoutes.Account.ResetPassword)]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPassword model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var response = await _identityService.ResetPassword(model);
+
+        if (!response.Success)
+            return BadRequest(response.Errors);
+        
+        return Ok(response);
+    }
+    
     
     [AllowAnonymous]
     [HttpGet(ApiRoutes.Account.ConfirmEmail)]
