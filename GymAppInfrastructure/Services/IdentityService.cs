@@ -49,15 +49,29 @@ internal class IdentityService : IIdentityService
             if (existingUser.AccountProvider.Contains("App"))
             {
                 return new AuthenticationRegisterResult
-                {
+                { 
+                    Success = false,
                     Errors = new[] { "User with this email address already exist" }
                 };
             }
             
-            //To będzie jako reset password docelowo
-            await _userManager.AddPasswordAsync(existingUser, registerUserDto.Password);
-            existingUser.AccountProvider += " App";
-            await _userRepo.Update(existingUser);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
+            var body =
+                $"Registration verification token = {token}";
+            var subject = "verify registration";
+            var result = await SendEmail(body, subject, existingUser.Email);
+            if(!result)
+                return new AuthenticationRegisterResult
+                {
+                    Success = false,
+                    Errors = new[] { "You are already registered into our app by facebook. We have sent a password token to your e-mail address but something went wrong while sending email. " +
+                                     "PLeas try later" }
+                };
+            return new AuthenticationRegisterResult
+            {
+                Success = true,
+                Errors = new[] { "You are already registered into our app by facebook. We have sent a password token to your e-mail address" }
+            };
         }
 
         var newUser = new User
@@ -84,6 +98,7 @@ internal class IdentityService : IIdentityService
         {
             return new AuthenticationRegisterResult()
             {
+                Success = false,
                 Errors = createdUser.Errors.Select(x => x.Description)
             };
         }
@@ -141,7 +156,7 @@ internal class IdentityService : IIdentityService
             UserName = Guid.NewGuid().ToString(),
             PrivateAccount = true,
             Email = email,
-            EmailConfirmed = false,
+            EmailConfirmed = true,
             Exercises = new(),
             Premium = new(),
             Valid = false,
@@ -201,11 +216,25 @@ internal class IdentityService : IIdentityService
         //generate jwt
     }
 
-    public async Task<ResetPasswordResult> ResetPassword(ResetPassword model) //fb provider && confirm email
+    public async Task<bool> SendResetPasswordToken(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+            throw new InvalidOperationException("User does not exist");
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var body = $"Password reset token = {token}";
+        var subject = "Reset Password token";
+
+        var result = await SendEmail(body, subject, user.Email);
+
+        return result;
+    }
+
+    public async Task<ResetPasswordResult> ResetPassword(ResetPassword model)
     {
         var existingUser = await _userManager.FindByEmailAsync(model.Email);
         if (existingUser is null)
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("User does not exist");
         var resetPassResult = await _userManager.ResetPasswordAsync(existingUser, model.Token, model.Password);
         if (!resetPassResult.Succeeded)
             return new ResetPasswordResult()
@@ -231,8 +260,9 @@ internal class IdentityService : IIdentityService
         var callbackUrl = generateCallbackToken(user.Id.ToString(), emailToken);
         var body = emailBody.Replace("#URL#",
             callbackUrl);
+        var subject = "Email Verification ";
 
-        var result = await SendEmail(body, user.Email);
+        var result = await SendEmail(body, subject, user.Email);
         if (!result)
         {
             return new AuthenticationRegisterResult
@@ -290,7 +320,7 @@ internal class IdentityService : IIdentityService
         return tokenHandler.WriteToken(token);
     }
 
-    private async Task<bool> SendEmail(string body, string email)
+    private async Task<bool> SendEmail(string body, string subject, string? email)
     {
         var sender = new MailgunSender(
             _emailOptions.DomainName,
@@ -300,7 +330,7 @@ internal class IdentityService : IIdentityService
         var emailToSend = Email
             .From(_emailOptions.From)
             .To(email)
-            .Subject("Email Verification ")
+            .Subject(subject)
             .Body(body);
 
         var response = await emailToSend.SendAsync();

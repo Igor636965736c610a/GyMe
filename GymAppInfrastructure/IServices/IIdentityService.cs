@@ -13,5 +13,6 @@ public interface IIdentityService
     Task<AuthenticationLoginResult> ExternalLogin(string? email, string? nameSurname);
     Task<bool> ConfirmEmail(string userId, string code);
     Task ActivateUser(Guid jwtId, string userName);
+    Task<bool> SendResetPasswordToken(string email);
     Task<ResetPasswordResult> ResetPassword(ResetPassword model);
 }
