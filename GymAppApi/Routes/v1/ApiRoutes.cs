@@ -13,6 +13,8 @@ public static class ApiRoutes
         public const string ActivateUser = "activateUser";
         public const string UpdateUser = "update";
         public const string RemoveUser = "remove";
+        public const string SendResetPasswordToken = "resetPassword/sendToken";
+        public const string ResetPassword = "resetPassword";
     }
 
     public static class Exercise
