@@ -49,15 +49,29 @@ internal class IdentityService : IIdentityService
             if (existingUser.AccountProvider.Contains("App"))
             {
                 return new AuthenticationRegisterResult
-                {
+                { 
+                    Success = false,
                     Errors = new[] { "User with this email address already exist" }
                 };
             }
             
-            //To będzie jako reset password docelowo
-            await _userManager.AddPasswordAsync(existingUser, registerUserDto.Password);
-            existingUser.AccountProvider += " App";
-            await _userRepo.Update(existingUser);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
+            var body =
+                $"Registration verification token = {token}";
+            var subject = "verify registration";
+            var result = await SendEmail(body, subject, existingUser.Email);
+            if(!result)
+                return new AuthenticationRegisterResult
+                {
+                    Success = false,
+                    Errors = new[] { "You are already registered into our app by facebook. We have sent a password token to your e-mail address but something went wrong while sending email. " +
+                                     "PLeas try later" }
+                };
+            return new AuthenticationRegisterResult
+            {
+                Success = true,
+                Errors = new[] { "You are already registered into our app by facebook. We have sent a password token to your e-mail address" }
+            };
         }
 
         var newUser = new User
@@ -84,6 +98,7 @@ internal class IdentityService : IIdentityService
         {
             return new AuthenticationRegisterResult()
             {
+                Success = false,
                 Errors = createdUser.Errors.Select(x => x.Description)
             };
         }
@@ -141,7 +156,7 @@ internal class IdentityService : IIdentityService
             UserName = Guid.NewGuid().ToString(),
             PrivateAccount = true,
             Email = email,
-            EmailConfirmed = false,
+            EmailConfirmed = true,
             Exercises = new(),
             Premium = new(),
             Valid = false,
