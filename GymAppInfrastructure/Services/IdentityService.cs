@@ -192,7 +192,7 @@ internal class IdentityService : IIdentityService
         return result.Succeeded;
     }
 
-    public async Task ActivateUser(Guid jwtId, string userName)
+    public async Task<ActivateUserResult> ActivateUser(Guid jwtId, string userName)
     {
         var user = await _userRepo.Get(jwtId);
         if (user == null)
@@ -204,16 +204,26 @@ internal class IdentityService : IIdentityService
             throw new InvalidOperationException("User is already Activate");
 
         if (userName.Length < 2)
-            throw new InvalidOperationException("username must contain at least 2 characters");
+            return new ActivateUserResult()
+            {
+                Success = false,
+                Errors = new[] { "username must contain at least 2 characters" }
+            };
         var userWithTheSameUsername = await _userRepo.Get(userName);
         if (userWithTheSameUsername is not null)
-            throw new InvalidOperationException("User with that username already exist");
+            throw new InvalidOperationException("User with this username already exist");
 
         user.UserName = userName;
         user.Valid = true;
         await _userRepo.Update(user);
-        
-        //generate jwt
+
+        var token = GenerateToken(user);
+
+        return new ActivateUserResult()
+        {
+            Token = token,
+            Success = true,
+        };
     }
 
     public async Task<bool> SendResetPasswordToken(string email)
