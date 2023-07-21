@@ -73,14 +73,6 @@ public static class ProgramExtensions
         {
            options.AppId = configuration["FacebookOptions:AppId"];
            options.AppSecret = configuration["FacebookOptions:AppSecret"];
-           options.Events = new OAuthEvents()
-           {
-               OnCreatingTicket = async context =>
-               {
-                   var identity = (ClaimsIdentity)context.Principal.Identity;
-                   identity.AddClaim(new Claim("id", Guid.NewGuid().ToString()));
-               }
-           };
        });
 
         return services;
