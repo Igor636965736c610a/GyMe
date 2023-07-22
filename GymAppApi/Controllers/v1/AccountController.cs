@@ -18,7 +18,7 @@ public class AccountController : ControllerBase
 {
     private readonly IIdentityService _identityService;
     private readonly IAccountService _accountService;
-
+    
     public AccountController(IIdentityService identityService, IAccountService accountService)
     {
         _identityService = identityService;

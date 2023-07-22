@@ -11,22 +11,7 @@ internal static class UtilsServices
         var output = series
             .Split(' ', StringSplitOptions.RemoveEmptyEntries)
             .Where(str => !string.IsNullOrWhiteSpace(str))
-            .Select(str =>
-            {
-                string[] parts = str.Split('x');
-                if (parts.Length != 2 || !int.TryParse(parts[0], out int first) ||
-                    !int.TryParse(parts[1], out int second))
-                {
-                    throw new ArgumentException($"Invalid format: \"{str}\"");
-                }
-
-                if (parts[0].Length > 11 || parts[1].Length > 11)
-                {
-                    throw new ArgumentException($"Maximum length exceeded: \"{str}\"");
-                }
-
-                return (first, second);
-            })
+            .Select(ParseSeries)
             .Select(pair => new Series(simpleExercise, pair.second, pair.first))
             .ToList();
 
@@ -36,5 +21,22 @@ internal static class UtilsServices
         }
 
         return output;
+    }
+
+    private static (int first, int second) ParseSeries(string str)
+    {
+        string[] parts = str.Split('x');
+        if (parts.Length != 2 || !int.TryParse(parts[0], out int first) ||
+            !int.TryParse(parts[1], out int second))
+        {
+            throw new ArgumentException($"Invalid format: \"{str}\"");
+        }
+
+        if (parts[0].Length > 11 || parts[1].Length > 11)
+        {
+            throw new ArgumentException($"Maximum length exceeded: \"{str}\"");
+        }
+
+        return (first, second);
     }
 }
