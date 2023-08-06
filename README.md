@@ -1,5 +1,7 @@
 # GyMe
 
+Nie akrualne
+
 ![image](https://github.com/Igor636965736c610a/GymApp/assets/102369546/10bba779-0b8b-40de-a763-98e2869ce882)
 ![image](https://github.com/Igor636965736c610a/GymApp/assets/102369546/2ea13c7e-eeab-4842-a030-225282f47803)
 ![image](https://github.com/Igor636965736c610a/GymApp/assets/102369546/ae82338b-8144-43a9-b21e-6db4e6eeb382)
