@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using GymAppApi.Controllers.HelperAttributes;
 using GymAppApi.Routes.v1;
 using GymAppInfrastructure.Dtos.User;
 using GymAppInfrastructure.IServices;
@@ -160,6 +161,7 @@ public class AccountController : ControllerBase
     }
 
     [Authorize(Policy = "SSO")]
+    [SkipValidAccountCheck]
     [HttpPost(ApiRoutes.Account.ActivateUser)]
     public async Task<IActionResult> ActivateUser([FromQuery] string userName)
     {
@@ -184,7 +186,7 @@ public class AccountController : ControllerBase
     }
 
     [Authorize(Policy = "SSO")]
-    //[Authorize]
+    [SkipValidAccountCheck]
     [HttpGet(ApiRoutes.Account.GetAccountInformation)]
     public async Task<IActionResult> GetAccountInformation()
     {

@@ -37,7 +37,7 @@ builder.Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetService<GymAppContext>();
+var dbContext = scope.ServiceProvider.GetRequiredService<GymAppContext>();
 var pendingMigrations = dbContext.Database.GetPendingMigrations();
 if (pendingMigrations.Any())
 {
