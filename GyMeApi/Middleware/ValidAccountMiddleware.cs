@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using GymAppApi.Controllers.HelperAttributes;
 using GymAppApi.Routes.v1;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -28,11 +29,8 @@ public class ValidAccountMiddleware : IMiddleware
         if (valid.Value == "False")
         {
             var endpoint = context.GetEndpoint();
-            var controllerActionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
-            var controllerName = controllerActionDescriptor?.ControllerName;
-            var actionName = controllerActionDescriptor?.ActionName;
-            
-            if (CheckPermissionsControllers(controllerName, actionName))
+            var skipValidAccountCheckAttribute = endpoint?.Metadata.GetMetadata<SkipValidAccountCheckAttribute>();
+            if (skipValidAccountCheckAttribute != null)
             {
                 await next(context);
                 return;
@@ -49,11 +47,5 @@ public class ValidAccountMiddleware : IMiddleware
         }
 
         await next(context);
-    }
-
-    private bool CheckPermissionsControllers(string? controllerName, string? actionName)
-    {
-        return (controllerName == "Account" && actionName == "ActivateUser") ||
-               (controllerName == "Account" && actionName == "GetAccountInformation");
     }
 }
