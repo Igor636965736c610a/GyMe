@@ -1,6 +1,6 @@
 # GyMe
 
-Nie akrualne
+Troche nie aktualne z powodu szybkiego rozwoju aplikacji
 
 ![image](https://github.com/Igor636965736c610a/GymApp/assets/102369546/10bba779-0b8b-40de-a763-98e2869ce882)
 ![image](https://github.com/Igor636965736c610a/GymApp/assets/102369546/2ea13c7e-eeab-4842-a030-225282f47803)
