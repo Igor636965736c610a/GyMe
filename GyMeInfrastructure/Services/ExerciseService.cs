@@ -1,5 +1,6 @@
 ﻿using System.Net.NetworkInformation;
 using AutoMapper;
+using FluentEmail.Core;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Dtos.Exercise;
@@ -26,28 +27,31 @@ internal class ExerciseService : IExerciseService
     
     public async Task Create(PostExerciseDto postExerciseDto)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
-        if (postExerciseDto.Position is null)
-            postExerciseDto.Position = 0;
+        postExerciseDto.Position ??= 0;
 
         var exerciseType = (ExercisesType)postExerciseDto.ExercisesType;
         var existingExercise = await _exerciseRepo.Get(userIdFromJwt, exerciseType);
         if (existingExercise is not null)
             throw new InvalidOperationException("Exercise already exist");
-        
+
         var exercises = await _exerciseRepo.GetAll(userIdFromJwt);
+        if (postExerciseDto.Position < 0)
+            postExerciseDto.Position = 0;
+        if (postExerciseDto.Position > exercises.Count)
+            postExerciseDto.Position = exercises.Count;
         var exercise = new Exercise(exerciseType, postExerciseDto.Position.Value, userIdFromJwt);
 
-        var toUpdate = AddExercise(exercise, exercises);
+        UpdateExercisesPositionUp(exercise.Position, exercises);
 
         await _exerciseRepo.Create(exercise);
-        await _exerciseRepo.Update(toUpdate);
+        await _exerciseRepo.Update(exercises);
     }
 
     public async Task Update(Guid exerciseId, PutExerciseDto putExerciseDto)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
@@ -56,9 +60,15 @@ internal class ExerciseService : IExerciseService
             throw new ForbiddenException("You do not have the appropriate permissions");
         
         var exercises = await _exerciseRepo.GetAll(userIdFromJwt);
+        if (putExerciseDto.Position < 0)
+            putExerciseDto.Position = 0;
+        if (putExerciseDto.Position > exercises.Count)
+            putExerciseDto.Position = exercises.Count;
         exercises.Remove(exercise);
+        
+        UpdateExercisesPositionDown(exercise.Position, exercises);
+        UpdateExercisesPositionUp(putExerciseDto.Position, exercises);
         exercise.Position = putExerciseDto.Position;
-        AddExercise(exercise, exercises);
 
         await _exerciseRepo.Update(exercise);
         await _exerciseRepo.Update(exercises);
@@ -66,24 +76,25 @@ internal class ExerciseService : IExerciseService
 
     public async Task Remove(Guid exerciseId)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
-        var exercises = await _exerciseRepo.GetAll(userIdFromJwt);
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
             throw new InvalidOperationException("Not Found");
         if (exercise.UserId != userIdFromJwt)
             throw new ForbiddenException("You do not have the appropriate permissions");
         
-        var toUpdate = RemoveExercise(exercise, exercises);
-
         await _exerciseRepo.Remove(exercise);
-        await _exerciseRepo.Update(toUpdate);
+        var exercises = await _exerciseRepo.GetAll(userIdFromJwt);
+        
+        UpdateExercisesPositionDown(exercise.Position, exercises);
+        
+        await _exerciseRepo.Update(exercises);
     }
 
     public async Task<GetExerciseDto> Get(Guid exerciseId)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
@@ -108,7 +119,7 @@ internal class ExerciseService : IExerciseService
 
     public async Task<IEnumerable<GetExerciseDto>> Get(Guid userId, int page, int size)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var owner = await _userRepo.Get(userId);
         if (owner is null)
@@ -130,51 +141,9 @@ internal class ExerciseService : IExerciseService
         return exercisesDto;
     }
 
-    private static List<Exercise> AddExercise(Exercise exercise, List<Exercise> exercises)
-    {
-        List<Exercise> output = new();
-        if (exercises.Count == 0)
-            return exercises;
-        if (exercise.Position < 0)
-        {
-            exercise.Position = 0;
-        }
-
-        if (exercise.Position > exercises.Count - 1)
-        {
-            exercise.Position = exercises.Count;
-            return exercises;
-        }
-
-        foreach (var e in exercises)
-        {
-            if (e.Position >= exercise.Position)
-            {
-                e.Position++;
-                output.Add(e);
-            }
-        }
-
-        return output;
-    }
-    private static List<Exercise> RemoveExercise(Exercise exercise, List<Exercise> exercises)
-    {
-        List<Exercise> output = new();
-        if (exercise.Position > exercises.Count - 1)
-        {
-            exercise.Position = exercises.Count;
-            return exercises;
-        }
-
-        foreach (var e in exercises)
-        {
-            if (e.Position > exercise.Position)
-            {
-                e.Position--;
-                output.Add(e);
-            }
-        }
-
-        return output;
-    }
+    private static void UpdateExercisesPositionUp(int position, IEnumerable<Exercise> exercises)
+        => exercises.Where(x => x.Position >= position).ForEach(x => x.Position += 1);
+    
+    private static void UpdateExercisesPositionDown(int position, IEnumerable<Exercise> exercises)
+        => exercises.Where(x => x.Position >= position).ForEach(x => x.Position -= 1);
 }

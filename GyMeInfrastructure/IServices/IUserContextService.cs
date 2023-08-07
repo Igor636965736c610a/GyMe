@@ -5,5 +5,5 @@ namespace GymAppInfrastructure.IServices;
 public interface IUserContextService
 {
     ClaimsPrincipal? User { get; }
-    Guid GetUserId { get; }
+    Guid UserId { get; }
 }

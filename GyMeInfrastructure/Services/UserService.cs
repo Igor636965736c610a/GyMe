@@ -22,7 +22,7 @@ internal class UserService : IUserService
 
     public async Task RemoveFriend(Guid userToRemoveId)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         if (userIdFromJwt == userToRemoveId)
             throw new InvalidOperationException("You can't remove yourself from friend list");
@@ -41,7 +41,7 @@ internal class UserService : IUserService
 
     public async Task AddFriend(Guid userToAddId)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         if (userIdFromJwt == userToAddId)
             throw new InvalidOperationException("You can't be friend with yourself");
@@ -64,7 +64,7 @@ internal class UserService : IUserService
 
     public async Task<GetUserDto> GetUser(Guid id)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var user = await _userRepo.Get(id);
         if(user is null || !user.Valid)
@@ -81,7 +81,7 @@ internal class UserService : IUserService
 
     public async Task<IEnumerable<GetUserDto>> GetFriends(int page, int size)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var friends = await _userRepo.GetFriends(userIdFromJwt, page, size);
 

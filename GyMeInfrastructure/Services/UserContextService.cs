@@ -14,9 +14,14 @@ public class UserContextService : IUserContextService
     }
 
     public ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
-    public Guid GetUserId => User is null ? 
-        throw new InvalidProgramException("Something went wrong") : 
-        User.FindFirst(c=> c.Type == "id") is null ? 
-            throw new InvalidProgramException("Something went wrong") :
-            Guid.Parse(User.FindFirst(c=> c.Type == "id")!.Value);
+    public Guid UserId
+    {
+        get
+        {
+            if (User is null)
+                throw new InvalidProgramException();
+            var first = User.FindFirst(c => c.Type == "id") ?? throw new InvalidProgramException();
+            return Guid.Parse(first.Value);
+        }
+    }
 }

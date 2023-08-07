@@ -200,7 +200,7 @@ internal class IdentityService : IIdentityService
 
     public async Task<ActivateUserResult> ActivateUser(string userName)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var user = await _userRepo.Get(userIdFromJwt);
         if (user == null)

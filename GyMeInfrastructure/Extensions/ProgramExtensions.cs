@@ -144,7 +144,7 @@ public static class ProgramExtensions
 
     public static IServiceCollection AddDb(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<GymAppContext>(options => {
+        services.AddDbContextPool<GymAppContext>(options => {
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
         

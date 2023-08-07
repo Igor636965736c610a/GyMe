@@ -29,7 +29,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
 
     public async Task Create(PostSimpleExerciseDto postSimpleExerciseDto)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var exercise = await _exerciseRepo.Get(postSimpleExerciseDto.ExerciseId);
         if (exercise is null)
@@ -48,7 +48,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
 
     public async Task Update(Guid id, PutSimpleExerciseDto putExerciseDto)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
@@ -68,7 +68,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
 
     public async Task Remove(Guid id)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
@@ -81,7 +81,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
 
     public async Task<GetSimpleExerciseDto> Get(Guid id)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
@@ -97,7 +97,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
 
     public async Task<IEnumerable<GetSimpleExerciseDto>> Get(Guid userId, Guid exerciseId, int page, int size)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var owner = await _userRepo.Get(userId);
         if (owner is null)

@@ -53,14 +53,14 @@ internal class ExerciseRepo : IExerciseRepo
             .ThenByDescending(s => s.NumberOfRepetitions)
             .FirstOrDefaultAsync();
 
-    public async Task<IEnumerable<int>?> GetScore(Guid exerciseId, int period,
+    public async Task<IEnumerable<int>> GetScore(Guid exerciseId, int period,
         Func<IEnumerable<Series>, int> calculate)
         => await _gymAppContext.Exercises
             .Where(x => x.Id == exerciseId)
             .Select(x => x.ConcreteExercise.OrderBy(e => e.Date).Take(period).Select(e => calculate(e.Series)))
             .FirstOrDefaultAsync();
 
-    public async Task<Dictionary<Guid, IEnumerable<int>>?> GetScores(IEnumerable<Guid> exercisesId, int period,
+    public async Task<Dictionary<Guid, IEnumerable<int>>> GetScores(IEnumerable<Guid> exercisesId, int period,
         Func<IEnumerable<Series>, int> calculate)
         => await _gymAppContext.Exercises
             .Where(x => exercisesId.Contains(x.Id))
@@ -71,7 +71,7 @@ internal class ExerciseRepo : IExerciseRepo
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
 
-    public async Task<Dictionary<string, IEnumerable<int>>?> GetScores(IEnumerable<ExercisesType> exercisesType, Guid userId, int period, Func<IEnumerable<Series>, int> calculate)
+    public async Task<Dictionary<string, IEnumerable<int>>> GetScores(IEnumerable<ExercisesType> exercisesType, Guid userId, int period, Func<IEnumerable<Series>, int> calculate)
         => await _gymAppContext.Exercises
             .Where(x => x.UserId == userId && exercisesType.Contains(x.ExercisesType))
             .Select(x => new
@@ -81,7 +81,7 @@ internal class ExerciseRepo : IExerciseRepo
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
 
-        public async Task<bool> Create(Exercise exercise)
+    public async Task<bool> Create(Exercise exercise)
     {
         await _gymAppContext.Exercises.AddAsync(exercise);
         return await UtilsRepo.SaveDatabaseChanges(_gymAppContext);

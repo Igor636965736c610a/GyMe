@@ -144,7 +144,7 @@ public class AccountController : ControllerBase
         var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
 
         var result = await _identityService.ExternalLogin(email, name);
-
+        
         return Ok(result);
     }
 

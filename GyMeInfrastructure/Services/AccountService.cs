@@ -23,7 +23,7 @@ internal class AccountService : IAccountService
 
     public async Task<GetAccountDto> GetInf()
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var user = await _userRepo.Get(userIdFromJwt);
         if (user is null)
@@ -36,7 +36,7 @@ internal class AccountService : IAccountService
 
     public async Task Update(PutUserDto putUserDto)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var user = await _userRepo.Get(userIdFromJwt);
         if (user is null)
@@ -52,7 +52,7 @@ internal class AccountService : IAccountService
 
     public async Task Remove()
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var user = await _userRepo.Get(userIdFromJwt);
         if (user is null)

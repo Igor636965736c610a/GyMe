@@ -26,7 +26,7 @@ internal class ChartService : IChartService
 
     public async Task<IEnumerable<int>?> Get(Guid exerciseId, ChartOption option, int period)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
@@ -42,7 +42,7 @@ internal class ChartService : IChartService
     
     public async Task<IEnumerable<int>?> Get(Guid userUd, ExercisesTypeDto exercisesTypeDto, ChartOption option, int period)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var exerciseType = _mapper.Map<ExercisesTypeDto, ExercisesType>(exercisesTypeDto);
         var exercise = await _exerciseRepo.Get(userUd, exerciseType);
@@ -59,7 +59,7 @@ internal class ChartService : IChartService
 
     public async Task<Dictionary<Guid, IEnumerable<int>>?> Get(Guid userId, IEnumerable<Guid> ids, ChartOption option, int period)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, userId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
@@ -72,7 +72,7 @@ internal class ChartService : IChartService
     
     public async Task<Dictionary<string, IEnumerable<int>>?> Get(Guid userId, IEnumerable<ExercisesTypeDto> exercisesTypeDto, ChartOption option, int period)
     {
-        var userIdFromJwt = _userContextService.GetUserId;
+        var userIdFromJwt = _userContextService.UserId;
         
         var exercisesType = _mapper.Map<IEnumerable<ExercisesTypeDto>, IEnumerable<ExercisesType>>(exercisesTypeDto);
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, userId, _userRepo))
