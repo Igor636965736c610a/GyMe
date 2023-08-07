@@ -114,7 +114,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
     private static bool ValidSeries(IEnumerable<BaseSeriesDto> series)
     {
         var baseSeriesDtos = series as BaseSeriesDto[] ?? series.ToArray();
-        if (baseSeriesDtos.Count() > 30)
+        if (baseSeriesDtos.Length > 30)
             return false;
         return !baseSeriesDtos.Any(x => x.NumberOfRepetitions > 999 || x.Weight > 99999);
     }
