@@ -11,14 +11,6 @@ public static class EntitiesConfig
     }
     public static class SimpleExercise
     {
-        
-    }
-    public static class UserFriend
-    {
-        
-    }
-    public static class Series
-    {
-        
+        public const int DescriptionMaxLength = 200;
     }
 }
