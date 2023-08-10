@@ -55,10 +55,9 @@ internal class ExerciseRepo : IExerciseRepo
 
     public async Task<IEnumerable<int>> GetScore(Guid exerciseId, int period,
         Func<IEnumerable<Series>, int> calculate)
-        => await _gymAppContext.Exercises
-            .Where(x => x.Id == exerciseId)
-            .Select(x => x.ConcreteExercise.OrderBy(e => e.Date).Take(period).Select(e => calculate(e.Series)))
-            .FirstOrDefaultAsync();
+        => await Task.FromResult(_gymAppContext.SimpleExercises
+            .Where(x => x.ExerciseId == exerciseId)
+            .OrderBy(e => e.Date).Take(period).Select(e => calculate(e.Series)));
 
     public async Task<Dictionary<Guid, IEnumerable<int>>> GetScores(IEnumerable<Guid> exercisesId, int period,
         Func<IEnumerable<Series>, int> calculate)

@@ -30,7 +30,7 @@ internal class ChartService : IChartService
         
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
-            return new List<int>();
+            return null;
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, exercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
@@ -47,7 +47,7 @@ internal class ChartService : IChartService
         var exerciseType = _mapper.Map<ExercisesTypeDto, ExercisesType>(exercisesTypeDto);
         var exercise = await _exerciseRepo.Get(userUd, exerciseType);
         if (exercise is null)
-            return new List<int>();
+            return null;
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, exercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
