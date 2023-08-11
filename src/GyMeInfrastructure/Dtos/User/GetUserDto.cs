@@ -6,6 +6,8 @@ public class GetUserDto
     public string LastName { get; set; }
     public string UserName { get; set; }
     public bool PrivateAccount { get; set; }
+    public GenderDto Gender { get; set; }
+    public byte[] ProfilePicture { get; set; }
     public FriendStatusDto? FriendStatus { get; set; } = null;
     public Guid Id { get; set; } 
 }

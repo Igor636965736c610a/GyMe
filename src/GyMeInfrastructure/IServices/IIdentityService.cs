@@ -8,7 +8,7 @@ namespace GymAppInfrastructure.IServices;
 
 public interface IIdentityService
 {
-    Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, Func<string, string, string> generateCallbackToken);
+    Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, byte[] profilePicture, Func<string, string, string> generateCallbackToken);
     Task<AuthenticationLoginResult> Login(LoginUserDto loginUserDto);
     Task<AuthenticationLoginResult> ExternalLogin(string? email, string? nameSurname);
     Task<bool> ConfirmEmail(string userId, string code);

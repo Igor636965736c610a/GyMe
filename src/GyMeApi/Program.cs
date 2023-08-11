@@ -57,6 +57,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseStaticFiles();
+
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseMiddleware<DbTransactionMiddleware>();

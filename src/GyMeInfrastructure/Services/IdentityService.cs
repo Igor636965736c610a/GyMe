@@ -48,7 +48,7 @@ internal class IdentityService : IIdentityService
         _userContextService = userContextService;
     }
     
-    public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, Func<string, string, string> generateCallbackToken)
+    public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, byte[] profilePicture, Func<string, string, string> generateCallbackToken)
     {
         var existingUser = await _userManager.FindByEmailAsync(registerUserDto.Email);
 
@@ -82,6 +82,8 @@ internal class IdentityService : IIdentityService
             };
         }
 
+        var gender = registerUserDto.IsChlopak ? Gender.Male : Gender.Female;
+
         var newUser = new User
         {
             Id = Guid.NewGuid(),
@@ -89,10 +91,12 @@ internal class IdentityService : IIdentityService
             LastName = registerUserDto.LastName,
             UserName = registerUserDto.UserName,
             PrivateAccount = registerUserDto.PrivateAccount,
+            Gender = gender,
+            ProfilePicture = profilePicture,
             Email = registerUserDto.Email,
             EmailConfirmed = false,
             Exercises = new(),
-            Premium = new(),
+            Premium = false,
             Valid = true,
             Friends = new(),
             InverseFriends = new (),
@@ -103,7 +107,7 @@ internal class IdentityService : IIdentityService
 
         if (!createdUser.Succeeded)
         {
-            return new AuthenticationRegisterResult()
+            return new AuthenticationRegisterResult
             {
                 Success = false,
                 Errors = createdUser.Errors.Select(x => x.Description)

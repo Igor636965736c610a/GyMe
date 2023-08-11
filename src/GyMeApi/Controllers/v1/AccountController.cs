@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using GymAppApi.Controllers.HelperAttributes;
 using GymAppApi.Routes.v1;
 using GymAppInfrastructure.Dtos.User;
@@ -10,6 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+
 
 namespace GymAppApi.Controllers.v1;
 
@@ -18,19 +23,23 @@ public class AccountController : ControllerBase
 {
     private readonly IIdentityService _identityService;
     private readonly IAccountService _accountService;
-    
-    public AccountController(IIdentityService identityService, IAccountService accountService)
+    private readonly IWebHostEnvironment _webHostEnvironment;
+
+    public AccountController(IIdentityService identityService, IAccountService accountService, IWebHostEnvironment webHostEnvironment)
     {
         _identityService = identityService;
         _accountService = accountService;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     [AllowAnonymous]
     [HttpPost(ApiRoutes.Account.Register)]
-    public async Task<IActionResult> Register([FromBody]RegisterUserDto registerUserDto)
+    public async Task<IActionResult> Register([FromBody]RegisterUserDto registerUserDto, IFormFile? pictureFile)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+
+        var profilePicture = await ValidateAndScaleProfilePicture(pictureFile, 200, 200);
 
         Func<string, string, string> createCallbackUrl = (userIdParam, codeParam)
             => Request.Scheme + "://" + Request.Host + Url.Action("ConfirmEmail", "Account", new
@@ -39,7 +48,7 @@ public class AccountController : ControllerBase
                 code = codeParam
             });
 
-        var result = await _identityService.Register(registerUserDto, createCallbackUrl);
+        var result = await _identityService.Register(registerUserDto, profilePicture, createCallbackUrl);
 
         if (!result.Success)
         {
@@ -111,7 +120,7 @@ public class AccountController : ControllerBase
         {
             return BadRequest(result.Errors);
         }
-        
+
         return Ok(result);
     }
     
@@ -196,5 +205,51 @@ public class AccountController : ControllerBase
         var accountInf = await _accountService.GetInf();
 
         return Ok(accountInf);
+    }
+    private async Task<byte[]> ValidateAndScaleProfilePicture(IFormFile? pictureFile, int maxWidth, int maxHeight)
+    {
+        if (pictureFile is null || pictureFile.Length == 0)
+        {
+            var defaultImagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "images/defaultProfilePicture.jpg");
+            return await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+        }
+        
+        if (pictureFile.Length > 400 * 1024)
+        {
+            throw new ArgumentException("Picture size exceeds the allowed limit of 400 KB.");
+        }
+
+        using var image = await Image.LoadAsync(pictureFile.OpenReadStream());
+
+        if (image.Width > maxWidth || image.Height > maxHeight)
+        {
+            using var resizedImage = ResizeImage(image, maxWidth, maxHeight);
+            await using var memoryStream = new MemoryStream();
+            await resizedImage.SaveAsync(memoryStream, new JpegEncoder());
+            return memoryStream.ToArray();
+        }
+
+        await using (var memoryStream = new MemoryStream())
+        {
+            await image.SaveAsync(memoryStream, new JpegEncoder());
+            return memoryStream.ToArray();
+        }
+    }
+
+    private static Image ResizeImage(Image image, int maxWidth, int maxHeight)
+    {
+        double ratioX = (double)maxWidth / image.Width;
+        double ratioY = (double)maxHeight / image.Height;
+        double ratio = Math.Min(ratioX, ratioY);
+        int newWidth = (int)(image.Width * ratio);
+        int newHeight = (int)(image.Height * ratio);
+
+        image.Mutate(x => x.Resize(new ResizeOptions
+        {
+            Size = new SixLabors.ImageSharp.Size(newWidth, newHeight),
+            Mode = ResizeMode.Max
+        }));
+
+        return image;
     }
 }
