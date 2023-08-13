@@ -1,6 +1,6 @@
-﻿using GymAppInfrastructure.Dtos.Exercise;
+﻿using GymAppInfrastructure.Models.Exercise;
 
-namespace GymAppInfrastructure.Dtos.User;
+namespace GymAppInfrastructure.Models.User;
 
 public class ShowProfileDto
 {

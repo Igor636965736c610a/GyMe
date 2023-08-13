@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.User;
+using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Options;
@@ -45,7 +45,7 @@ internal class UserService : IUserService
         
         if (userIdFromJwt == userToAddId)
             throw new InvalidOperationException("You can't be friend with yourself");
-        var userToAdd = await _userRepo.Get(userToAddId);
+        var userToAdd = await _userRepo.GetOnlyValid(userToAddId);
         if (userToAdd is null)
             throw new NullReferenceException("User does not exist");
         var friendStatus1 = await _userRepo.GetFriend(userIdFromJwt, userToAddId);
@@ -66,8 +66,8 @@ internal class UserService : IUserService
     {
         var userIdFromJwt = _userContextService.UserId;
         
-        var user = await _userRepo.Get(id);
-        if(user is null || !user.Valid)
+        var user = await _userRepo.GetOnlyValid(id);
+        if(user is null)
             throw new NullReferenceException("User does not exist");
         
         var userDto = _mapper.Map<User, GetUserDto>(user);

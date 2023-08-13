@@ -2,7 +2,7 @@
 using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Exercise;
+using GymAppInfrastructure.Models.Exercise;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Options;

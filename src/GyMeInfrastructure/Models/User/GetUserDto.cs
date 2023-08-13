@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Dtos.User;
+﻿namespace GymAppInfrastructure.Models.User;
 
 public class GetUserDto
 {
@@ -8,6 +8,6 @@ public class GetUserDto
     public bool PrivateAccount { get; set; }
     public GenderDto Gender { get; set; }
     public byte[] ProfilePicture { get; set; }
-    public FriendStatusDto? FriendStatus { get; set; } = null;
+    public FriendStatusDto? FriendStatus { get; set; } 
     public Guid Id { get; set; } 
 }

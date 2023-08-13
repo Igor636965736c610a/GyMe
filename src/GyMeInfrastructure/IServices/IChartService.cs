@@ -1,4 +1,4 @@
-﻿using GymAppInfrastructure.Dtos.Exercise;
+﻿using GymAppInfrastructure.Models.Exercise;
 using GymAppInfrastructure.Options;
 
 namespace GymAppInfrastructure.IServices;

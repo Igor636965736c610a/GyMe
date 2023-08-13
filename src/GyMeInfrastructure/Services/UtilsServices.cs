@@ -1,6 +1,6 @@
 ﻿using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Series;
+using GymAppInfrastructure.Models.Series;
 
 namespace GymAppInfrastructure.Services;
 
@@ -11,8 +11,8 @@ internal static class UtilsServices
         if (userIdFromJwt == userIdFromResource)
             return true;
         
-        var user = await userRepo.Get(userIdFromResource);
-        if (!user!.PrivateAccount)
+        var user = await userRepo.GetOnlyValid(userIdFromResource);
+        if (user is { ExtendedUser.PrivateAccount: false })
             return true;
 
         var friendStatus = await userRepo.GetFriend(userIdFromJwt, userIdFromResource);

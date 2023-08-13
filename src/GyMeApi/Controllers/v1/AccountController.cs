@@ -4,8 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using GymAppApi.Controllers.HelperAttributes;
 using GymAppApi.Routes.v1;
-using GymAppInfrastructure.Dtos.User;
+using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.Models.Account;
 using GymAppInfrastructure.Results;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
@@ -34,12 +35,13 @@ public class AccountController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost(ApiRoutes.Account.Register)]
-    public async Task<IActionResult> Register([FromBody]RegisterUserDto registerUserDto, IFormFile? pictureFile)
+    public async Task<IActionResult> Register([FromBody]RegisterUserDto registerUserDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var profilePicture = await ValidateAndScaleProfilePicture(pictureFile, 200, 200);
+        //var profilePicture = await ValidateAndScaleProfilePicture(registerUserDto.ProfileImage, 200, 200);
+        var profilePicture = await GetDefaultProfilePicture();
 
         Func<string, string, string> createCallbackUrl = (userIdParam, codeParam)
             => Request.Scheme + "://" + Request.Host + Url.Action("ConfirmEmail", "Account", new
@@ -57,7 +59,21 @@ public class AccountController : ControllerBase
 
         return Ok(result);
     }
-    
+
+    [Authorize(Policy = "SSO")]
+    [HttpPost(ApiRoutes.Account.SetProfilePicture)]
+    public async Task<IActionResult> SetProfilePicture([FromForm] IFormFile image)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var profilePicture = await ValidateAndScaleProfilePicture(image);
+
+        await _accountService.SetUserProfile(profilePicture);
+
+        return Ok();
+    }
+
     [AllowAnonymous]
     [HttpPost(ApiRoutes.Account.SendResetPasswordToken)]
     public async Task<IActionResult> SendResetPasswordToken([FromQuery] string email)
@@ -172,12 +188,12 @@ public class AccountController : ControllerBase
     [Authorize(Policy = "SSO")]
     [SkipValidAccountCheck]
     [HttpPost(ApiRoutes.Account.ActivateUser)]
-    public async Task<IActionResult> ActivateUser([FromQuery] string userName)
+    public async Task<IActionResult> ActivateUser([FromBody] ActivateAccountModel activateAccountModel) 
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        await _identityService.ActivateUser(userName);
+        await _identityService.ActivateUser(activateAccountModel);
 
         return Ok();
     }
@@ -206,12 +222,14 @@ public class AccountController : ControllerBase
 
         return Ok(accountInf);
     }
-    private async Task<byte[]> ValidateAndScaleProfilePicture(IFormFile? pictureFile, int maxWidth, int maxHeight)
+    
+    private async Task<byte[]> ValidateAndScaleProfilePicture(IFormFile? pictureFile)
     {
+        const int maxWidth = 200;
+        const int maxHeight = 200;
         if (pictureFile is null || pictureFile.Length == 0)
         {
-            var defaultImagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "images/defaultProfilePicture.jpg");
-            return await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+            throw new ArgumentException("No picture file provided.");
         }
         
         if (pictureFile.Length > 400 * 1024)
@@ -251,5 +269,11 @@ public class AccountController : ControllerBase
         }));
 
         return image;
+    }
+
+    private async Task<byte[]> GetDefaultProfilePicture()
+    {
+        var defaultImagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "images/defaultProfilePicture.jpg");
+        return await System.IO.File.ReadAllBytesAsync(defaultImagePath);
     }
 }

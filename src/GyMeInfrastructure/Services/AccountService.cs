@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Account;
-using GymAppInfrastructure.Dtos.User;
+using GymAppInfrastructure.Models.Account;
+using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
 
@@ -21,32 +21,52 @@ internal class AccountService : IAccountService
         _userContextService = userContextService;
     }
 
-    public async Task<GetAccountDto> GetInf()
+    public async Task<GetAccountInfModel> GetInf()
     {
         var userIdFromJwt = _userContextService.UserId;
         
-        var user = await _userRepo.Get(userIdFromJwt);
+        var user = await _userRepo.GetOnlyValid(userIdFromJwt);
         if (user is null)
             throw new InvalidOperationException("Something went wrong");
 
-        var userDto = _mapper.Map<User, GetAccountDto>(user);
-
-        return userDto;
+        var accountInf = _mapper.Map<User, GetAccountInfModel>(user);
+        
+        if (user.ExtendedUser is not null)
+        {
+            accountInf.Gender = (GenderDto)user.ExtendedUser.Gender;
+            accountInf.ProfilePicture = user.ExtendedUser.ProfilePicture;
+        }
+        
+        return accountInf;
     }
 
     public async Task Update(PutUserDto putUserDto)
     {
         var userIdFromJwt = _userContextService.UserId;
         
-        var user = await _userRepo.Get(userIdFromJwt);
-        if (user is null)
+        var user = await _userRepo.GetOnlyValid(userIdFromJwt);
+        if (user?.ExtendedUser is null)
             throw new InvalidOperationException("Something went wrong");
         
         user.UserName = putUserDto.UserName;
         user.FirstName = putUserDto.FirstName;
         user.LastName = putUserDto.LastName;
-        user.PrivateAccount = putUserDto.PrivateAccount;
+        user.ExtendedUser.PrivateAccount = putUserDto.PrivateAccount;
         
+        await _userRepo.Update(user);
+    }
+    
+    public async Task SetUserProfile(byte[] image)
+    {
+        var userIdFromJwt = _userContextService.UserId;
+
+        var user = await _userRepo.GetOnlyValid(userIdFromJwt);
+
+        if (user?.ExtendedUser is null)
+            throw new InvalidProgramException("Something went wrong");
+
+        user.ExtendedUser.ProfilePicture = image;
+
         await _userRepo.Update(user);
     }
 
@@ -54,7 +74,7 @@ internal class AccountService : IAccountService
     {
         var userIdFromJwt = _userContextService.UserId;
         
-        var user = await _userRepo.Get(userIdFromJwt);
+        var user = await _userRepo.GetOnlyValid(userIdFromJwt);
         if (user is null)
             throw new InvalidOperationException("Something went wrong");
 

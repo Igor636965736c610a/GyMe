@@ -1,6 +1,6 @@
-﻿using GymAppInfrastructure.Dtos.Series;
+﻿using GymAppInfrastructure.Models.Series;
 
-namespace GymAppInfrastructure.Dtos.SimpleExercise;
+namespace GymAppInfrastructure.Models.SimpleExercise;
 
 public class PutSimpleExerciseDto
 {

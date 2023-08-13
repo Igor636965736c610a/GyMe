@@ -1,5 +1,5 @@
 ﻿using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Exercise;
+using GymAppInfrastructure.Models.Exercise;
 
 namespace GymAppInfrastructure.IServices;
 

@@ -1,8 +1,8 @@
 ﻿using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Series;
-using GymAppInfrastructure.Dtos.SimpleExercise;
+using GymAppInfrastructure.Models.SimpleExercise;
+using GymAppInfrastructure.Models.Series;
 
-namespace GymAppInfrastructure.Dtos.Exercise;
+namespace GymAppInfrastructure.Models.Exercise;
 
 public class GetExerciseDto
 {

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
-namespace GymAppInfrastructure.Dtos.User;
+namespace GymAppInfrastructure.Models.User;
 
 public class RegisterUserDto
 {

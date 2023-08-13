@@ -1,6 +1,6 @@
 ﻿using GymAppCore.Models.Entities;
 
-namespace GymAppInfrastructure.Dtos.Exercise;
+namespace GymAppInfrastructure.Models.Exercise;
 
 public class PostExerciseDto
 {

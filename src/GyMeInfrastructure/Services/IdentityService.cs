@@ -7,8 +7,9 @@ using FluentEmail.Mailgun;
 using GymAppCore.IRepo;
 using GymAppCore.Models;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.User;
+using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.Models.Account;
 using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Results;
 using GymAppInfrastructure.Results.Authorization;
@@ -37,9 +38,7 @@ internal class IdentityService : IIdentityService
     public IdentityService(
         UserManager<User> userManager, JwtSettings jwtSettings, 
         IOptionsSnapshot<EmailOptions> emailOptions, 
-        IUserRepo userRepo, SignInManager<User> signInManager, 
-        ApplicationFacebookOptions applicationFacebookOptions,
-        IUserContextService userContextService)
+        IUserRepo userRepo, IUserContextService userContextService)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;
@@ -90,14 +89,17 @@ internal class IdentityService : IIdentityService
             FirstName = registerUserDto.FirstName,
             LastName = registerUserDto.LastName,
             UserName = registerUserDto.UserName,
-            PrivateAccount = registerUserDto.PrivateAccount,
-            Gender = gender,
-            ProfilePicture = profilePicture,
             Email = registerUserDto.Email,
             EmailConfirmed = false,
             Exercises = new(),
-            Premium = false,
             Valid = true,
+            ExtendedUser = new ExtendedUser()
+            {
+                PrivateAccount = registerUserDto.PrivateAccount,
+                Gender = gender,
+                ProfilePicture = profilePicture,
+                Premium = false
+            },
             Friends = new(),
             InverseFriends = new (),
             AccountProvider = nameof(AccountProviderOptions.App),
@@ -165,11 +167,9 @@ internal class IdentityService : IIdentityService
             FirstName = name,
             LastName = surname,
             UserName = Guid.NewGuid().ToString(),
-            PrivateAccount = true,
             Email = email,
             EmailConfirmed = true,
             Exercises = new(),
-            Premium = new(),
             Valid = false,
             Friends = new(),
             InverseFriends = new(),
@@ -202,12 +202,12 @@ internal class IdentityService : IIdentityService
         return result.Succeeded;
     }
 
-    public async Task<ActivateUserResult> ActivateUser(string userName)
+    public async Task<ActivateUserResult> ActivateUser(ActivateAccountModel activateAccountModel)
     {
         var userIdFromJwt = _userContextService.UserId;
         
         var user = await _userRepo.Get(userIdFromJwt);
-        if (user == null)
+        if (user is null)
         {
             throw new NullReferenceException("User not found");
         }
@@ -215,18 +215,27 @@ internal class IdentityService : IIdentityService
         if (user.Valid)
             throw new InvalidOperationException("User is already Activate");
 
-        if (userName.Length < 2)
+        if (activateAccountModel.UserName.Length < 2)
             return new ActivateUserResult()
             {
                 Success = false,
                 Errors = new[] { "username must contain at least 2 characters" }
             };
-        var userWithTheSameUsername = await _userRepo.Get(userName);
+        var userWithTheSameUsername = await _userRepo.Get(activateAccountModel.UserName);
         if (userWithTheSameUsername is not null)
             throw new InvalidOperationException("User with this username already exist");
 
-        user.UserName = userName;
+        var extendedUser = new ExtendedUser()
+        {
+            Gender = (Gender)activateAccountModel.Gender,
+            ProfilePicture = activateAccountModel.ProfilePicture,
+            PrivateAccount = activateAccountModel.PrivateAccount,
+            User = user
+        };
+
+        user.UserName = activateAccountModel.UserName;
         user.Valid = true;
+        user.ExtendedUser = extendedUser;
         await _userRepo.Update(user);
 
         var token = GenerateToken(user);

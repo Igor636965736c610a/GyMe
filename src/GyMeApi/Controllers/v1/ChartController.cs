@@ -1,5 +1,5 @@
 ﻿using GymAppApi.Routes.v1;
-using GymAppInfrastructure.Dtos.Exercise;
+using GymAppInfrastructure.Models.Exercise;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Options;
 using Microsoft.AspNetCore.Authorization;

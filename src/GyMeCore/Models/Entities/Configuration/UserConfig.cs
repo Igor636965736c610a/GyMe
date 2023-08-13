@@ -10,8 +10,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.Property(p => p.Id).IsRequired();
         builder.Property(p => p.FirstName).IsRequired().HasMaxLength(EntitiesConfig.User.FirstNameMaxLength);
         builder.Property(p => p.LastName).IsRequired().HasMaxLength(EntitiesConfig.User.LastNameLength);
-        builder.Property(p => p.UserName).HasMaxLength(EntitiesConfig.User.UserNameMaxLength);
-        builder.Property(p => p.PrivateAccount).IsRequired();
+        builder.Property(p => p.UserName).IsRequired().HasMaxLength(EntitiesConfig.User.UserNameMaxLength);
         builder.Property(p => p.Valid).IsRequired();
         builder.Property(p => p.AccountProvider).IsRequired().HasMaxLength(EntitiesConfig.User.AccountProviderMaxLength);
         

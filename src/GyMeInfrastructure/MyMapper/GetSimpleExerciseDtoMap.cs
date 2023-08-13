@@ -1,5 +1,5 @@
 ﻿using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.SimpleExercise;
+using GymAppInfrastructure.Models.SimpleExercise;
 
 namespace GymAppInfrastructure.MyMapper;
 

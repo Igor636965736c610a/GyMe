@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Account;
-using GymAppInfrastructure.Dtos.Exercise;
-using GymAppInfrastructure.Dtos.Series;
-using GymAppInfrastructure.Dtos.SimpleExercise;
-using GymAppInfrastructure.Dtos.User;
+using GymAppInfrastructure.Models.Account;
+using GymAppInfrastructure.Models.Exercise;
+using GymAppInfrastructure.Models.Series;
+using GymAppInfrastructure.Models.SimpleExercise;
+using GymAppInfrastructure.Models.User;
 
 namespace GymAppInfrastructure.AutoMapper;
 
@@ -19,7 +19,7 @@ public static class AutoMapperConfig
                 cfg.CreateMap<SimpleExercise, GetSimpleExerciseDto>().ReverseMap();
                 cfg.CreateMap<User, GetUserDto>().ReverseMap();
                 cfg.CreateMap<User, ShowProfileDto>();
-                cfg.CreateMap<User, GetAccountDto>().ReverseMap();
+                cfg.CreateMap<User, GetAccountInfModel>().ReverseMap();
                 cfg.CreateMap<ExercisesType, ExercisesTypeDto>().ReverseMap();
             })
             .CreateMapper();

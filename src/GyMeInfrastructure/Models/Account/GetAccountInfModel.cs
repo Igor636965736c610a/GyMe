@@ -1,6 +1,8 @@
-﻿namespace GymAppInfrastructure.Dtos.Account;
+﻿using GymAppInfrastructure.Models.User;
 
-public class GetAccountDto
+namespace GymAppInfrastructure.Models.Account;
+
+public class GetAccountInfModel
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }
@@ -8,6 +10,8 @@ public class GetAccountDto
     public string UserName { get; set; }
     public bool PrivateAccount { get; set; }
     public bool Valid { get; set; }
+    public GenderDto Gender { get; set; }
+    public byte[] ProfilePicture { get; set; }
     public bool Premium { get; set; }
     public DateTime? ImportancePremium { get; set; }
 }

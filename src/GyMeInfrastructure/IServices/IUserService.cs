@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.User;
+using GymAppInfrastructure.Models.User;
 
 namespace GymAppInfrastructure.IServices;
 

@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Dtos.Exercise;
+﻿namespace GymAppInfrastructure.Models.Exercise;
 
 public class PutExerciseDto
 {

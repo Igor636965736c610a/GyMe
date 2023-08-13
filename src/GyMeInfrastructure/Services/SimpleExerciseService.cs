@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Dtos.Series;
-using GymAppInfrastructure.Dtos.SimpleExercise;
+using GymAppInfrastructure.Models.Series;
+using GymAppInfrastructure.Models.SimpleExercise;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.MyMapper;
@@ -99,7 +99,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
     {
         var userIdFromJwt = _userContextService.UserId;
         
-        var owner = await _userRepo.Get(userId);
+        var owner = await _userRepo.GetOnlyValid(userId);
         if (owner is null)
             throw new InvalidOperationException("User does not exist");
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, userId, _userRepo))

@@ -1,5 +1,6 @@
 ﻿using GymAppCore.Models;
-using GymAppInfrastructure.Dtos.User;
+using GymAppInfrastructure.Models.Account;
+using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.Results;
 using GymAppInfrastructure.Results.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,7 @@ public interface IIdentityService
     Task<AuthenticationLoginResult> Login(LoginUserDto loginUserDto);
     Task<AuthenticationLoginResult> ExternalLogin(string? email, string? nameSurname);
     Task<bool> ConfirmEmail(string userId, string code);
-    Task<ActivateUserResult> ActivateUser(string userName);
+    Task<ActivateUserResult> ActivateUser(ActivateAccountModel activateAccountModel);
     Task<bool> SendResetPasswordToken(string email);
     Task<ResetPasswordResult> ResetPassword(ResetPassword model);
 }

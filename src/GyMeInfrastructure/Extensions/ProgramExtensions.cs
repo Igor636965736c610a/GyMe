@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Refit;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace GymAppInfrastructure.Extensions;
 
@@ -185,10 +186,7 @@ public static class ProgramExtensions
         var emailOptions = new EmailOptions();
         configuration.GetSection(nameof(EmailOptions)).Bind(emailOptions);
         services.AddSingleton(emailOptions);
-        var facebookOptions = new ApplicationFacebookOptions();
-        configuration.GetSection(nameof(ApplicationFacebookOptions)).Bind(facebookOptions);
-        services.AddSingleton(facebookOptions);
 
         return services;
     }
-}
+}  

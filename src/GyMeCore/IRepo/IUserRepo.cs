@@ -4,7 +4,7 @@ namespace GymAppCore.IRepo;
 
 public interface IUserRepo
 {
-    Task<User?> ShowProfile(Guid id);
+    Task<User?> GetOnlyValid(Guid id);
     Task<User?> Get(Guid id);
     Task<User?> Get(string userName);
     Task<List<User>> FindUsers(string key, int page, int size);

@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Dtos.User;
+﻿namespace GymAppInfrastructure.Models.User;
 
 public class UserFriendDto
 {
