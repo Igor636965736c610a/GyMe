@@ -99,7 +99,7 @@ public static class ProgramExtensions
     {
         services.AddSwaggerGen(option =>
         {
-            option.SwaggerDoc("v1", new OpenApiInfo { Title = "GymApp", Version = "v1" });
+            option.SwaggerDoc("v1", new OpenApiInfo { Title = "GyMe", Version = "v1" });
             option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,

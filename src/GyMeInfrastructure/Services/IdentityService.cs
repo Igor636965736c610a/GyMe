@@ -202,7 +202,7 @@ internal class IdentityService : IIdentityService
         return result.Succeeded;
     }
 
-    public async Task<ActivateUserResult> ActivateUser(ActivateAccountModel activateAccountModel)
+    public async Task<ActivateUserResult> ActivateUser(ActivateAccountModel activateAccountModel, byte[] profilePicture)
     {
         var userIdFromJwt = _userContextService.UserId;
         
@@ -228,8 +228,8 @@ internal class IdentityService : IIdentityService
         var extendedUser = new ExtendedUser()
         {
             Gender = (Gender)activateAccountModel.Gender,
-            ProfilePicture = activateAccountModel.ProfilePicture,
             PrivateAccount = activateAccountModel.PrivateAccount,
+            ProfilePicture = profilePicture,
             User = user
         };
 

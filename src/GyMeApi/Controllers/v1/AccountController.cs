@@ -167,6 +167,7 @@ public class AccountController : ControllerBase
 
         var email = authenticateResult.Principal.FindFirstValue(ClaimTypes.Email);
         var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
+        var defaultProfilePicture = await GetDefaultProfilePicture();
 
         var result = await _identityService.ExternalLogin(email, name);
         
@@ -193,7 +194,9 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        await _identityService.ActivateUser(activateAccountModel);
+        var defaultProfilePicture = await GetDefaultProfilePicture();
+        
+        await _identityService.ActivateUser(activateAccountModel, defaultProfilePicture);
 
         return Ok();
     }

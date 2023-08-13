@@ -25,7 +25,7 @@ internal class AccountService : IAccountService
     {
         var userIdFromJwt = _userContextService.UserId;
         
-        var user = await _userRepo.GetOnlyValid(userIdFromJwt);
+        var user = await _userRepo.Get(userIdFromJwt);
         if (user is null)
             throw new InvalidOperationException("Something went wrong");
 

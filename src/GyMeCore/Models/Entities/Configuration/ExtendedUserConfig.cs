@@ -9,6 +9,8 @@ public class ExtendedUserConfig : IEntityTypeConfiguration<ExtendedUser>
     {
         builder.Property(x => x.Gender).IsRequired();
         builder.Property(x => x.ProfilePicture).IsRequired();
+        builder.Property(x => x.UserId).IsRequired();
+        builder.Property(x => x.Premium).IsRequired();
         
         builder.HasKey(x => x.UserId);
         builder
