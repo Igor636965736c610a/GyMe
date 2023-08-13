@@ -23,7 +23,7 @@ internal class UserRepo : IUserRepo
         => await _gymAppContext.Users.Include(x => x.ExtendedUser).FirstOrDefaultAsync(x => x.UserName == userName);
 
     public async Task<List<User>> FindUsers(string key, int page, int size)
-        => await _gymAppContext.Users.Where(x => ($"{x.FirstName}{x.LastName}".ToLower().Contains(key.ToLower().Trim()) || x.UserName.Contains(key) && x.Valid))
+        => await _gymAppContext.Users.Where(x => $"{x.FirstName}{x.LastName}".ToLower().Contains(key.ToLower().Trim()) || x.UserName.Contains(key) && x.Valid)
             .Skip(page*size)
             .Take(size)
             .Include(x => x.ExtendedUser)

@@ -53,13 +53,11 @@ internal class UserService : IUserService
         await SetFriendStatus(userIdFromJwt, userToAddId, friendStatus1, friendStatus2);
     }
 
-    public async Task<List<GetUserDto>> FindUsers(string key, int page, int size)
+    public async Task<IEnumerable<Guid>> FindUsers(string key, int page, int size)
     {
         var users = await _userRepo.FindUsers(key, page, size);
 
-        var usersDto = _mapper.Map<List<User>, List<GetUserDto>>(users);
-
-        return usersDto;
+        return users.Select(x => x.Id);
     }
 
     public async Task<GetUserDto> GetUser(Guid id)

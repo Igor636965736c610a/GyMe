@@ -3,6 +3,7 @@ using GymAppInfrastructure.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GymAppApi.Controllers.v1;
 
@@ -65,5 +66,16 @@ public class UserController : ControllerBase
         var friends = await _userService.GetFriends(page, size);
 
         return Ok(friends);
+    }
+
+    [HttpGet()]
+    public async Task<IActionResult> FindUser([FromQuery] string key, [FromQuery] int page, [FromQuery] int size)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var users = await _userService.FindUsers(key, page, size);
+
+        return Ok(users);
     }
 }
