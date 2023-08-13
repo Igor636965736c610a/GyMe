@@ -32,6 +32,7 @@ public static class ApiRoutes
         public const string AddFriend = "addFriend/{id}";
         public const string DeleteFriend = "deleteFriend/{id}";
         public const string GetUser = "get{id}";
+        public const string FindUser = "findUser";
         public const string GetFriends = "getFriends";
     }
     

@@ -68,7 +68,7 @@ public class UserController : ControllerBase
         return Ok(friends);
     }
 
-    [HttpGet()]
+    [HttpGet(ApiRoutes.User.FindUser)]
     public async Task<IActionResult> FindUser([FromQuery] string key, [FromQuery] int page, [FromQuery] int size)
     {
         if (!ModelState.IsValid)
