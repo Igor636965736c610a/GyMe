@@ -1,3 +1,3 @@
 # GyMe
 
-![Diagram bez tytułu drawio (3)](https://github.com/Igor636965736c610a/GyMe/assets/102369546/1e108461-be34-49f5-bc41-a0d4d5b8c7e1)
+![Diagram bez tytułu drawio (4)](https://github.com/Igor636965736c610a/GyMe/assets/102369546/99187db0-7cf0-4de2-9d76-7fbdc2818276)
