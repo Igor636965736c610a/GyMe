@@ -55,7 +55,7 @@ internal class ExerciseService : IExerciseService
         
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
-            throw new InvalidOperationException("Not Found");
+            throw new NullReferenceException("Not Found");
         if(exercise.UserId != userIdFromJwt)
             throw new ForbiddenException("You do not have the appropriate permissions");
         
@@ -80,7 +80,7 @@ internal class ExerciseService : IExerciseService
         
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
-            throw new InvalidOperationException("Not Found");
+            throw new NullReferenceException("Not Found");
         if (exercise.UserId != userIdFromJwt)
             throw new ForbiddenException("You do not have the appropriate permissions");
         

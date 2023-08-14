@@ -167,7 +167,6 @@ public class AccountController : ControllerBase
 
         var email = authenticateResult.Principal.FindFirstValue(ClaimTypes.Email);
         var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
-        var defaultProfilePicture = await GetDefaultProfilePicture();
 
         var result = await _identityService.ExternalLogin(email, name);
         

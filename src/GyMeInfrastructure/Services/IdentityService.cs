@@ -251,7 +251,7 @@ internal class IdentityService : IIdentityService
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user is null)
-            throw new InvalidOperationException("User does not exist");
+            throw new NullReferenceException("User does not exist");
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         var body = $"Password reset token = {token}";
         var subject = "Reset Password token";

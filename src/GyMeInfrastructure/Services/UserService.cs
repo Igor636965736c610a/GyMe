@@ -29,7 +29,7 @@ internal class UserService : IUserService
         var friend1 = await _userRepo.GetFriend(userIdFromJwt, userToRemoveId);
         var friend2 = await _userRepo.GetFriend(userToRemoveId, userIdFromJwt);
         if (friend1 is null)
-            throw new InvalidOperationException("something went wrong");
+            throw new InvalidProgramException("something went wrong");
         if (friend2 is null)
             throw new InvalidOperationException("you don't have this friend");
         await _userRepo.RemoveFriend(new List<UserFriend>()

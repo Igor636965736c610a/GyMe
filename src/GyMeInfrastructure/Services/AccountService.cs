@@ -27,7 +27,7 @@ internal class AccountService : IAccountService
         
         var user = await _userRepo.Get(userIdFromJwt);
         if (user is null)
-            throw new InvalidOperationException("Something went wrong");
+            throw new InvalidProgramException("Something went wrong");
 
         var accountInf = _mapper.Map<User, GetAccountInfModel>(user);
         
@@ -46,7 +46,7 @@ internal class AccountService : IAccountService
         
         var user = await _userRepo.GetOnlyValid(userIdFromJwt);
         if (user?.ExtendedUser is null)
-            throw new InvalidOperationException("Something went wrong");
+            throw new InvalidProgramException("Something went wrong");
         
         user.UserName = putUserDto.UserName;
         user.FirstName = putUserDto.FirstName;
@@ -76,7 +76,7 @@ internal class AccountService : IAccountService
         
         var user = await _userRepo.GetOnlyValid(userIdFromJwt);
         if (user is null)
-            throw new InvalidOperationException("Something went wrong");
+            throw new InvalidProgramException("Something went wrong");
 
         await _userRepo.RemoveUser(user);
     }

@@ -26,7 +26,7 @@ public class ExerciseController : ControllerBase
 
         await _exerciseService.Create(postExerciseDto);
 
-        return Ok();
+        return Ok();   
     }
 
     [HttpGet(ApiRoutes.Exercise.Get)]

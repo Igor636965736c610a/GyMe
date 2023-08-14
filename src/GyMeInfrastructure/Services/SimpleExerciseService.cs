@@ -33,7 +33,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
         
         var exercise = await _exerciseRepo.Get(postSimpleExerciseDto.ExerciseId);
         if (exercise is null)
-            throw new InvalidOperationException("Exercise does not exist");
+            throw new NullReferenceException("Exercise does not exist");
         if (exercise.UserId != userIdFromJwt)
             throw new ForbiddenException("You do not have the appropriate permissions");
         if(!ValidSeries(postSimpleExerciseDto.SeriesDto))
@@ -52,7 +52,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
         
         var simpleExercise = await _simpleExerciseRepo.Get(id);
         if (simpleExercise is null)
-            throw new InvalidOperationException("Not Found");
+            throw new NullReferenceException("Not Found");
         if (simpleExercise.UserId != userIdFromJwt)
             throw new ForbiddenException("You do not have access to this data");
         if(!ValidSeries(putExerciseDto.SeriesDto))
