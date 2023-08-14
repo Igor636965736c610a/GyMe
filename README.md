@@ -1,3 +1,4 @@
 # GyMe
 
-![qwertyu](https://github.com/Igor636965736c610a/GyMe/assets/102369546/03519a9d-d480-4339-8379-6f912a0923b7)
+
+![dwqefawfwqfq](https://github.com/Igor636965736c610a/GyMe/assets/102369546/3eda2c8c-0892-42a3-8fd3-1e8f176ff939)
