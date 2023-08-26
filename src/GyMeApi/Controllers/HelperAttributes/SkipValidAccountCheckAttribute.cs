@@ -1,6 +1,6 @@
 ﻿namespace GymAppApi.Controllers.HelperAttributes;
 
-[AttributeUsage(AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.All)]
 public class SkipValidAccountCheckAttribute : Attribute
 {
 }

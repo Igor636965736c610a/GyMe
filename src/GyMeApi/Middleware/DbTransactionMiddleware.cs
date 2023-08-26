@@ -1,5 +1,6 @@
 ﻿using GymAppInfrastructure.Context;
 using GymAppInfrastructure.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GymAppApi.Middleware;
@@ -19,13 +20,20 @@ public class DbTransactionMiddleware : IMiddleware
         try
         {
             await next(context);
-
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+        try
+        {
             await transaction.CommitAsync();
         }
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            throw; //new DbCommitException("DbTransaction", ex); //mój exception se zrobie jakiś 
+            throw new DbCommitException("DbTransaction", ex);
         }
     }
 }

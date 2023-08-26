@@ -98,6 +98,7 @@ internal class IdentityService : IIdentityService
                 PrivateAccount = registerUserDto.PrivateAccount,
                 Gender = gender,
                 ProfilePicture = profilePicture,
+                Description = registerUserDto.Description,
                 Premium = false
             },
             Friends = new(),
@@ -147,7 +148,7 @@ internal class IdentityService : IIdentityService
     public async Task<AuthenticationLoginResult> ExternalLogin(string? email, string? nameSurname)
     {
         if (email is null || nameSurname is null)
-            throw new InvalidOperationException("Something went wrong");
+            throw new InvalidProgramException("Something went wrong");
 
         var user = await _userManager.FindByEmailAsync(email);
         if (user is not null)
@@ -230,6 +231,7 @@ internal class IdentityService : IIdentityService
             Gender = (Gender)activateAccountModel.Gender,
             PrivateAccount = activateAccountModel.PrivateAccount,
             ProfilePicture = profilePicture,
+            Description = activateAccountModel.Description,
             User = user
         };
 

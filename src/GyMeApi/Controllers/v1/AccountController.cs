@@ -40,7 +40,6 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        //var profilePicture = await ValidateAndScaleProfilePicture(registerUserDto.ProfileImage, 200, 200);
         var profilePicture = await GetDefaultProfilePicture();
 
         Func<string, string, string> createCallbackUrl = (userIdParam, codeParam)
@@ -195,9 +194,9 @@ public class AccountController : ControllerBase
         
         var defaultProfilePicture = await GetDefaultProfilePicture();
         
-        await _identityService.ActivateUser(activateAccountModel, defaultProfilePicture);
+        var result = await _identityService.ActivateUser(activateAccountModel, defaultProfilePicture);
 
-        return Ok();
+        return Ok(result);
     }
 
     [Authorize(Policy = "SSO")]

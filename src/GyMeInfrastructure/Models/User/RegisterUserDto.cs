@@ -10,6 +10,7 @@ public class RegisterUserDto
     public string LastName { get; set; }
     public bool PrivateAccount { get; set; }
     public bool IsChlopak { get; set; }
+    public string? Description { get; set; }
     [EmailAddress]
     public string Email { get; set; }
     public string Password { get; set; }

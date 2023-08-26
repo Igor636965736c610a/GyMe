@@ -9,6 +9,7 @@ using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Repo;
 using GymAppInfrastructure.Requirements;
 using GymAppInfrastructure.Services;
+using GymAppInfrastructure.Services.InternalManagement;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
@@ -95,7 +96,7 @@ public static class ProgramExtensions
         return services;
     }
 
-    public static IServiceCollection AddMvcModel(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerConfig(this IServiceCollection services)
     {
         services.AddSwaggerGen(option =>
         {
@@ -183,9 +184,10 @@ public static class ProgramExtensions
 
     public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        var emailOptions = new EmailOptions();
-        configuration.GetSection(nameof(EmailOptions)).Bind(emailOptions);
-        services.AddSingleton(emailOptions);
+        services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
+        services.AddSingleton<ErrorService>();
+        services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
+        services.AddSingleton<EmailOptions>();
 
         return services;
     }

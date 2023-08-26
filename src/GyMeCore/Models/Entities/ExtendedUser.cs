@@ -10,6 +10,7 @@ public class ExtendedUser
     public bool PrivateAccount { get; set; }
     public bool Premium { get; set; } 
     public DateTime? ImportancePremium { get; set; }
+    public string? Description { get; set; }
     public User User { get; set; }
     public Guid UserId { get; set; }
 }

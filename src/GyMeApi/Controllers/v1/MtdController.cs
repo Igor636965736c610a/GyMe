@@ -1,10 +1,12 @@
-﻿using GymAppInfrastructure.ApiResponses;
+﻿using GymAppApi.Controllers.HelperAttributes;
+using GymAppInfrastructure.ApiResponses;
 using GymAppInfrastructure.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymAppApi.Controllers.v1;
 
+[SkipValidAccountCheck]
 [Route("[controller]")]
 public class MtdController : ControllerBase
 {

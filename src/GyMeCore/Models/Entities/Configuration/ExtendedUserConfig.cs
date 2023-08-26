@@ -11,8 +11,9 @@ public class ExtendedUserConfig : IEntityTypeConfiguration<ExtendedUser>
         builder.Property(x => x.ProfilePicture).IsRequired();
         builder.Property(x => x.UserId).IsRequired();
         builder.Property(x => x.Premium).IsRequired();
-        
+        builder.Property(x => x.Description).HasMaxLength(150);
         builder.HasKey(x => x.UserId);
+        
         builder
             .HasOne(x => x.User)
             .WithOne(x => x.ExtendedUser)

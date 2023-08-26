@@ -49,6 +49,10 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
 
@@ -296,8 +300,7 @@ namespace GymAppInfrastructure.Migrations
                 {
                     b.Navigation("Exercises");
 
-                    b.Navigation("ExtendedUser")
-                        .IsRequired();
+                    b.Navigation("ExtendedUser");
 
                     b.Navigation("Friends");
 

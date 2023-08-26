@@ -1,12 +1,11 @@
 using System.Text.Json.Serialization;
+using FluentValidation.AspNetCore;
 using GymAppApi.Middleware;
 using GymAppApi.Middleware.Extension;
 using GymAppInfrastructure.AutoMapper;
 using GymAppInfrastructure.Context;
 using GymAppInfrastructure.Extensions;
 using GymAppInfrastructure.Options;
-using GymAppInfrastructure.Requirements;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +17,7 @@ builder.Services.AddControllers()
         x.JsonSerializerOptions.Converters.Add(converter);
     });
 builder.Services.BindOptions(builder.Configuration);
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddDb(builder.Configuration);
 builder.Services.ConfigureRefit();
 builder.Services.AddCorsPolicy();
@@ -27,7 +27,7 @@ builder.Services.AddRepositories();
 builder.Services.AddMiddlewares();
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddAuthorizationSet();
-builder.Services.AddMvcModel();
+builder.Services.AddSwaggerConfig();
 builder.Services.AddSingleton(AutoMapperConfig.Initialize());
 builder.Services.AddCookies();
 builder.Services.AddHttpContextAccessor();
@@ -56,6 +56,8 @@ if (app.Environment.IsDevelopment())
         option.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description);
     });
 }
+
+app.UseCors("AllowAll");
 
 app.UseStaticFiles();
 
