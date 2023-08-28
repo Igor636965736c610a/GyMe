@@ -68,6 +68,17 @@ public class UserController : ControllerBase
         return Ok(friends);
     }
 
+    [HttpGet(ApiRoutes.User.GetCommonFriends)]
+    public async Task<IActionResult> GetCommonFriends([FromQuery]int page)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var commonFriends = await _userService.GetCommonFriends(page);
+
+        return Ok(commonFriends);
+    }
+
     [HttpGet(ApiRoutes.User.FindUser)]
     public async Task<IActionResult> FindUser([FromQuery] string key, [FromQuery] int page, [FromQuery] int size)
     {

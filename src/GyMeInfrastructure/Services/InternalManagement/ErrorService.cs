@@ -1,4 +1,4 @@
-﻿using GymAppInfrastructure.Context;
+﻿using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Models.InternalManagement;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -9,7 +9,7 @@ public class ErrorService
 {
     private readonly IMongoCollection<Error> _errorsCollection;
     
-    public ErrorService(IOptions<MongoDbSettings> mongoDbSettings) {
+    public ErrorService(IOptions<MongoDbErrors> mongoDbSettings) {
         MongoClient client = new MongoClient(mongoDbSettings.Value.ConnectionURI);
         IMongoDatabase database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
         _errorsCollection = database.GetCollection<Error>(mongoDbSettings.Value.CollectionName);

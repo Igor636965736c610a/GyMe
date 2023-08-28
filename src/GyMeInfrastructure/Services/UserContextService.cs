@@ -14,6 +14,18 @@ public class UserContextService : IUserContextService
     }
 
     public ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
+
+    public string Email
+    {
+        get
+        {
+            if (User is null)
+                throw new InvalidProgramException();
+            var first = User.FindFirst(c => c.Type == ClaimTypes.Email) ?? throw new InvalidProgramException();
+            return first.Value;
+        }
+    }
+
     public Guid UserId
     {
         get

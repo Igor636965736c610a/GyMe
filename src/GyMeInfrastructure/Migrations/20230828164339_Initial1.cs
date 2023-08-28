@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GymAppInfrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Initial1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,10 +16,11 @@ namespace GymAppInfrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
-                    PrivateAccount = table.Column<bool>(type: "boolean", nullable: false),
-                    UserName = table.Column<string>(type: "text", nullable: true),
+                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UserName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Valid = table.Column<bool>(type: "boolean", nullable: false),
+                    AccountProvider = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
                     NormalizedEmail = table.Column<string>(type: "text", nullable: true),
@@ -60,43 +61,22 @@ namespace GymAppInfrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FriendRequests",
+                name: "ExtendedUsers",
                 columns: table => new
                 {
-                    SenderId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RecipientId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Gender = table.Column<int>(type: "integer", nullable: false),
+                    ProfilePicture = table.Column<byte[]>(type: "bytea", nullable: false),
+                    PrivateAccount = table.Column<bool>(type: "boolean", nullable: false),
+                    Premium = table.Column<bool>(type: "boolean", nullable: false),
+                    ImportancePremium = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Description = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FriendRequests", x => new { x.SenderId, x.RecipientId });
+                    table.PrimaryKey("PK_ExtendedUsers", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_FriendRequests_Users_RecipientId",
-                        column: x => x.RecipientId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FriendRequests_Users_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Premiums",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    PremiumAccount = table.Column<bool>(type: "boolean", nullable: false),
-                    Importance = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Premiums", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Premiums_Users_UserId",
+                        name: "FK_ExtendedUsers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -108,7 +88,8 @@ namespace GymAppInfrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FriendId = table.Column<Guid>(type: "uuid", nullable: false)
+                    FriendId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FriendStatus = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -134,9 +115,8 @@ namespace GymAppInfrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ExerciseId = table.Column<Guid>(type: "uuid", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SeriesString = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,17 +161,6 @@ namespace GymAppInfrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendRequests_RecipientId",
-                table: "FriendRequests",
-                column: "RecipientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Premiums_UserId",
-                table: "Premiums",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Series_SimpleExerciseId",
                 table: "Series",
                 column: "SimpleExerciseId");
@@ -216,10 +185,7 @@ namespace GymAppInfrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "FriendRequests");
-
-            migrationBuilder.DropTable(
-                name: "Premiums");
+                name: "ExtendedUsers");
 
             migrationBuilder.DropTable(
                 name: "Series");

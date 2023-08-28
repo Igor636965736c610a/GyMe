@@ -3,7 +3,6 @@ using FluentValidation.AspNetCore;
 using GymAppApi.Middleware;
 using GymAppApi.Middleware.Extension;
 using GymAppInfrastructure.AutoMapper;
-using GymAppInfrastructure.Context;
 using GymAppInfrastructure.Extensions;
 using GymAppInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +36,7 @@ builder.Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<GymAppContext>();
+var dbContext = scope.ServiceProvider.GetRequiredService<GyMePostgresContext>();
 var pendingMigrations = dbContext.Database.GetPendingMigrations();
 if (pendingMigrations.Any())
 {

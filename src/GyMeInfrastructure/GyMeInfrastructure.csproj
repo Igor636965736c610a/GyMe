@@ -41,4 +41,8 @@
       <PackageReference Include="System.Text.Json" Version="8.0.0-preview.5.23280.8" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>

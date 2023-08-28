@@ -2,8 +2,7 @@
 
 public enum FriendStatusDto
 {
-    Friends,
-    Invited,
-    BeInvited,
-    Strangers
+    InviteSend,
+    InviteReceived,
+    Friend
 }
