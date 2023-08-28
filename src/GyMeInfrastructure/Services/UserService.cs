@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
+using GymAppCore.Models.Results;
 using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
@@ -86,6 +87,20 @@ internal class UserService : IUserService
         var friendsDto = _mapper.Map<IEnumerable<User>, IEnumerable<GetUserDto>>(friends);
 
         return friendsDto;
+    }
+
+    public async Task<IEnumerable<CommonFriendsResultDto>> GetCommonFriends(int page)
+    {
+        var userIdFromJwt = _userContextService.UserId;
+
+        var user = await _userRepo.GetOnlyValid(userIdFromJwt);
+        if(user is null)
+            throw new InvalidProgramException("Something went wrong");
+
+        var commonFriends = await _userRepo.GetCommonFriendsSortedByCount(userIdFromJwt, page);
+        var commonFriendsDto = _mapper.Map<IEnumerable<CommonFriendsResult>, IEnumerable<CommonFriendsResultDto>>(commonFriends);
+        
+        return commonFriendsDto;
     }
     
     private async Task SetFriendStatus(Guid userIdFromJwt, Guid user2Id, UserFriend? friendStatus1, UserFriend? friendStatus2)

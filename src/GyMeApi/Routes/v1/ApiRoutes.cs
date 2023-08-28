@@ -34,6 +34,7 @@ public static class ApiRoutes
         public const string GetUser = "get{id}";
         public const string FindUser = "findUser";
         public const string GetFriends = "getFriends";
+        public const string GetCommonFriends = "getCommonFriends";
     }
     
     public static class SimpleExercise
@@ -51,5 +52,11 @@ public static class ApiRoutes
         public const string GetByType = "getByType";
         public const string GetAllByIds = "getAllByIds";
         public const string GetAllByTypes = "getAllByTypes";
+    }
+    
+    public static class Payments
+    {
+        public const string RedirectToPayment = "redirectToPayment";
+        public const string Webhook = "webhook";
     }
 }

@@ -1,4 +1,4 @@
-﻿using GymAppInfrastructure.Context;
+﻿using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -7,9 +7,9 @@ namespace GymAppApi.Middleware;
 
 public class DbTransactionMiddleware : IMiddleware
 {
-    private readonly GymAppContext _dbContext;
+    private readonly GyMePostgresContext _dbContext;
 
-    public DbTransactionMiddleware(GymAppContext dbContext)
+    public DbTransactionMiddleware(GyMePostgresContext dbContext)
     {
         _dbContext = dbContext;
     }

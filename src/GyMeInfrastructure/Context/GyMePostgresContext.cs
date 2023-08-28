@@ -2,9 +2,9 @@
 using GymAppCore.Models.Entities.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace GymAppInfrastructure.Context;
+namespace GymAppInfrastructure.Options;
 
-public class GymAppContext : DbContext
+public class GyMePostgresContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<ExtendedUser> ExtendedUsers { get; set; }
@@ -13,7 +13,7 @@ public class GymAppContext : DbContext
     public DbSet<Series> Series { get; set; }
     public DbSet<UserFriend> UserFriends { get; set; }
 
-    public GymAppContext(DbContextOptions<GymAppContext> options)
+    public GyMePostgresContext(DbContextOptions<GyMePostgresContext> options)
         : base(options)
     {
     }

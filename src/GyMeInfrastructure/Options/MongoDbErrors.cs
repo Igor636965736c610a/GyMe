@@ -1,6 +1,6 @@
-﻿namespace GymAppInfrastructure.Context;
+﻿namespace GymAppInfrastructure.Options;
 
-public class MongoDbSettings
+public class MongoDbErrors
 {
     public string ConnectionURI { get; set; } = null!;
     public string DatabaseName { get; set; } = null!;

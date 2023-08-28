@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GymAppCore.Models.Entities;
+using GymAppCore.Models.Results;
 using GymAppInfrastructure.Models.Account;
 using GymAppInfrastructure.Models.Exercise;
 using GymAppInfrastructure.Models.Series;
@@ -20,6 +21,7 @@ public static class AutoMapperConfig
                 cfg.CreateMap<User, GetUserDto>().ReverseMap();
                 cfg.CreateMap<User, ShowProfileDto>();
                 cfg.CreateMap<User, GetAccountInfModel>().ReverseMap();
+                cfg.CreateMap<CommonFriendsResult, CommonFriendsResultDto>().ReverseMap();
                 cfg.CreateMap<ExercisesType, ExercisesTypeDto>().ReverseMap();
             })
             .CreateMapper();

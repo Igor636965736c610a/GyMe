@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Context;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Repo;
@@ -36,6 +35,7 @@ public static class ProgramExtensions
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IChartService, ChartService>();
         services.AddScoped<IUserContextService, UserContextService>();
+        services.AddSingleton<ErrorService>();
 
         return services;
     }
@@ -146,12 +146,12 @@ public static class ProgramExtensions
 
     public static IServiceCollection AddDb(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContextPool<GymAppContext>(options => {
+        services.AddDbContextPool<GyMePostgresContext>(options => {
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
         
         services.AddIdentity<User, IdentityRole<Guid>>()
-            .AddEntityFrameworkStores<GymAppContext>()
+            .AddEntityFrameworkStores<GyMePostgresContext>()
             .AddDefaultTokenProviders();
 
         return services;
@@ -184,8 +184,10 @@ public static class ProgramExtensions
 
     public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
-        services.AddSingleton<ErrorService>();
+        services.Configure<MongoDbErrors>(configuration.GetSection(nameof(MongoDbErrors)));
+        services.AddSingleton<MongoDbErrors>();
+        services.Configure<StripeOptions>(configuration.GetSection(nameof(StripeOptions)));
+        services.AddSingleton<StripeOptions>();
         services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
         services.AddSingleton<EmailOptions>();
 
