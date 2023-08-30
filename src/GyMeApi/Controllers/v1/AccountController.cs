@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -61,8 +62,9 @@ public class AccountController : ControllerBase
     }
 
     [Authorize(Policy = "SSO")]
+    [RequestSizeLimit(4*1024)]
     [HttpPost(ApiRoutes.Account.SetProfilePicture)]
-    public async Task<IActionResult> SetProfilePicture([FromForm] IFormFile image)
+    public async Task<IActionResult> SetProfilePicture([FromForm]IFormFile image)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

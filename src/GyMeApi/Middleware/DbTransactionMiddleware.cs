@@ -21,7 +21,7 @@ public class DbTransactionMiddleware : IMiddleware
         {
             await next(context);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
             throw;

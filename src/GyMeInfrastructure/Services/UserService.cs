@@ -78,18 +78,19 @@ internal class UserService : IUserService
         return userDto;
     }
 
-    public async Task<IEnumerable<GetUserDto>> GetFriends(int page, int size)
+    public async Task<IEnumerable<GetUserDto>> GetFriends(FriendStatusDto friendStatusDto, int page, int size)
     {
         var userIdFromJwt = _userContextService.UserId;
+        var friendsStatus = (FriendStatus)friendStatusDto;
         
-        var friends = await _userRepo.GetFriends(userIdFromJwt, page, size);
+        var friends = await _userRepo.GetFriends(userIdFromJwt, friendsStatus, page, size);
 
         var friendsDto = _mapper.Map<IEnumerable<User>, IEnumerable<GetUserDto>>(friends);
 
         return friendsDto;
     }
 
-    public async Task<IEnumerable<CommonFriendsResultDto>> GetCommonFriends(int page)
+    public async Task<IEnumerable<CommonFriendsResultDto>> GetCommonFriends(int page, int size)
     {
         var userIdFromJwt = _userContextService.UserId;
 
@@ -97,7 +98,7 @@ internal class UserService : IUserService
         if(user is null)
             throw new InvalidProgramException("Something went wrong");
 
-        var commonFriends = await _userRepo.GetCommonFriendsSortedByCount(userIdFromJwt, page);
+        var commonFriends = await _userRepo.GetCommonFriendsSortedByCount(userIdFromJwt, page, size);
         var commonFriendsDto = _mapper.Map<IEnumerable<CommonFriendsResult>, IEnumerable<CommonFriendsResultDto>>(commonFriends);
         
         return commonFriendsDto;

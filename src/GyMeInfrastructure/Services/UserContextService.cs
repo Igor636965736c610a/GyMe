@@ -15,6 +15,8 @@ public class UserContextService : IUserContextService
 
     public ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
 
+    public HttpContext HttpContent => _httpContextAccessor.HttpContext ?? throw new InvalidProgramException("HttpContext null");
+
     public string Email
     {
         get
@@ -23,6 +25,17 @@ public class UserContextService : IUserContextService
                 throw new InvalidProgramException();
             var first = User.FindFirst(c => c.Type == ClaimTypes.Email) ?? throw new InvalidProgramException();
             return first.Value;
+        }
+    }
+    
+    public bool EmailConfirmed
+    {
+        get
+        {
+            if (User is null)
+                throw new InvalidProgramException();
+            var first = User.FindFirst(c => c.Type == "EmailConfirmed") ?? throw new InvalidProgramException();
+            return bool.Parse(first.Value);
         }
     }
 

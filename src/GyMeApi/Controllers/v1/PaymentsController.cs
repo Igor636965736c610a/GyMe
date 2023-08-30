@@ -1,5 +1,6 @@
 ﻿using GymAppApi.Routes.v1;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.Models.Payment;
 using GymAppInfrastructure.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,87 +11,40 @@ using Stripe.Checkout;
 namespace GymAppApi.Controllers.v1;
 
 [Authorize]
+[Route("[controller]")]
 public class PaymentsController : ControllerBase
 {
     private readonly string _stripePublicKey;
     private readonly IUserContextService _userContextService;
+    private readonly IPaymentService _paymentService;
 
-    public PaymentsController(IOptions<StripeOptions> options, IUserContextService userContextService)
+    public PaymentsController(IOptions<StripeOptions> options, IUserContextService userContextService, IPaymentService paymentService)
     {
         _stripePublicKey = options.Value.PublicKey;
         StripeConfiguration.ApiKey = options.Value.SecretKey;
         _userContextService = userContextService;
+        _paymentService = paymentService;
     }
 
     [HttpPost(ApiRoutes.Payments.RedirectToPayment)]
-    public IActionResult RedirectToPayment([FromBody] PaymentRequest paymentRequest)
+    public async Task<IActionResult> RedirectToPayment([FromBody] PaymentRequestModel paymentRequest)
     {
-        var customerOptions = new CustomerCreateOptions
-        {
-            Email = _userContextService.Email
-        };
+        if (!ModelState.IsValid)
+            return BadRequest("Invalid data");
 
-        var customerService = new CustomerService();
-        var customer = customerService.Create(customerOptions);
+        if (!_userContextService.EmailConfirmed)
+            return UnprocessableEntity("Email address is not confirmed. Please, confirm your email! ;)");
 
-        var options = new SessionCreateOptions
-        {
-            Customer = customer.Id,
-            PaymentMethodTypes = new List<string>
-            {
-                "card",
-                "blik",
-                "paypal"
-            },
-            LineItems = new List<SessionLineItemOptions>
-            {
-                new SessionLineItemOptions
-                {
-                    PriceData = new SessionLineItemPriceDataOptions
-                    {
-                        UnitAmount = paymentRequest.Amount,
-                        Currency = paymentRequest.Currency,
-                        ProductData = new SessionLineItemPriceDataProductDataOptions
-                        {
-                            Name = "application developer support :D",
-                        },
-                    },
-                    Quantity = 1,
-                },
-            },
-            Mode = "payment",
-            SuccessUrl = "https://adres-twojej-strony.com/success",
-            CancelUrl = "https://adres-twojej-strony.com/cancel",
-        };
-
-        var sessionService = new SessionService();
-        var session = sessionService.Create(options);
+        var session = await _paymentService.CreateRedirectToPayment(paymentRequest);
+        
         return Ok(new { SessionId = session.Id, PublishableKey = _stripePublicKey });
     }
 
     [HttpPost(ApiRoutes.Payments.Webhook)]
-    public Task StripeWebhook()
+    public async Task<IActionResult> StripeWebhook()
     {
-        var json = new StreamReader(HttpContext.Request.Body).ReadToEnd();
-        var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], "Foo");
-        if (stripeEvent.Type == Events.PaymentIntentSucceeded)
-        {
-            if (stripeEvent.Data.Object is not Session session)
-                throw new InvalidProgramException("Session payment error");
-            
-            var paymentIntentId = session.PaymentIntent.Id;
-            var amount = session.AmountTotal;
-            var email = session.Customer.Email;
-            
-            // mongo db message
-        }
-
-        return Task.CompletedTask;
+        await _paymentService.WebhookStripePayments();
+        
+        return Ok("Webhook processed successfully");
     }
-}
-
-public class PaymentRequest
-{
-    public int Amount { get; set; }
-    public string Currency { get; set; }
 }

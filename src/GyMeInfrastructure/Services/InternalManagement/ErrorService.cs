@@ -9,10 +9,10 @@ public class ErrorService
 {
     private readonly IMongoCollection<Error> _errorsCollection;
     
-    public ErrorService(IOptions<MongoDbErrors> mongoDbSettings) {
+    public ErrorService(IOptions<MongoDbSettings> mongoDbSettings) {
         MongoClient client = new MongoClient(mongoDbSettings.Value.ConnectionURI);
         IMongoDatabase database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
-        _errorsCollection = database.GetCollection<Error>(mongoDbSettings.Value.CollectionName);
+        _errorsCollection = database.GetCollection<Error>(mongoDbSettings.Value.ErrorsCollectionName);
     }
 
     public async Task Add(Error error)

@@ -4,6 +4,7 @@ using System.Text;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.Models.InternalManagement;
 using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Repo;
 using GymAppInfrastructure.Requirements;
@@ -35,7 +36,9 @@ public static class ProgramExtensions
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IChartService, ChartService>();
         services.AddScoped<IUserContextService, UserContextService>();
+        services.AddScoped<IPaymentService, PaymentService>();
         services.AddSingleton<ErrorService>();
+        services.AddSingleton<PaymentMessagesService>();
 
         return services;
     }
@@ -184,8 +187,8 @@ public static class ProgramExtensions
 
     public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<MongoDbErrors>(configuration.GetSection(nameof(MongoDbErrors)));
-        services.AddSingleton<MongoDbErrors>();
+        services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
+        services.AddSingleton<MongoDbSettings>();
         services.Configure<StripeOptions>(configuration.GetSection(nameof(StripeOptions)));
         services.AddSingleton<StripeOptions>();
         services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));

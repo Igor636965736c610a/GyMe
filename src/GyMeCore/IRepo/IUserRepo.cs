@@ -9,8 +9,8 @@ public interface IUserRepo
     Task<User?> Get(Guid id);
     Task<User?> Get(string userName);
     Task<List<User>> FindUsers(string key, int page, int size);
-    Task<List<User>> GetFriends(Guid id, int page, int size);
-    Task<UserFriend?> GetFriend(Guid user, Guid friend);
+    Task<List<User>> GetFriends(Guid id, FriendStatus friendStatus, int page, int size);
+    Task<UserFriend?> GetFriend(Guid userId, Guid friendId);
     Task<IEnumerable<CommonFriendsResult>> GetCommonFriendsSortedByCount(Guid userId, int page, int size = 50);
     Task<bool> AddFriend(IEnumerable<UserFriend> userFriend);
     Task<bool> RemoveFriend(UserFriend userFriend);

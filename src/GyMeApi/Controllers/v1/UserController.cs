@@ -1,5 +1,6 @@
 ﻿using GymAppApi.Routes.v1;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -58,23 +59,23 @@ public class UserController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.User.GetFriends)]
-    public async Task<IActionResult> GetFriends([FromQuery]int page, [FromQuery]int size)
+    public async Task<IActionResult> GetFriends([FromQuery]FriendStatusDto friendStatusDto, [FromQuery]int page, [FromQuery]int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var friends = await _userService.GetFriends(page, size);
+        var friends = await _userService.GetFriends(friendStatusDto, page, size);
 
         return Ok(friends);
     }
 
     [HttpGet(ApiRoutes.User.GetCommonFriends)]
-    public async Task<IActionResult> GetCommonFriends([FromQuery]int page)
+    public async Task<IActionResult> GetCommonFriends([FromQuery]int page, [FromQuery]int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var commonFriends = await _userService.GetCommonFriends(page);
+        var commonFriends = await _userService.GetCommonFriends(page, size);
 
         return Ok(commonFriends);
     }

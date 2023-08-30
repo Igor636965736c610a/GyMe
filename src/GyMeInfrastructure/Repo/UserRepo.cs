@@ -31,16 +31,16 @@ internal class UserRepo : IUserRepo
             .Include(x => x.ExtendedUser)
             .ToListAsync();
 
-    public async Task<List<User>> GetFriends(Guid id, int page, int size)
-        => await _gyMePostgresContext.UserFriends.Where(x => x.UserId == id && x.FriendStatus == FriendStatus.Friend).Select(x => x.Friend)
+    public async Task<List<User>> GetFriends(Guid id, FriendStatus friendStatus, int page, int size)
+        => await _gyMePostgresContext.UserFriends.Where(x => x.UserId == id && x.FriendStatus == friendStatus).Select(x => x.Friend)
             .Skip(page*size)
             .Take(size)
             .ToListAsync();
 
-    public async Task<UserFriend?> GetFriend(Guid user, Guid friend)
-        => await _gyMePostgresContext.UserFriends.FirstOrDefaultAsync(x => x.UserId == user);
+    public async Task<UserFriend?> GetFriend(Guid userId, Guid friendId)
+        => await _gyMePostgresContext.UserFriends.FirstOrDefaultAsync(x => x.UserId == userId && x.FriendId == friendId);
 
-    public async Task<IEnumerable<CommonFriendsResult>> GetCommonFriendsSortedByCount(Guid userId, int page, int size = 50)
+    public async Task<IEnumerable<CommonFriendsResult>> GetCommonFriendsSortedByCount(Guid userId, int page, int size = 20)
         => await _gyMePostgresContext.UserFriends
             .Where(x => x.UserId == userId)
             .SelectMany(x => x.Friend.Friends)
