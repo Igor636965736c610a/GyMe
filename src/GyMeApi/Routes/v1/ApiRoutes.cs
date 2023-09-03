@@ -59,4 +59,9 @@ public static class ApiRoutes
         public const string RedirectToPayment = "redirectToPayment";
         public const string Webhook = "webhook";
     }
+    
+    public static class UserFeedback
+    {
+        public const string SendOpinion = "opinion";
+    }
 }

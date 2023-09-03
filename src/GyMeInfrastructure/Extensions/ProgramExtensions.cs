@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
+using FluentValidation;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Models.InternalManagement;
+using GymAppInfrastructure.Models.Validations;
 using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Repo;
 using GymAppInfrastructure.Requirements;
@@ -39,6 +41,7 @@ public static class ProgramExtensions
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddSingleton<ErrorService>();
         services.AddSingleton<PaymentMessagesService>();
+        services.AddSingleton<OpinionService>();
 
         return services;
     }
@@ -54,9 +57,7 @@ public static class ProgramExtensions
 
     public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtSettings = new JwtSettings();
-        configuration.Bind(nameof(jwtSettings), jwtSettings);
-        services.AddSingleton(jwtSettings);
+        var serviceProvider = services.BuildServiceProvider();
 
         services.AddAuthentication(x =>
         {
@@ -69,17 +70,17 @@ public static class ProgramExtensions
             x.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(serviceProvider.GetRequiredService<JwtSettings>().Secret)),
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 RequireExpirationTime = false,
                 ValidateLifetime = true
             };
-        }).AddFacebook(options => 
+        }).AddFacebook(options =>
         {
-           options.AppId = configuration["FacebookOptions:AppId"];
-           options.AppSecret = configuration["FacebookOptions:AppSecret"];
-       });
+            options.AppId = configuration["FacebookOptions:AppId"];
+            options.AppSecret = configuration["FacebookOptions:AppSecret"];
+        });
 
         return services;
     }
@@ -157,6 +158,16 @@ public static class ProgramExtensions
             .AddEntityFrameworkStores<GyMePostgresContext>()
             .AddDefaultTokenProviders();
 
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = true;
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 0;
+        });
+
         return services;
     }
 
@@ -185,15 +196,36 @@ public static class ProgramExtensions
         return services;
     }
 
-    public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddValidations(this IServiceCollection services)
     {
-        services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
-        services.AddSingleton<MongoDbSettings>();
-        services.Configure<StripeOptions>(configuration.GetSection(nameof(StripeOptions)));
-        services.AddSingleton<StripeOptions>();
-        services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
-        services.AddSingleton<EmailOptions>();
+        services.AddValidatorsFromAssemblyContaining<ActivateAccountModelValidator>();
+        services.AddValidatorsFromAssemblyContaining<BaseSeriesDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<OpinionRequestBodyValidator>();
+        services.AddValidatorsFromAssemblyContaining<PaymentRequestModelValidator>();
+        services.AddValidatorsFromAssemblyContaining<PostSimpleExerciseDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<PutSimpleExerciseDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<PutUserDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>();
 
         return services;
     }
-}  
+
+    public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
+        services.Configure<StripeOptions>(configuration.GetSection(nameof(StripeOptions)));
+        services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
+        services.AddSingleton<MongoDbSettings>();
+        services.AddSingleton<StripeOptions>();
+        services.AddSingleton<EmailOptions>();
+        
+        var swaggerSettings = new SwaggerSettings();
+        var jwtSettings = new JwtSettings();
+        configuration.GetSection(nameof(SwaggerSettings)).Bind(swaggerSettings);
+        configuration.GetSection(nameof(JwtSettings)).Bind(jwtSettings);
+        services.AddSingleton(swaggerSettings);
+        services.AddSingleton(jwtSettings);
+
+        return services;
+    }
+}

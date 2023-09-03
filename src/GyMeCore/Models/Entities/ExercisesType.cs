@@ -1,5 +1,8 @@
-﻿namespace GymAppCore.Models.Entities;
+﻿using NetEscapades.EnumGenerators;
 
+namespace GymAppCore.Models.Entities;
+
+[EnumExtensions]
 public enum ExercisesType
 {
     test1,

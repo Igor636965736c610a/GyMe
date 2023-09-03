@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Models.Payment;
+﻿namespace GymAppInfrastructure.Models.InternalManagement;
 
 public class PaymentRequestModel
 {

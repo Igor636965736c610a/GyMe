@@ -1,5 +1,5 @@
 ﻿using GymAppCore.Models.Entities;
-using GymAppCore.Models.Entities.Configuration;
+using GymAppCore.Models.Entities.Configurations;
 
 namespace GymAppCore.Models.Results;
 

@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Policy;
 using System.Text;
@@ -37,12 +38,12 @@ internal class IdentityService : IIdentityService
     
     public IdentityService(
         UserManager<User> userManager, JwtSettings jwtSettings, 
-        IOptionsSnapshot<EmailOptions> emailOptions, 
+        IOptionsMonitor<EmailOptions> emailOptions, 
         IUserRepo userRepo, IUserContextService userContextService)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;
-        _emailOptions = emailOptions.Value;
+        _emailOptions = emailOptions.CurrentValue;
         _userRepo = userRepo;
         _userContextService = userContextService;
     }
@@ -216,12 +217,6 @@ internal class IdentityService : IIdentityService
         if (user.Valid)
             throw new InvalidOperationException("User is already Activate");
 
-        if (activateAccountModel.UserName.Length < 2)
-            return new ActivateUserResult()
-            {
-                Success = false,
-                Errors = new[] { "username must contain at least 2 characters" }
-            };
         var userWithTheSameUsername = await _userRepo.Get(activateAccountModel.UserName);
         if (userWithTheSameUsername is not null)
             throw new InvalidOperationException("User with this username already exist");

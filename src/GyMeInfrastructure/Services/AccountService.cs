@@ -51,6 +51,7 @@ internal class AccountService : IAccountService
         user.UserName = putUserDto.UserName;
         user.FirstName = putUserDto.FirstName;
         user.LastName = putUserDto.LastName;
+        user.ExtendedUser.Description = putUserDto.Description;
         user.ExtendedUser.PrivateAccount = putUserDto.PrivateAccount;
         
         await _userRepo.Update(user);

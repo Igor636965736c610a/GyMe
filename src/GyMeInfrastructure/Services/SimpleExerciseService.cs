@@ -41,7 +41,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
 
         var series = _mapper.Map<IEnumerable<BaseSeriesDto>, IEnumerable<Series>>(postSimpleExerciseDto.SeriesDto).ToList();
 
-        var simpleExercise = new SimpleExercise(DateTime.UtcNow, postSimpleExerciseDto.Description, userIdFromJwt, exercise, series);
+        var simpleExercise = new SimpleExercise(userIdFromJwt, exercise, series, exercise.ExercisesType, postSimpleExerciseDto.Description);
 
         await _simpleExerciseRepo.Create(simpleExercise);
     }
@@ -113,9 +113,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
     
     private static bool ValidSeries(IEnumerable<BaseSeriesDto> series)
     {
-        var baseSeriesDtos = series as BaseSeriesDto[] ?? series.ToArray();
-        if (baseSeriesDtos.Length > 30)
-            return false;
-        return !baseSeriesDtos.Any(x => x.NumberOfRepetitions > 999 || x.Weight > 99999);
+        var baseSeriesDto = series as BaseSeriesDto[] ?? series.ToArray();
+        return baseSeriesDto.Length <= 30;
     }
 }

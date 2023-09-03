@@ -1,5 +1,8 @@
-﻿namespace GymAppInfrastructure.Models.Exercise;
+﻿using NetEscapades.EnumGenerators;
 
+namespace GymAppInfrastructure.Models.Exercise;
+
+[EnumExtensions]
 public enum ExercisesTypeDto
 {
     test1,

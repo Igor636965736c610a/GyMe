@@ -5,6 +5,7 @@ using GymAppCore.Models.Results;
 using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
+using GymAppInfrastructure.MyMapper;
 using GymAppInfrastructure.Options;
 
 namespace GymAppInfrastructure.Services;
@@ -54,11 +55,11 @@ internal class UserService : IUserService
         await SetFriendStatus(userIdFromJwt, userToAddId, friendStatus1, friendStatus2);
     }
 
-    public async Task<IEnumerable<Guid>> FindUsers(string key, int page, int size)
+    public async Task<IEnumerable<GetUserDto>> FindUsers(string key, int page, int size)
     {
         var users = await _userRepo.FindUsers(key, page, size);
 
-        return users.Select(x => x.Id);
+        return users.Select(x => GetUserDtoMap.Map(x));
     }
 
     public async Task<GetUserDto> GetUser(Guid id)
@@ -69,7 +70,7 @@ internal class UserService : IUserService
         if(user is null)
             throw new NullReferenceException("User does not exist");
         
-        var userDto = _mapper.Map<User, GetUserDto>(user);
+        var userDto = GetUserDtoMap.Map(user);
 
         var friendStatus = await _userRepo.GetFriend(userIdFromJwt, id);
         if (friendStatus is not null)
@@ -85,7 +86,7 @@ internal class UserService : IUserService
         
         var friends = await _userRepo.GetFriends(userIdFromJwt, friendsStatus, page, size);
 
-        var friendsDto = _mapper.Map<IEnumerable<User>, IEnumerable<GetUserDto>>(friends);
+        var friendsDto = GetUserDtoMap.Map(friends);
 
         return friendsDto;
     }

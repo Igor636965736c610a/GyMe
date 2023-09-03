@@ -1,4 +1,4 @@
-﻿using GymAppInfrastructure.Models.Payment;
+﻿using GymAppInfrastructure.Models.InternalManagement;
 using Stripe.Checkout;
 
 namespace GymAppInfrastructure.IServices;

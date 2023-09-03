@@ -19,7 +19,6 @@ public static class AutoMapperConfig
                 cfg.CreateMap<Series, BaseSeriesDto>().ReverseMap();
                 cfg.CreateMap<SimpleExercise, GetSimpleExerciseDto>().ReverseMap();
                 cfg.CreateMap<User, GetUserDto>().ReverseMap();
-                cfg.CreateMap<User, ShowProfileDto>();
                 cfg.CreateMap<User, GetAccountInfModel>().ReverseMap();
                 cfg.CreateMap<CommonFriendsResult, CommonFriendsResultDto>().ReverseMap();
                 cfg.CreateMap<ExercisesType, ExercisesTypeDto>().ReverseMap();

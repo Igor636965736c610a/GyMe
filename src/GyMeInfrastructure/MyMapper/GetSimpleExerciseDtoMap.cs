@@ -6,8 +6,7 @@ namespace GymAppInfrastructure.MyMapper;
 public static class GetSimpleExerciseDtoMap
 {
     public static GetSimpleExerciseDto Map(SimpleExercise simpleExercise)
-    {
-        return new GetSimpleExerciseDto()
+        => new GetSimpleExerciseDto()
         {
             Id = simpleExercise.Id,
             Date = simpleExercise.Date,
@@ -22,5 +21,4 @@ public static class GetSimpleExerciseDtoMap
             AverageNumberOfRepetitionsPerSeries = (int)Math.Round(simpleExercise.Series.Average(x => x.NumberOfRepetitions), 2, MidpointRounding.AwayFromZero),
             AverageWeight = (int)Math.Round(simpleExercise.Series.Average(x => x.Weight), 2, MidpointRounding.AwayFromZero)
         };
-    }
 }

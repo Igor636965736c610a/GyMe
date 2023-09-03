@@ -1,6 +1,5 @@
 ﻿using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Models.InternalManagement;
-using GymAppInfrastructure.Models.Payment;
 using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Services.InternalManagement;
 using Microsoft.Extensions.Options;
@@ -15,9 +14,9 @@ public class PaymentService : IPaymentService
     private readonly PaymentMessagesService _paymentMessagesService;
     private readonly IUserContextService _userContextService;
 
-    public PaymentService(IOptions<StripeOptions> options, IUserContextService userContextService, PaymentMessagesService paymentMessagesService)
+    public PaymentService(IOptionsMonitor<StripeOptions> options, IUserContextService userContextService, PaymentMessagesService paymentMessagesService)
     {
-        _stripeSecretKey = options.Value.SecretKey;
+        _stripeSecretKey = options.CurrentValue.SecretKey;
         _userContextService = userContextService;
         _paymentMessagesService = paymentMessagesService;
     }

@@ -1,6 +1,6 @@
 ﻿using GymAppApi.Routes.v1;
 using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.Payment;
+using GymAppInfrastructure.Models.InternalManagement;
 using GymAppInfrastructure.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ using Stripe.Checkout;
 
 namespace GymAppApi.Controllers.v1;
 
-[Authorize]
+[Authorize(Policy = "SSO")]
 [Route("[controller]")]
 public class PaymentsController : ControllerBase
 {

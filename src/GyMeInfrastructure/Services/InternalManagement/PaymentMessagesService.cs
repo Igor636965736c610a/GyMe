@@ -9,11 +9,11 @@ public class PaymentMessagesService
 {
     private readonly IMongoCollection<PaymentMessage> _paymentMessagesCollection;
 
-    public PaymentMessagesService(IOptions<MongoDbSettings> mongoDbSettings)
+    public PaymentMessagesService(IOptionsMonitor<MongoDbSettings> mongoDbSettings)
     {
-        MongoClient client = new MongoClient(mongoDbSettings.Value.ConnectionURI);
-        IMongoDatabase database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
-        _paymentMessagesCollection = database.GetCollection<PaymentMessage>(mongoDbSettings.Value.PaymentMessagesCollectionName);
+        MongoClient client = new MongoClient(mongoDbSettings.CurrentValue.ConnectionURI);
+        IMongoDatabase database = client.GetDatabase(mongoDbSettings.CurrentValue.DatabaseName);
+        _paymentMessagesCollection = database.GetCollection<PaymentMessage>(mongoDbSettings.CurrentValue.PaymentMessagesCollectionName);
     }
     
     public async Task Add(PaymentMessage paymentMessage)

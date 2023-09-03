@@ -31,8 +31,10 @@ internal class UserRepo : IUserRepo
             .Include(x => x.ExtendedUser)
             .ToListAsync();
 
-    public async Task<List<User>> GetFriends(Guid id, FriendStatus friendStatus, int page, int size)
-        => await _gyMePostgresContext.UserFriends.Where(x => x.UserId == id && x.FriendStatus == friendStatus).Select(x => x.Friend)
+    public async Task<List<UserFriend>> GetFriends(Guid id, FriendStatus friendStatus, int page, int size)
+        => await _gyMePostgresContext.UserFriends.Where(x => x.UserId == id && x.FriendStatus == friendStatus)
+            .Include(x => x.Friend)
+            .ThenInclude(x => x.ExtendedUser)
             .Skip(page*size)
             .Take(size)
             .ToListAsync();

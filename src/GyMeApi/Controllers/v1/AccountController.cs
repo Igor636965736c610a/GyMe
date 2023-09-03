@@ -62,7 +62,7 @@ public class AccountController : ControllerBase
     }
 
     [Authorize(Policy = "SSO")]
-    [RequestSizeLimit(4*1024)]
+    [RequestSizeLimit(1000*1024)]
     [HttpPost(ApiRoutes.Account.SetProfilePicture)]
     public async Task<IActionResult> SetProfilePicture([FromForm]IFormFile image)
     {
@@ -236,7 +236,7 @@ public class AccountController : ControllerBase
             throw new ArgumentException("No picture file provided.");
         }
         
-        if (pictureFile.Length > 400 * 1024)
+        if (pictureFile.Length > 1000 * 1024)
         {
             throw new ArgumentException("Picture size exceeds the allowed limit of 400 KB.");
         }

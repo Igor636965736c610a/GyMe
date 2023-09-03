@@ -18,6 +18,7 @@ builder.Services.AddControllers()
 builder.Services.BindOptions(builder.Configuration);
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddDb(builder.Configuration);
+builder.Services.AddValidations();
 builder.Services.ConfigureRefit();
 builder.Services.AddCorsPolicy();
 builder.Services.AddEndpointsApiExplorer();
@@ -30,8 +31,6 @@ builder.Services.AddSwaggerConfig();
 builder.Services.AddSingleton(AutoMapperConfig.Initialize());
 builder.Services.AddCookies();
 builder.Services.AddHttpContextAccessor();
-var swaggerOptions = new SwaggerOptions();
-builder.Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
 
 var app = builder.Build();
 
@@ -48,11 +47,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger(option =>
     {
-        option.RouteTemplate = swaggerOptions.JsonRoute;
+        option.RouteTemplate = app.Services.GetRequiredService<SwaggerSettings>().JsonRoute;
     });
     app.UseSwaggerUI(option =>
     {
-        option.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description);
+        option.SwaggerEndpoint(app.Services.GetRequiredService<SwaggerSettings>().UiEndpoint, app.Services.GetRequiredService<SwaggerSettings>().Description);
     });
 }
 

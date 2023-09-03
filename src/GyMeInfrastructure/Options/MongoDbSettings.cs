@@ -6,4 +6,5 @@ public class MongoDbSettings
     public string DatabaseName { get; set; } = null!;
     public string ErrorsCollectionName { get; set; } = null!;
     public string PaymentMessagesCollectionName { get; set; } = null!;
+    public string OpinionsCollectionName { get; set; } = null!;
 }

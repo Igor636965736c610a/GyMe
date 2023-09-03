@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GymAppCore.Models.Entities.Configuration;
+namespace GymAppCore.Models.Entities.Configurations;
 
 public class ExtendedUserConfig : IEntityTypeConfiguration<ExtendedUser>
 {
@@ -11,7 +11,7 @@ public class ExtendedUserConfig : IEntityTypeConfiguration<ExtendedUser>
         builder.Property(x => x.ProfilePicture).IsRequired();
         builder.Property(x => x.UserId).IsRequired();
         builder.Property(x => x.Premium).IsRequired();
-        builder.Property(x => x.Description).HasMaxLength(150);
+        builder.Property(x => x.Description).HasMaxLength(EntitiesConfig.ExtendedUserConf.DescriptionMaxLenght);
         builder.HasKey(x => x.UserId);
         
         builder

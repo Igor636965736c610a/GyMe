@@ -2,6 +2,7 @@
 
 public class GetUserDto
 {
+    public Guid Id { get; set; } 
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string UserName { get; set; }
@@ -10,5 +11,4 @@ public class GetUserDto
     public byte[] ProfilePicture { get; set; }
     public string? Description { get; set; }
     public FriendStatusDto? FriendStatus { get; set; } 
-    public Guid Id { get; set; } 
 }
