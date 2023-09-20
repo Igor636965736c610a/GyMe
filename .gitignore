@@ -1,6 +1,7 @@
 ###################
 # compiled source #
 ###################
+/wwwroot/Images/
 *.com
 *.class
 *.dll
