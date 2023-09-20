@@ -47,6 +47,7 @@ TestResults/
 *.rar
 *.tar
 *.zip
+src/GyMeApi/wwwroot/Images/
 ######################
 # Logs and databases #
 ######################
