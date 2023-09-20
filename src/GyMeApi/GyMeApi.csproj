@@ -30,4 +30,14 @@
       <ProjectReference Include="..\GyMeInfrastructure\GyMeInfrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
+      <Folder Include="wwwroot\Images\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\Images\b89b0063-e4d6-4a6d-a7d3-c2599bf907da\b89b0063-e4d6-4a6d-a7d3-c2599bf907da.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\Images\e091c0e0-fb84-45b3-810c-585ee383abda\e091c0e0-fb84-45b3-810c-585ee383abda.jpg" />
+    </ItemGroup>
+
 </Project>

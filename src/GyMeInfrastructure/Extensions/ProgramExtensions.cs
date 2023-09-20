@@ -7,6 +7,7 @@ using GymAppCore.Models.Entities;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Models.InternalManagement;
 using GymAppInfrastructure.Models.Validations;
+using GymAppInfrastructure.MyMapper;
 using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Repo;
 using GymAppInfrastructure.Requirements;
@@ -39,6 +40,10 @@ public static class ProgramExtensions
         services.AddScoped<IChartService, ChartService>();
         services.AddScoped<IUserContextService, UserContextService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IReactionService, ReactionService>();
+        services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<IGyMeResourceService, GyMeResourceService>();
+        services.AddScoped<IGyMeMapper, GyMeMapper>();
         services.AddSingleton<ErrorService>();
         services.AddSingleton<PaymentMessagesService>();
         services.AddSingleton<OpinionService>();
@@ -51,6 +56,8 @@ public static class ProgramExtensions
         services.AddScoped<IExerciseRepo, ExerciseRepo>();
         services.AddScoped<ISimpleExerciseRepo, SimpleExerciseRepo>();
         services.AddScoped<IUserRepo, UserRepo>();
+        services.AddScoped<IReactionRepo, ReactionRepo>();
+        services.AddScoped<ICommentRepo, CommentRepo>();
 
         return services;
     }
@@ -175,8 +182,6 @@ public static class ProgramExtensions
     {
         services.AddRefitClient<IJokeApiService>()
             .ConfigureHttpClient(x => x.BaseAddress = new Uri("https://v2.jokeapi.dev/"));
-        services.AddRefitClient<IFacebookApiService>()
-            .ConfigureHttpClient(x => x.BaseAddress = new Uri("https://graph.facebook.com"));
 
         return services;
     }

@@ -8,7 +8,7 @@ using Stripe.Checkout;
 
 namespace GymAppInfrastructure.Services;
 
-public class PaymentService : IPaymentService
+internal class PaymentService : IPaymentService
 {
     private readonly string _stripeSecretKey;
     private readonly PaymentMessagesService _paymentMessagesService;

@@ -6,7 +6,7 @@ public class ExtendedUser
 {
     public Gender Gender { get; set; }
     [Column(TypeName = "bytea")]
-    public byte[] ProfilePicture { get; set; }
+    public string ProfilePictureUrl { get; set; }
     public bool PrivateAccount { get; set; }
     public bool Premium { get; set; } 
     public DateTime? ImportancePremium { get; set; }

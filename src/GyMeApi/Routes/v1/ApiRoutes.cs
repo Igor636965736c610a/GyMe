@@ -64,4 +64,10 @@ public static class ApiRoutes
     {
         public const string SendOpinion = "opinion";
     }
+    
+    public static class Reaction
+    {
+        public const string AddEmojiReaction = "add/emoji";
+        public const string AddImageReaction = "add/image";
+    }
 }

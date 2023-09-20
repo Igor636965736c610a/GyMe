@@ -12,6 +12,9 @@ public class GyMePostgresContext : DbContext
     public DbSet<SimpleExercise> SimpleExercises { get; set; }
     public DbSet<Series> Series { get; set; }
     public DbSet<UserFriend> UserFriends { get; set; }
+    public DbSet<Reaction> Reactions { get; set; }
+    public DbSet<Comment> Comments { get; set; }
+    public DbSet<CommentReaction> CommentReactions { get; set; }
 
     public GyMePostgresContext(DbContextOptions<GyMePostgresContext> options)
         : base(options)
@@ -25,5 +28,8 @@ public class GyMePostgresContext : DbContext
         builder.ApplyConfigurationsFromAssembly(typeof(SimpleExerciseConfig).Assembly);
         builder.ApplyConfigurationsFromAssembly(typeof(UserConfig).Assembly);
         builder.ApplyConfigurationsFromAssembly(typeof(ExtendedUser).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(CommentConfig).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(CommentReactionConfig).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(ReactionConfig).Assembly);
     }
 }

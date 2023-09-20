@@ -1,10 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Transactions;
+using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Models.Account;
 using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
+using Microsoft.AspNetCore.Http;
 
 namespace GymAppInfrastructure.Services;
 
@@ -13,12 +15,14 @@ internal class AccountService : IAccountService
     private readonly IUserRepo _userRepo;
     private readonly IMapper _mapper;
     private readonly IUserContextService _userContextService;
-    
-    public AccountService(IUserRepo userRepo, IMapper mapper, IUserContextService userContextService)
+    private readonly IGyMeResourceService _gyMeResourceService;
+
+    public AccountService(IUserRepo userRepo, IMapper mapper, IUserContextService userContextService, IGyMeResourceService gyMeResourceService)
     {
         _userRepo = userRepo;
         _mapper = mapper;
         _userContextService = userContextService;
+        _gyMeResourceService = gyMeResourceService;
     }
 
     public async Task<GetAccountInfModel> GetInf()
@@ -34,7 +38,7 @@ internal class AccountService : IAccountService
         if (user.ExtendedUser is not null)
         {
             accountInf.Gender = (GenderDto)user.ExtendedUser.Gender;
-            accountInf.ProfilePicture = user.ExtendedUser.ProfilePicture;
+            accountInf.ProfilePictureUrl = user.ExtendedUser.ProfilePictureUrl;
         }
         
         return accountInf;
@@ -57,7 +61,7 @@ internal class AccountService : IAccountService
         await _userRepo.Update(user);
     }
     
-    public async Task SetUserProfile(byte[] image)
+    public async Task SetUserProfile(IFormFile image)
     {
         var userIdFromJwt = _userContextService.UserId;
 
@@ -66,9 +70,11 @@ internal class AccountService : IAccountService
         if (user?.ExtendedUser is null)
             throw new InvalidProgramException("Something went wrong");
 
-        user.ExtendedUser.ProfilePicture = image;
-
+        var path = _gyMeResourceService.GeneratePathToPhoto(user.Id.ToString(), user.Id.ToString() + Path.GetExtension(image.FileName));
+        user.ExtendedUser.ProfilePictureUrl = path;
+        
         await _userRepo.Update(user);
+        await _gyMeResourceService.SaveImageOnServer(image, path);
     }
 
     public async Task Remove()

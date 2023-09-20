@@ -2,7 +2,7 @@
 
 namespace GymAppCore.IRepo;
 
-public interface IExerciseRepo 
+public interface IExerciseRepo
 {
     Task<Exercise?> Get(Guid exerciseId);
     Task<Exercise?> Get(Guid userId, ExercisesType exercisesType);

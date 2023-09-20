@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Policy;
 using System.Text;
+using System.Transactions;
 using FluentEmail.Core;
 using FluentEmail.Mailgun;
 using GymAppCore.IRepo;
@@ -14,6 +15,7 @@ using GymAppInfrastructure.Models.Account;
 using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Results;
 using GymAppInfrastructure.Results.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Identity;
@@ -35,20 +37,23 @@ internal class IdentityService : IIdentityService
     private readonly EmailOptions _emailOptions;
     private readonly IUserRepo _userRepo;
     private readonly IUserContextService _userContextService;
-    
+    private readonly IGyMeResourceService _gyMeResourceService;
+
     public IdentityService(
         UserManager<User> userManager, JwtSettings jwtSettings, 
         IOptionsMonitor<EmailOptions> emailOptions, 
-        IUserRepo userRepo, IUserContextService userContextService)
+        IUserRepo userRepo, IUserContextService userContextService,
+        IGyMeResourceService gyMeResourceService)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;
         _emailOptions = emailOptions.CurrentValue;
         _userRepo = userRepo;
         _userContextService = userContextService;
+        _gyMeResourceService = gyMeResourceService;
     }
     
-    public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, byte[] profilePicture, Func<string, string, string> generateCallbackToken)
+    public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, Func<string, string, string> generateCallbackToken)
     {
         var existingUser = await _userManager.FindByEmailAsync(registerUserDto.Email);
 
@@ -83,10 +88,11 @@ internal class IdentityService : IIdentityService
         }
 
         var gender = registerUserDto.IsChlopak ? Gender.Male : Gender.Female;
+        var id = Guid.NewGuid();
 
         var newUser = new User
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             FirstName = registerUserDto.FirstName,
             LastName = registerUserDto.LastName,
             UserName = registerUserDto.UserName,
@@ -98,7 +104,7 @@ internal class IdentityService : IIdentityService
             {
                 PrivateAccount = registerUserDto.PrivateAccount,
                 Gender = gender,
-                ProfilePicture = profilePicture,
+                ProfilePictureUrl = _gyMeResourceService.GeneratePathToPhoto(id.ToString(), id.ToString()) + ".jpg",
                 Description = registerUserDto.Description,
                 Premium = false
             },
@@ -106,9 +112,7 @@ internal class IdentityService : IIdentityService
             InverseFriends = new (),
             AccountProvider = nameof(AccountProviderOptions.App),
         };
-        
         var createdUser = await _userManager.CreateAsync(newUser, registerUserDto.Password);
-
         if (!createdUser.Succeeded)
         {
             return new AuthenticationRegisterResult
@@ -117,6 +121,7 @@ internal class IdentityService : IIdentityService
                 Errors = createdUser.Errors.Select(x => x.Description)
             };
         }
+        _gyMeResourceService.SetDefaultProfilePicture(id.ToString());
 
         return await AuthenticateUser(newUser, generateCallbackToken);
     }
@@ -194,7 +199,7 @@ internal class IdentityService : IIdentityService
     public async Task<bool> ConfirmEmail(string userId, string code)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
+        if (user is null)
         {
             throw new NullReferenceException("User not found");
         }
@@ -204,7 +209,7 @@ internal class IdentityService : IIdentityService
         return result.Succeeded;
     }
 
-    public async Task<ActivateUserResult> ActivateUser(ActivateAccountModel activateAccountModel, byte[] profilePicture)
+    public async Task<ActivateUserResult> ActivateUser(ActivateAccountModel activateAccountModel)
     {
         var userIdFromJwt = _userContextService.UserId;
         
@@ -221,11 +226,12 @@ internal class IdentityService : IIdentityService
         if (userWithTheSameUsername is not null)
             throw new InvalidOperationException("User with this username already exist");
 
+        var imagePath = _gyMeResourceService.GeneratePathToPhoto(user.Id.ToString(), user.Id.ToString()) + ".jpg";
         var extendedUser = new ExtendedUser()
         {
             Gender = (Gender)activateAccountModel.Gender,
             PrivateAccount = activateAccountModel.PrivateAccount,
-            ProfilePicture = profilePicture,
+            ProfilePictureUrl = imagePath,
             Description = activateAccountModel.Description,
             User = user
         };
@@ -233,7 +239,9 @@ internal class IdentityService : IIdentityService
         user.UserName = activateAccountModel.UserName;
         user.Valid = true;
         user.ExtendedUser = extendedUser;
+
         await _userRepo.Update(user);
+        _gyMeResourceService.SetDefaultProfilePicture(user.Id.ToString());
 
         var token = GenerateToken(user);
 
@@ -349,7 +357,7 @@ internal class IdentityService : IIdentityService
         return tokenHandler.WriteToken(token);
     }
 
-    private async Task<bool> SendEmail(string body, string subject, string? email)
+    private async Task<bool> SendEmail(string body, string subject, string email)
     {
         var sender = new MailgunSender(
             _emailOptions.DomainName,

@@ -19,6 +19,7 @@ public class ErrorHandlerMiddleware : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        string errorMessage = "CRITICAL";
         try
         {
             await next(context);
@@ -35,6 +36,7 @@ public class ErrorHandlerMiddleware : IMiddleware
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     _logger.LogError("An InvalidOperationException occurred: {ErrorMessage}", error.Message);
+                    errorMessage = error.Message;
                     var errorEntity = CreateError(error, response.StatusCode);
                     await _errorService.Add(errorEntity);
 
@@ -45,6 +47,7 @@ public class ErrorHandlerMiddleware : IMiddleware
                 {
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     _logger.LogError("A NullReferenceException occurred: {ErrorMessage}", error.Message);
+                    errorMessage = error.Message;
                     
                     break;
                 }
@@ -53,6 +56,7 @@ public class ErrorHandlerMiddleware : IMiddleware
                 {
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     _logger.LogError("A ForbiddenException occurred: {ErrorMessage}", error.Message);
+                    errorMessage = error.Message;
                     
                     break;
                 }
@@ -61,6 +65,7 @@ public class ErrorHandlerMiddleware : IMiddleware
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     _logger.LogError("An ArgumentException occurred: {ErrorMessage}", error.Message);
+                    errorMessage = error.Message;
 
                     break;
                 }
@@ -97,7 +102,7 @@ public class ErrorHandlerMiddleware : IMiddleware
                 }
             }
 
-            var result = JsonSerializer.Serialize(new { message = error.Message });
+            var result = JsonSerializer.Serialize(new { message = errorMessage });
             await response.WriteAsync(result);
         }
     }

@@ -7,5 +7,7 @@ public enum FriendStatus
 {
     InviteSend,
     InviteReceived,
-    Friend
+    Friend,
+    Blocked,
+    Blocking
 }

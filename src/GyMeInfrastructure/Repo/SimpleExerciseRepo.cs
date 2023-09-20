@@ -1,5 +1,6 @@
 ﻿using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
+using GymAppInfrastructure.Models.ReactionsAndComments;
 using GymAppInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +15,24 @@ internal class SimpleExerciseRepo : ISimpleExerciseRepo
     }
     
     public async Task<SimpleExercise?> Get(Guid id)
-        => await _gyMePostgresContext.SimpleExercises.Include(x => x.Series).FirstOrDefaultAsync(x => x.Id == id);
+        => await _gyMePostgresContext.SimpleExercises
+            .Include(x => x.Series)
+            .Include(x => x.Reactions
+                .OrderBy(z => z.ReactionType == ReactionType.Image.ToStringFast())
+                .ThenBy(z => z.TimeStamp)
+                .Take(3))
+            .ThenInclude(x => x.User)
+            .FirstOrDefaultAsync(x => x.Id == id);
 
     public async Task<List<SimpleExercise>> GetAll(Guid userId, Guid exerciseId, int page, int size)
         => await _gyMePostgresContext.SimpleExercises.Where(x => x.UserId == userId && x.ExerciseId == exerciseId)
             .OrderBy(x => x.Date)
             .Include(x => x.Series)
+            .Include(x => x.Reactions
+                .OrderBy(z => z.ReactionType == ReactionType.Image.ToStringFast())
+                .ThenBy(z => z.TimeStamp)
+                .Take(3))
+            .ThenInclude(x => x.User)
             .Skip(page*size)
             .Take(size)
             .ToListAsync();

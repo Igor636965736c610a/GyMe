@@ -20,6 +20,7 @@ public class SimpleExercise
     public Exercise Exercise { get; set; }
     public Guid ExerciseId { get; set; }
     public List<Series> Series { get; set; }
+    public List<Reaction> Reactions { get; set; }
     public User User { get; set; }
     public Guid UserId { get; set; }
 }

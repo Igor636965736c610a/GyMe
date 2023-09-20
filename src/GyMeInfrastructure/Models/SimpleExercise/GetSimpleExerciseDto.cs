@@ -1,4 +1,5 @@
-﻿using GymAppInfrastructure.Models.Series;
+﻿using GymAppInfrastructure.Models.ReactionsAndComments;
+using GymAppInfrastructure.Models.Series;
 
 namespace GymAppInfrastructure.Models.SimpleExercise;
 
@@ -8,8 +9,8 @@ public class GetSimpleExerciseDto
     public Guid ExerciseId { get; set; }
     public DateTime Date { get; set; }
     public IEnumerable<GetSeriesDto> Series { get; set; }
+    public IEnumerable<GetReactionDto> FirstThreeReactionsDto { get; set; }
     public string? Description { get; set; }
-    public string? SeriesString { get; set; }
     public int? MaxRep { get; set; }
     public int? Score { get; set; }
     public int? NumberOfRepetitions { get; set; }

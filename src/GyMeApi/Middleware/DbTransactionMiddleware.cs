@@ -1,4 +1,5 @@
-﻿using GymAppInfrastructure.Options;
+﻿using System.Transactions;
+using GymAppInfrastructure.Options;
 using GymAppInfrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;

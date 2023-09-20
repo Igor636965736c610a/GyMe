@@ -26,13 +26,11 @@ public class AccountController : ControllerBase
 {
     private readonly IIdentityService _identityService;
     private readonly IAccountService _accountService;
-    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public AccountController(IIdentityService identityService, IAccountService accountService, IWebHostEnvironment webHostEnvironment)
+    public AccountController(IIdentityService identityService, IAccountService accountService)
     {
         _identityService = identityService;
         _accountService = accountService;
-        _webHostEnvironment = webHostEnvironment;
     }
 
     [AllowAnonymous]
@@ -42,8 +40,6 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var profilePicture = await GetDefaultProfilePicture();
-
         Func<string, string, string> createCallbackUrl = (userIdParam, codeParam)
             => Request.Scheme + "://" + Request.Host + Url.Action("ConfirmEmail", "Account", new
             {
@@ -51,7 +47,7 @@ public class AccountController : ControllerBase
                 code = codeParam
             });
 
-        var result = await _identityService.Register(registerUserDto, profilePicture, createCallbackUrl);
+        var result = await _identityService.Register(registerUserDto, createCallbackUrl);
 
         if (!result.Success)
         {
@@ -69,9 +65,7 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var profilePicture = await ValidateAndScaleProfilePicture(image);
-
-        await _accountService.SetUserProfile(profilePicture);
+        await _accountService.SetUserProfile(image);
 
         return Ok();
     }
@@ -195,9 +189,7 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var defaultProfilePicture = await GetDefaultProfilePicture();
-        
-        var result = await _identityService.ActivateUser(activateAccountModel, defaultProfilePicture);
+        var result = await _identityService.ActivateUser(activateAccountModel);
 
         return Ok(result);
     }
@@ -225,59 +217,5 @@ public class AccountController : ControllerBase
         var accountInf = await _accountService.GetInf();
 
         return Ok(accountInf);
-    }
-    
-    private async Task<byte[]> ValidateAndScaleProfilePicture(IFormFile? pictureFile)
-    {
-        const int maxWidth = 200;
-        const int maxHeight = 200;
-        if (pictureFile is null || pictureFile.Length == 0)
-        {
-            throw new ArgumentException("No picture file provided.");
-        }
-        
-        if (pictureFile.Length > 1000 * 1024)
-        {
-            throw new ArgumentException("Picture size exceeds the allowed limit of 400 KB.");
-        }
-
-        using var image = await Image.LoadAsync(pictureFile.OpenReadStream());
-
-        if (image.Width > maxWidth || image.Height > maxHeight)
-        {
-            using var resizedImage = ResizeImage(image, maxWidth, maxHeight);
-            await using var memoryStream = new MemoryStream();
-            await resizedImage.SaveAsync(memoryStream, new JpegEncoder());
-            return memoryStream.ToArray();
-        }
-
-        await using (var memoryStream = new MemoryStream())
-        {
-            await image.SaveAsync(memoryStream, new JpegEncoder());
-            return memoryStream.ToArray();
-        }
-    }
-
-    private static Image ResizeImage(Image image, int maxWidth, int maxHeight)
-    {
-        double ratioX = (double)maxWidth / image.Width;
-        double ratioY = (double)maxHeight / image.Height;
-        double ratio = Math.Min(ratioX, ratioY);
-        int newWidth = (int)(image.Width * ratio);
-        int newHeight = (int)(image.Height * ratio);
-
-        image.Mutate(x => x.Resize(new ResizeOptions
-        {
-            Size = new SixLabors.ImageSharp.Size(newWidth, newHeight),
-            Mode = ResizeMode.Max
-        }));
-
-        return image;
-    }
-
-    private async Task<byte[]> GetDefaultProfilePicture()
-    {
-        var defaultImagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "images/defaultProfilePicture.jpg");
-        return await System.IO.File.ReadAllBytesAsync(defaultImagePath);
     }
 }

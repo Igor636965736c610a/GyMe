@@ -11,7 +11,7 @@ public class GetAccountInfModel
     public bool PrivateAccount { get; set; }
     public bool Valid { get; set; }
     public GenderDto Gender { get; set; }
-    public byte[] ProfilePicture { get; set; }
+    public string ProfilePictureUrl { get; set; }
     public string? Description { get; set; }
     public bool Premium { get; set; }
     public DateTime? ImportancePremium { get; set; }

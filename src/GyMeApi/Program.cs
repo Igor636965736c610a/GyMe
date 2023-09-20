@@ -5,6 +5,9 @@ using GymAppApi.Middleware.Extension;
 using GymAppInfrastructure.AutoMapper;
 using GymAppInfrastructure.Extensions;
 using GymAppInfrastructure.Options;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

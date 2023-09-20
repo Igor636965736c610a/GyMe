@@ -23,5 +23,20 @@ public class UserConfig : IEntityTypeConfiguration<User>
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId)
                 .HasPrincipalKey(e => e.Id);
+                
+        builder.HasMany(e => e.Reactions)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId)
+            .HasPrincipalKey(e => e.Id);
+        
+        builder.HasMany(e => e.Comments)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId)
+            .HasPrincipalKey(e => e.Id);
+        
+        builder.HasMany(e => e.CommentReactions)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId)
+            .HasPrincipalKey(e => e.Id);
     }
 }

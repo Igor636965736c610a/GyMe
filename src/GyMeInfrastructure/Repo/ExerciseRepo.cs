@@ -27,7 +27,8 @@ internal class ExerciseRepo : IExerciseRepo
     public async Task<List<Exercise>> GetAll(Guid userId, int page, int size)
         => await _gyMePostgresContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position)
             .Skip(page * size)
-            .Take(size).ToListAsync();
+            .Take(size)
+            .ToListAsync();
 
     public async Task<List<Exercise>> GetAll(Guid userId)
         => await _gyMePostgresContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position).ToListAsync();

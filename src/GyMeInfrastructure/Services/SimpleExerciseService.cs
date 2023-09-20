@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Policy;
+using AutoMapper;
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Models.Series;
@@ -17,14 +18,17 @@ internal class SimpleExerciseService : ISimpleExerciseService
     private readonly IUserRepo _userRepo;
     private readonly IMapper _mapper;
     private readonly IUserContextService _userContextService;
+    private readonly IGyMeMapper _gyMeMapper;
 
-    public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IExerciseRepo exerciseRepo, IUserRepo userRepo, IMapper mapper, IUserContextService userContextService)
+    public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IExerciseRepo exerciseRepo, IUserRepo userRepo, IMapper mapper, IUserContextService userContextService,
+        IGyMeMapper gyMeMapper)
     {
         _simpleExerciseRepo = simpleExerciseRepo;
         _exerciseRepo = exerciseRepo;
         _userRepo = userRepo;
         _mapper = mapper;
         _userContextService = userContextService;
+        _gyMeMapper = gyMeMapper;
     }
 
     public async Task Create(PostSimpleExerciseDto postSimpleExerciseDto)
@@ -90,7 +94,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        var simpleExerciseDto = GetSimpleExerciseDtoMap.Map(simpleExercise);
+        var simpleExerciseDto = _gyMeMapper.GetSimpleExerciseDtoMap(simpleExercise);
 
         return simpleExerciseDto;
     }
@@ -106,7 +110,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
             throw new ForbiddenException("You do not have the appropriate permissions");
 
         var simpleExercises = await _simpleExerciseRepo.GetAll(userId, exerciseId, page, size);
-        var simpleExercisesDto = simpleExercises.Select(x => GetSimpleExerciseDtoMap.Map(x));
+        var simpleExercisesDto = simpleExercises.Select(x => _gyMeMapper.GetSimpleExerciseDtoMap(x));
 
         return simpleExercisesDto;
     }

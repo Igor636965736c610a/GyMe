@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
 using GymAppInfrastructure.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace GymAppInfrastructure.Services;
 
-public class UserContextService : IUserContextService
+internal class UserContextService : IUserContextService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -12,7 +13,7 @@ public class UserContextService : IUserContextService
     {
         _httpContextAccessor = httpContextAccessor;
     }
-
+    
     public ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
 
     public HttpContext HttpContent => _httpContextAccessor.HttpContext ?? throw new InvalidProgramException("HttpContext null");

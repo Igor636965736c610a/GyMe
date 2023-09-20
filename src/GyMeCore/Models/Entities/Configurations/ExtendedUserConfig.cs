@@ -8,7 +8,7 @@ public class ExtendedUserConfig : IEntityTypeConfiguration<ExtendedUser>
     public void Configure(EntityTypeBuilder<ExtendedUser> builder)
     {
         builder.Property(x => x.Gender).IsRequired();
-        builder.Property(x => x.ProfilePicture).IsRequired();
+        builder.Property(x => x.ProfilePictureUrl).IsRequired();
         builder.Property(x => x.UserId).IsRequired();
         builder.Property(x => x.Premium).IsRequired();
         builder.Property(x => x.Description).HasMaxLength(EntitiesConfig.ExtendedUserConf.DescriptionMaxLenght);
