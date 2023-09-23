@@ -19,7 +19,7 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpPost(ApiRoutes.Exercise.Create)]
-    public async Task<IActionResult> CreateExercise([FromBody] PostExerciseDto postExerciseDto)
+    public async Task<IActionResult> CreateExercise([FromBody]PostExerciseDto postExerciseDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

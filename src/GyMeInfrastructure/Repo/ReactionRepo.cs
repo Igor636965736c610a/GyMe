@@ -1,7 +1,10 @@
 ﻿using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
+using GymAppCore.Models.Results;
+using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
 using GymAppInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver.Linq;
 
 namespace GymAppInfrastructure.Repo;
 
@@ -42,4 +45,19 @@ public class ReactionRepo : IReactionRepo
         _gyMePostgresContext.Reactions.Remove(reaction);
         await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
     }
+    
+    public async Task<IEnumerable<ReactionsCountResult>> GetConcreteReactionsCount(Guid simpleExerciseId)
+        => await _gyMePostgresContext.Reactions
+            .Where(x => x.SimpleExerciseId == simpleExerciseId)
+            .GroupBy(x => x.ReactionType)
+            .Select(x => new ReactionsCountResult()
+            {
+                ReactionType = x.Key,
+                Emoji = x.First().Emoji,
+                Count = x.Count()
+            }).ToListAsync();
+
+    public int GetReactionsCount(Guid simpleExerciseId)
+        => _gyMePostgresContext.Reactions
+            .Count(x => x.SimpleExerciseId == simpleExerciseId);
 }

@@ -1,16 +1,21 @@
-﻿using GymAppCore.Models.Entities;
+﻿using GymAppCore.IRepo;
+using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Models.ReactionsAndComments;
 using GymAppInfrastructure.Models.Series;
 using GymAppInfrastructure.Models.SimpleExercise;
 using GymAppInfrastructure.Models.User;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace GymAppInfrastructure.MyMapper;
 
 public class GyMeMapper : IGyMeMapper
 {
+    private readonly IReactionRepo _reactionRepo;
+
+    public GyMeMapper(IReactionRepo reactionRepo)
+    {
+        _reactionRepo = reactionRepo;
+    }
+
     public GetCommentDto MaGetCommentDtoMap(Comment comment, Dictionary<string, int> reactionsCount)
         => new GetCommentDto()
         {
@@ -45,7 +50,7 @@ public class GyMeMapper : IGyMeMapper
         {
             Id = reaction.Id,
             Emoji = reaction.Emoji,
-            ImageReaction = reaction.ImageUel,
+            ImageReaction = reaction.ImageUrl,
             User = new Owner()
             {
                 Id = reaction.User.Id,
@@ -74,6 +79,7 @@ public class GyMeMapper : IGyMeMapper
             ExerciseId = simpleExercise.ExerciseId,
             Series = simpleExercise.Series.Select(x => GetSeriesDtoMap(x)),
             Description = simpleExercise.Description,
+            ReactionsCount = _reactionRepo.GetReactionsCount(simpleExercise.Id),
             MaxRep = simpleExercise.Series.OrderByDescending(x => x.Weight).ThenByDescending(x => x.NumberOfRepetitions).First().Weight,
             Score = simpleExercise.Series.Sum(x => (int)Math.Round(x.Weight / (1.0278 - 0.0278 * x.NumberOfRepetitions), 2, MidpointRounding.AwayFromZero)),
             NumberOfRepetitions = simpleExercise.Series.Sum(x => x.NumberOfRepetitions),

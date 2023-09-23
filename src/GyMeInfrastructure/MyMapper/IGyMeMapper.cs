@@ -1,5 +1,6 @@
 ﻿using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Models.ReactionsAndComments;
+using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
 using GymAppInfrastructure.Models.Series;
 using GymAppInfrastructure.Models.SimpleExercise;
 using GymAppInfrastructure.Models.User;

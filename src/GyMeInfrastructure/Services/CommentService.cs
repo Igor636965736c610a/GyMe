@@ -2,7 +2,7 @@
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.ReactionsAndComments;
+using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
 
 namespace GymAppInfrastructure.Services;
 

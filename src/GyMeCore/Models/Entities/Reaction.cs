@@ -6,18 +6,18 @@ public class Reaction
     {
     }
 
-    public Reaction(Guid id, string? emoji, string imageUel, string reactionType, Guid simpleExerciseId, Guid userId)
+    public Reaction(Guid id, string? emoji, string? imageUrl, string reactionType, Guid simpleExerciseId, Guid userId)
     {
         Id = id;
         Emoji = emoji;
-        ImageUel = imageUel;
+        ImageUrl = imageUrl;
         ReactionType = reactionType;
         SimpleExerciseId = simpleExerciseId;
         UserId = userId;
     }
     public Guid Id { get; set; }
     public string? Emoji { get; set; }
-    public string ImageUel { get; set; }
+    public string? ImageUrl { get; set; }
     public string ReactionType { get; set; }
     public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
     public SimpleExercise SimpleExercise { get; set; }

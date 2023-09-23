@@ -104,7 +104,7 @@ internal class IdentityService : IIdentityService
             {
                 PrivateAccount = registerUserDto.PrivateAccount,
                 Gender = gender,
-                ProfilePictureUrl = _gyMeResourceService.GeneratePathToPhoto(id.ToString(), id.ToString()) + ".jpg",
+                ProfilePictureUrl = _gyMeResourceService.GenerateUrlToPhoto(id.ToString(), id.ToString()) + ".jpg",
                 Description = registerUserDto.Description,
                 Premium = false
             },
@@ -226,12 +226,12 @@ internal class IdentityService : IIdentityService
         if (userWithTheSameUsername is not null)
             throw new InvalidOperationException("User with this username already exist");
 
-        var imagePath = _gyMeResourceService.GeneratePathToPhoto(user.Id.ToString(), user.Id.ToString()) + ".jpg";
+        var imageUrl = _gyMeResourceService.GenerateUrlToPhoto(user.Id.ToString(), user.Id.ToString()) + ".jpg";
         var extendedUser = new ExtendedUser()
         {
             Gender = (Gender)activateAccountModel.Gender,
             PrivateAccount = activateAccountModel.PrivateAccount,
-            ProfilePictureUrl = imagePath,
+            ProfilePictureUrl = imageUrl,
             Description = activateAccountModel.Description,
             User = user
         };

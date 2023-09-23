@@ -1,6 +1,7 @@
 ﻿using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Models.ReactionsAndComments;
+using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
 using GymAppInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 

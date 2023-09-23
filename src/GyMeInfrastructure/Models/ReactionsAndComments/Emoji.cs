@@ -5,5 +5,5 @@ namespace GymAppInfrastructure.Models.ReactionsAndComments;
 [EnumExtensions]
 public enum Emoji
 {
-    test1znakow
+    emoji1chars
 }

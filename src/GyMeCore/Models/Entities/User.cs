@@ -12,7 +12,8 @@ public class User : IdentityUser<Guid>
     public override string Email { get; set; }
     public bool Valid { get; set; }
     public string AccountProvider { get; set; }
-    
+    public ResourcesAddresses SetResourcesAddresses { get; set; }
+    public Guid SetResourcesAddressesId { get; set; }
     public ExtendedUser? ExtendedUser { get; set; }
     public List<UserFriend> Friends { get; set; }
     public List<UserFriend> InverseFriends { get; set; }

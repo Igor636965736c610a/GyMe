@@ -1,4 +1,4 @@
-﻿using GymAppInfrastructure.Models.ReactionsAndComments;
+﻿using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
 
 namespace GymAppInfrastructure.IServices;
 

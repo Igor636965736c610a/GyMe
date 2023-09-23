@@ -110,7 +110,7 @@ public class ErrorHandlerMiddleware : IMiddleware
     private Error CreateError(Exception exception, int statusCode)
         => new()
         {
-            StatusCode = (int)HttpStatusCode.BadRequest,
+            StatusCode = statusCode,
             StackStrace = exception.StackTrace,
             Message = exception.Message
         };

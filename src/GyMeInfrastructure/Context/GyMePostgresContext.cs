@@ -15,6 +15,7 @@ public class GyMePostgresContext : DbContext
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<CommentReaction> CommentReactions { get; set; }
+    public DbSet<ResourcesAddresses> ResourcesAddresses { get; set; }
 
     public GyMePostgresContext(DbContextOptions<GyMePostgresContext> options)
         : base(options)

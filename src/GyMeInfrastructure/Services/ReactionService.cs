@@ -5,6 +5,7 @@ using GymAppCore.Models.Entities;
 using GymAppInfrastructure.Exceptions;
 using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Models.ReactionsAndComments;
+using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
 using GymAppInfrastructure.MyMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +36,7 @@ internal class ReactionService : IReactionService
         _gyMeResourceService = gyMeResourceService;
     }
 
-    public async Task AddEmojiReaction(Guid simpleExerciseId, Emoji emoji)
+    public async Task AddEmojiReaction(Guid simpleExerciseId, ReactionType reactionType)
     {
         var userIdFromJwt = _userContextService.UserId;
 
@@ -48,60 +49,54 @@ internal class ReactionService : IReactionService
         
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
-        
+
+        string? imageUrl = null!;
+        if (reactionType == ReactionType.Image)
+        {
+            var resourcesAddresses = await _userRepo.GetResourcesAddresses(userIdFromJwt);
+            if (resourcesAddresses?.ReactionImageUrl is null)
+                throw new InvalidOperationException("No set photo for reaction");
+            imageUrl = resourcesAddresses.ReactionImageUrl;
+        }
+            
         var existingReaction = await _reactionRepo.Get(simpleExerciseId, userIdFromJwt);
         if (existingReaction is not null)
         {
-            existingReaction.ImageUel = null;
-            existingReaction.Emoji = GetEmoji(emoji);
-            existingReaction.ReactionType = emoji.ToStringFast();
+            existingReaction.ImageUrl = imageUrl;
+            existingReaction.Emoji = GetEmoji(reactionType);
+            existingReaction.ReactionType = reactionType.ToStringFast();
             existingReaction.TimeStamp = DateTime.UtcNow;
 
             await _reactionRepo.Update(existingReaction);
             return;
         }
 
-        var emojiReaction = new Reaction(Guid.NewGuid(), null, GetEmoji(emoji), emoji.ToStringFast(),
+        var emojiReaction = new Reaction(Guid.NewGuid(), GetEmoji(reactionType), imageUrl, reactionType.ToStringFast(),
             simpleExercise.Id, userIdFromJwt);
 
         await _reactionRepo.Create(emojiReaction);
     }
     
-    public async Task AddImageReaction(Guid simpleExerciseId, IFormFile image)
+    public async Task SetImageReaction(IFormFile image)
     {
         var userIdFromJwt = _userContextService.UserId;
 
-        var simpleExercise = await _simpleExerciseRepo.Get(simpleExerciseId);
-        if (simpleExercise is null)
-            throw new NullReferenceException("Not Found");
-        
-        if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
-            throw new ForbiddenException("You do not have the appropriate permissions");
-        
-        var existingReaction = await _reactionRepo.Get(simpleExerciseId, userIdFromJwt);
-        if (existingReaction is not null)
+        var resourcesAddresses = await _userRepo.GetResourcesAddresses(userIdFromJwt);
+        var newResourcesAddressesId = Guid.NewGuid();
+        var reactionImageUrl = _gyMeResourceService.GenerateUrlToPhoto(userIdFromJwt.ToString(), newResourcesAddressesId.ToString());
+        if (resourcesAddresses is null)
         {
-            var path = _gyMeResourceService.GeneratePathToPhoto(existingReaction.Id.ToString(), userIdFromJwt + Path.GetExtension(image.FileName));
-            existingReaction.ImageUel = path;
-            existingReaction.Emoji = null;
-            existingReaction.ReactionType = ReactionType.Image.ToStringFast();
-            existingReaction.TimeStamp = DateTime.UtcNow;
-
-            await _reactionRepo.Update(existingReaction);
-            await _gyMeResourceService.SaveImageOnServer(image, path);
-
-            return;
+            resourcesAddresses = new ResourcesAddresses(newResourcesAddressesId, reactionImageUrl, userIdFromJwt);
+            await _userRepo.AddResourcesAddresses(resourcesAddresses);
+        }
+        else
+        {
+            resourcesAddresses.Id = newResourcesAddressesId;
+            resourcesAddresses.ReactionImageUrl = reactionImageUrl;
         }
 
-        var newEmojiId = Guid.NewGuid();
-        var newPath = _gyMeResourceService.GeneratePathToPhoto(newEmojiId.ToString(), userIdFromJwt + Path.GetExtension(image.FileName));
-        var emojiReaction = new Reaction(newEmojiId, null, newPath, ReactionType.Image.ToStringFast(),
-            simpleExercise.Id, userIdFromJwt);
-
-        using var scope = new TransactionScope();
-        await _reactionRepo.Create(emojiReaction);
-        await _gyMeResourceService.SaveImageOnServer(image, newPath);
-        scope.Complete();
+        var path = _gyMeResourceService.GeneratePathToPhoto(newResourcesAddressesId + Path.GetExtension(image.FileName), userIdFromJwt.ToString());
+        await _gyMeResourceService.SaveImageOnServer(image, path);
     }
 
     public async Task<IEnumerable<GetReactionDto>> GetReactions(Guid simpleExerciseId, int page, int size, ReactionType? reactionType)
@@ -143,6 +138,29 @@ internal class ReactionService : IReactionService
         }
     }
 
+    public async Task<IEnumerable<GetReactionCountDto>> GetReactionsCount(Guid simpleExerciseId)
+    {
+        var userIdFromJwt = _userContextService.UserId;
+
+        var simpleExercise = await _simpleExerciseRepo.Get(simpleExerciseId);
+        if (simpleExercise is null)
+            throw new NullReferenceException("Not Found");
+        
+        if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
+            throw new ForbiddenException("You do not have the appropriate permissions");
+
+        var reactionsCount = await _reactionRepo.GetConcreteReactionsCount(simpleExerciseId);
+
+        var reactionsCountDto = reactionsCount.Select(x => new GetReactionCountDto()
+        {
+            ReactionType = x.ReactionType,
+            Emoji = x.Emoji,
+            Count = x.Count
+        });
+
+        return reactionsCountDto;
+    }
+
     public async Task RemoveReaction(Guid reactionId)
     {
         var userIdFromJwt = _userContextService.UserId;
@@ -157,8 +175,9 @@ internal class ReactionService : IReactionService
         await _reactionRepo.Remove(reaction);
     }
 
-    private static string GetEmoji(Emoji emoji) => emoji switch
+    private static string? GetEmoji(ReactionType reactionType) => reactionType switch
     {
+        ReactionType.Image => null,
         _ => throw new InvalidProgramException("Invalid Server Error")
     };
 }

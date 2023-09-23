@@ -17,4 +17,6 @@ public interface IUserRepo
     Task<bool> RemoveFriend(IEnumerable<UserFriend> userFriend);
     Task<bool> Update(User user);
     Task<bool> RemoveUser(User user);
+    Task<ResourcesAddresses?> GetResourcesAddresses(Guid userId);
+    Task AddResourcesAddresses(ResourcesAddresses resourcesAddresses);
 }

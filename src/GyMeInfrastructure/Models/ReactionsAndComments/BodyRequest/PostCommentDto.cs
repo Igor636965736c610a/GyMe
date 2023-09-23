@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Models.ReactionsAndComments;
+﻿namespace GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
 
 public class PostCommentDto
 {

@@ -15,13 +15,13 @@ internal class GyMeResourceService : IGyMeResourceService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string GeneratePathToPhoto(string fileName, string userId)
+    public string GenerateUrlToPhoto(string fileName, string userId)
     {
-        var photoPath = Path.Combine(GeneratePathToUserResourceFolder(userId), fileName);
+        var photoUrl = Path.Combine(GeneratePathToUserResourceFolder(userId), fileName);
 
-        return photoPath;
+        return photoUrl;
     }
-
+    
     public string GeneratePathToUserResourceFolder(string userId)
     {
         var path = Path.Combine($"https://{_httpContextAccessor.HttpContext!.Request.Host}", "Images", userId);
@@ -29,6 +29,13 @@ internal class GyMeResourceService : IGyMeResourceService
         return path;
     }
 
+    public string GeneratePathToPhoto(string fileName, string userId)
+    {
+        var photoPath = Path.Combine(_webHostEnvironment.WebRootPath, @$"Images\{userId}\{fileName}");
+
+        return photoPath;
+    }
+    
     public void SetDefaultProfilePicture(string userId)
     {
         var userDirectory = Path.Combine(_webHostEnvironment.WebRootPath, @$"Images\{userId}");

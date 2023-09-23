@@ -89,4 +89,16 @@ internal class UserRepo : IUserRepo
         _gyMePostgresContext.Users.Remove(user);
         return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
     }
+
+    public async Task<ResourcesAddresses?> GetResourcesAddresses(Guid userId)
+        => await _gyMePostgresContext.ResourcesAddresses
+            .FirstOrDefaultAsync(x => x.UserId == userId);
+
+    public async Task AddResourcesAddresses(ResourcesAddresses resourcesAddresses)
+    {
+        await _gyMePostgresContext.ResourcesAddresses
+            .AddAsync(resourcesAddresses);
+
+        await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+    }
 }

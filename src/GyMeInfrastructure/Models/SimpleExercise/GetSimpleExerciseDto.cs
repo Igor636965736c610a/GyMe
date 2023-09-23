@@ -10,6 +10,7 @@ public class GetSimpleExerciseDto
     public DateTime Date { get; set; }
     public IEnumerable<GetSeriesDto> Series { get; set; }
     public IEnumerable<GetReactionDto> FirstThreeReactionsDto { get; set; }
+    public int ReactionsCount { get; set; }
     public string? Description { get; set; }
     public int? MaxRep { get; set; }
     public int? Score { get; set; }

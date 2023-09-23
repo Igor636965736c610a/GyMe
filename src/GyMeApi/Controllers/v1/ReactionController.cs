@@ -1,6 +1,6 @@
 ﻿using GymAppApi.Routes.v1;
 using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
+using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest.BodyRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,21 +23,19 @@ public class ReactionController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _reactionService.AddEmojiReaction(postEmojiReaction.SimpleExerciseId, postEmojiReaction.Emoji);
+        await _reactionService.AddEmojiReaction(postEmojiReaction.SimpleExerciseId, postEmojiReaction.ReactionType);
 
         return Ok();
     }
 
-    [HttpPost(ApiRoutes.Reaction.AddImageReaction)]
+    [HttpPost(ApiRoutes.Reaction.SetImageReaction)]
     [RequestSizeLimit(1000*1024)]
-    public async Task<IActionResult> AddImageReaction([FromForm] IFormFile image, [FromQuery] string simpleExerciseId)
+    public async Task<IActionResult> SetImageReaction([FromForm] IFormFile image)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var simpleExerciseIdGuid = Guid.Parse(simpleExerciseId);
-
-        await _reactionService.AddImageReaction(simpleExerciseIdGuid, image);
+        await _reactionService.SetImageReaction(image);
 
         return Ok();
     }

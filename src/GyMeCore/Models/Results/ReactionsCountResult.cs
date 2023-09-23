@@ -1,6 +1,6 @@
-﻿namespace GymAppInfrastructure.Models.ReactionsAndComments;
+﻿namespace GymAppCore.Models.Results;
 
-public class GetReactionCountDto
+public class ReactionsCountResult
 {
     public string ReactionType { get; set; }
     public string? Emoji { get; set; }

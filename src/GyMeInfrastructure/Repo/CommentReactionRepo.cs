@@ -13,8 +13,12 @@ public class CommentReactionRepo : ICommentReactionRepo
         _gyMePostgresContext = gyMePostgresContext;
     }
 
-    public async Task<IQueryable<CommentReaction>> Test()
+    public async Task<IQueryable<CommentReaction>> GetAll(Guid commentId, int page, int size)
     {
-        return _gyMePostgresContext.CommentReactions.Where(x => x.Emoji == "test");
+        return await Task.FromResult(_gyMePostgresContext.CommentReactions
+            .Where(x => x.CommentId == commentId)
+            .OrderBy(x => x.TimeStamp)
+            .Skip(page * size)
+            .Take(size));
     }
 }

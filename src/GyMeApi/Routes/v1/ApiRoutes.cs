@@ -67,7 +67,7 @@ public static class ApiRoutes
     
     public static class Reaction
     {
-        public const string AddEmojiReaction = "add/emoji";
-        public const string AddImageReaction = "add/image";
+        public const string AddEmojiReaction = "reaction/add";
+        public const string SetImageReaction = "reaction/set/imageReaction";
     }
 }

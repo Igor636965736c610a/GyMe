@@ -70,10 +70,13 @@ internal class AccountService : IAccountService
         if (user?.ExtendedUser is null)
             throw new InvalidProgramException("Something went wrong");
 
-        var path = _gyMeResourceService.GeneratePathToPhoto(user.Id.ToString(), user.Id.ToString() + Path.GetExtension(image.FileName));
-        user.ExtendedUser.ProfilePictureUrl = path;
+        var url = _gyMeResourceService.GenerateUrlToPhoto(user.Id.ToString(), user.Id + Path.GetExtension(image.FileName));
+        user.ExtendedUser.ProfilePictureUrl = url;
         
         await _userRepo.Update(user);
+        var path = _gyMeResourceService.GeneratePathToPhoto(user.Id + Path.GetExtension(image.FileName),
+            user.Id.ToString());
+        
         await _gyMeResourceService.SaveImageOnServer(image, path);
     }
 
