@@ -54,21 +54,20 @@ public class SimpleExerciseController : ControllerBase
     }
     
     [HttpGet(ApiRoutes.SimpleExercise.GetAll)]
-    public async Task<IActionResult> GetForeignSimpleExercises([FromQuery] string exerciseId, [FromQuery] string userId,[FromQuery] int page,[FromQuery] int size)
+    public async Task<IActionResult> GetSimpleExercises([FromQuery] string exerciseId,[FromQuery] int page,[FromQuery] int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
             
-        var id = Guid.Parse(userId);
         var parseExerciseId = Guid.Parse(exerciseId);
 
-        var result =  await _simpleExerciseService.Get(id, parseExerciseId, page, size);
+        var result =  await _simpleExerciseService.Get(parseExerciseId, page, size);
 
         return Ok(result);
     }
 
     [HttpDelete(ApiRoutes.SimpleExercise.Remove)]
-    public async Task<IActionResult> RemoveSimpleExercise([FromRoute] string id)
+    public async Task<IActionResult> RemoveSimpleExercise([FromRoute]string id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

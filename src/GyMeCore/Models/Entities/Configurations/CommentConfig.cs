@@ -7,9 +7,16 @@ public class CommentConfig : IEntityTypeConfiguration<Comment>
 {
     public void Configure(EntityTypeBuilder<Comment> builder)
     {
-        builder.HasMany(e => e.CommentReactions)
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).IsRequired();
+        builder.Property(x => x.Message).IsRequired().HasMaxLength(EntitiesConfig.CommentConf.MessageMaxLenght);
+        builder.Property(x => x.TimeStamp).IsRequired();
+        builder.Property(x => x.UserId).IsRequired();
+        builder.Property(x => x.SimpleExerciseId).IsRequired();
+        
+        builder
+            .HasMany(e => e.CommentReactions)
             .WithOne(e => e.Comment)
-            .HasForeignKey(e => e.CommentId)
-            .HasPrincipalKey(e => e.Id);
+            .HasForeignKey(e => e.CommentId);
     }
 }

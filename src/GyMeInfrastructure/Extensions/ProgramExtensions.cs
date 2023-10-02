@@ -31,33 +31,36 @@ public static class ProgramExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IExerciseService, ExerciseService>();
-        services.AddScoped<IIdentityService, IdentityService>();
-        services.AddScoped<ISimpleExerciseService, SimpleExerciseService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IAccountService, AccountService>();
-        services.AddScoped<IChartService, ChartService>();
-        services.AddScoped<IUserContextService, UserContextService>();
-        services.AddScoped<IPaymentService, PaymentService>();
-        services.AddScoped<IReactionService, ReactionService>();
-        services.AddScoped<ICommentService, CommentService>();
-        services.AddScoped<IGyMeResourceService, GyMeResourceService>();
-        services.AddScoped<IGyMeMapper, GyMeMapper>();
-        services.AddSingleton<ErrorService>();
-        services.AddSingleton<PaymentMessagesService>();
-        services.AddSingleton<OpinionService>();
+        services.AddScoped<IExerciseService, ExerciseService>()
+            .AddScoped<IIdentityService, IdentityService>()
+            .AddScoped<ISimpleExerciseService, SimpleExerciseService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IAccountService, AccountService>()
+            .AddScoped<IChartService, ChartService>()
+            .AddScoped<IUserContextService, UserContextService>()
+            .AddScoped<IPaymentService, PaymentService>()
+            .AddScoped<IReactionService, ReactionService>()
+            .AddScoped<ICommentService, CommentService>()
+            .AddScoped<IGyMeResourceService, GyMeResourceService>()
+            .AddScoped<ICommentReactionService, CommentReactionService>()
+            .AddScoped<IGyMeMapper, GyMeMapper>()
+            .AddSingleton<ErrorService>()
+            .AddSingleton<PaymentMessagesService>()
+            .AddSingleton<OpinionService>();
 
         return services;
     }
     
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IExerciseRepo, ExerciseRepo>();
-        services.AddScoped<ISimpleExerciseRepo, SimpleExerciseRepo>();
-        services.AddScoped<IUserRepo, UserRepo>();
-        services.AddScoped<IReactionRepo, ReactionRepo>();
-        services.AddScoped<ICommentRepo, CommentRepo>();
+        services
+            .AddScoped<IExerciseRepo, ExerciseRepo>()
+            .AddScoped<ISimpleExerciseRepo, SimpleExerciseRepo>()
+            .AddScoped<IUserRepo, UserRepo>()
+            .AddScoped<IReactionRepo, ReactionRepo>()
+            .AddScoped<ICommentRepo, CommentRepo>()
+            .AddScoped<ICommentReactionRepo, CommentReactionRepo>();
 
         return services;
     }
@@ -203,33 +206,39 @@ public static class ProgramExtensions
 
     public static IServiceCollection AddValidations(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<ActivateAccountModelValidator>();
-        services.AddValidatorsFromAssemblyContaining<BaseSeriesDtoValidator>();
-        services.AddValidatorsFromAssemblyContaining<OpinionRequestBodyValidator>();
-        services.AddValidatorsFromAssemblyContaining<PaymentRequestModelValidator>();
-        services.AddValidatorsFromAssemblyContaining<PostSimpleExerciseDtoValidator>();
-        services.AddValidatorsFromAssemblyContaining<PutSimpleExerciseDtoValidator>();
-        services.AddValidatorsFromAssemblyContaining<PutUserDtoValidator>();
-        services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>();
+        services
+            .AddValidatorsFromAssemblyContaining<ActivateAccountModelValidator>()
+            .AddValidatorsFromAssemblyContaining<BaseSeriesDtoValidator>()
+            .AddValidatorsFromAssemblyContaining<OpinionRequestBodyValidator>()
+            .AddValidatorsFromAssemblyContaining<PaymentRequestModelValidator>()
+            .AddValidatorsFromAssemblyContaining<PostSimpleExerciseDtoValidator>()
+            .AddValidatorsFromAssemblyContaining<PutSimpleExerciseDtoValidator>()
+            .AddValidatorsFromAssemblyContaining<PutUserDtoValidator>()
+            .AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>()
+            .AddValidatorsFromAssemblyContaining<PostCommentDtoValidator>()
+            .AddValidatorsFromAssemblyContaining<PutCommentDtoValidator>()
+            .AddValidatorsFromAssemblyContaining<PostReactionDtoValidator>();
 
         return services;
     }
 
     public static IServiceCollection BindOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
-        services.Configure<StripeOptions>(configuration.GetSection(nameof(StripeOptions)));
-        services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
-        services.AddSingleton<MongoDbSettings>();
-        services.AddSingleton<StripeOptions>();
-        services.AddSingleton<EmailOptions>();
+        services
+            .Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)))
+            .Configure<StripeOptions>(configuration.GetSection(nameof(StripeOptions)))
+            .Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)))
+            .AddSingleton<MongoDbSettings>()
+            .AddSingleton<StripeOptions>()
+            .AddSingleton<EmailOptions>();
         
         var swaggerSettings = new SwaggerSettings();
         var jwtSettings = new JwtSettings();
         configuration.GetSection(nameof(SwaggerSettings)).Bind(swaggerSettings);
         configuration.GetSection(nameof(JwtSettings)).Bind(jwtSettings);
-        services.AddSingleton(swaggerSettings);
-        services.AddSingleton(jwtSettings);
+        services
+            .AddSingleton(swaggerSettings)
+            .AddSingleton(jwtSettings);
 
         return services;
     }

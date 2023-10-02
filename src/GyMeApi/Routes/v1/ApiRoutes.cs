@@ -67,7 +67,20 @@ public static class ApiRoutes
     
     public static class Reaction
     {
-        public const string AddEmojiReaction = "reaction/add";
-        public const string SetImageReaction = "reaction/set/imageReaction";
+        public const string AddReaction = "add";
+        public const string SetImageReaction = "set/imageReaction";
+        public const string GetReactions = "get";
+        public const string GetSpecificReactionsCount = "get/count";
+        public const string RemoveReaction = "remove";
+    }
+
+    public static class Comments
+    {
+        public const string AddComment = "add";
+        public const string GetComment = "get/{id}";
+        public const string GetCommentsSortedByPubTime = "get/sortByPubTime";
+        public const string GetCommentsSortedByReactionsCount = "get/sortByReactionsCount";
+        public const string UpdateComment = "update";
+        public const string RemoveComment = "remove";
     }
 }

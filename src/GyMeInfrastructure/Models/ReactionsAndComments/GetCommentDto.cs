@@ -7,5 +7,6 @@ public class GetCommentDto
     public string Message { get; set; }
     public Owner User { get; set; }
     public DateTime TimeStamp { get; set; }
-    public IEnumerable<GetReactionCountDto> GetCommentReactionCountDtos { get; set; }
+    public int ReactionsCount { get; set; }
+    public IEnumerable<GetCommentReactionDto> FirstThreeCommentReactionsDto { get; set; }
 }

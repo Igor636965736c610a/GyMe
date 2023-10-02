@@ -18,16 +18,20 @@ internal class SimpleExerciseService : ISimpleExerciseService
     private readonly IUserRepo _userRepo;
     private readonly IMapper _mapper;
     private readonly IUserContextService _userContextService;
+    private readonly IReactionRepo _reactionRepo;
+    private readonly ICommentRepo _commentRepo;
     private readonly IGyMeMapper _gyMeMapper;
 
     public SimpleExerciseService(ISimpleExerciseRepo simpleExerciseRepo, IExerciseRepo exerciseRepo, IUserRepo userRepo, IMapper mapper, IUserContextService userContextService,
-        IGyMeMapper gyMeMapper)
+        IReactionRepo reactionRepo, ICommentRepo commentRepo, IGyMeMapper gyMeMapper)
     {
         _simpleExerciseRepo = simpleExerciseRepo;
         _exerciseRepo = exerciseRepo;
         _userRepo = userRepo;
         _mapper = mapper;
         _userContextService = userContextService;
+        _reactionRepo = reactionRepo;
+        _commentRepo = commentRepo;
         _gyMeMapper = gyMeMapper;
     }
 
@@ -94,23 +98,29 @@ internal class SimpleExerciseService : ISimpleExerciseService
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        var simpleExerciseDto = _gyMeMapper.GetSimpleExerciseDtoMap(simpleExercise);
+        var reactionsCount = await _reactionRepo.GetReactionsCount(simpleExercise.Id);
+        var commentsCount = await _commentRepo.GetCommentsCount(simpleExercise.Id);
+        var simpleExerciseDto = _gyMeMapper.GetSimpleExerciseDtoMap(simpleExercise, reactionsCount, commentsCount);
 
         return simpleExerciseDto;
     }
 
-    public async Task<IEnumerable<GetSimpleExerciseDto>> Get(Guid userId, Guid exerciseId, int page, int size)
+    public async Task<IEnumerable<GetSimpleExerciseDto>> Get(Guid exerciseId, int page, int size)
     {
         var userIdFromJwt = _userContextService.UserId;
         
-        var owner = await _userRepo.GetOnlyValid(userId);
-        if (owner is null)
-            throw new InvalidOperationException("User does not exist");
-        if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, userId, _userRepo))
+        var exercise = await _exerciseRepo.Get(exerciseId);
+        if (exercise is null)
+            throw new InvalidOperationException("Exercise does not exist");
+        if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, exercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        var simpleExercises = await _simpleExerciseRepo.GetAll(userId, exerciseId, page, size);
-        var simpleExercisesDto = simpleExercises.Select(x => _gyMeMapper.GetSimpleExerciseDtoMap(x));
+        var simpleExercises = await _simpleExerciseRepo.GetAll(exerciseId, page, size);
+        var simpleExercisesId = simpleExercises.Select(x => x.Id);
+        var exercisesId = simpleExercisesId as Guid[] ?? simpleExercisesId.ToArray();
+        var reactionsCount = await _reactionRepo.GetReactionsCount(exercisesId);
+        var commentsCount = await _commentRepo.GetCommentsCount(exercisesId);
+        var simpleExercisesDto = simpleExercises.Select(x => _gyMeMapper.GetSimpleExerciseDtoMap(x, reactionsCount[x.Id], commentsCount[x.Id]));
 
         return simpleExercisesDto;
     }

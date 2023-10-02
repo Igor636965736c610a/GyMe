@@ -25,8 +25,8 @@ internal class SimpleExerciseRepo : ISimpleExerciseRepo
             .ThenInclude(x => x.User)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-    public async Task<List<SimpleExercise>> GetAll(Guid userId, Guid exerciseId, int page, int size)
-        => await _gyMePostgresContext.SimpleExercises.Where(x => x.UserId == userId && x.ExerciseId == exerciseId)
+    public async Task<List<SimpleExercise>> GetAll(Guid exerciseId, int page, int size)
+        => await _gyMePostgresContext.SimpleExercises.Where(x => x.ExerciseId == exerciseId)
             .OrderBy(x => x.Date)
             .Include(x => x.Series)
             .Include(x => x.Reactions

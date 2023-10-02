@@ -19,7 +19,7 @@ public class ValidAccountMiddleware : IMiddleware
         }
 
         var valid = context.User.FindFirst("validAccount");
-
+        
         if (valid is null)
         {
             await next(context);

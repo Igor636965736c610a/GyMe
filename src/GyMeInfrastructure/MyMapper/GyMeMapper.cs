@@ -9,14 +9,7 @@ namespace GymAppInfrastructure.MyMapper;
 
 public class GyMeMapper : IGyMeMapper
 {
-    private readonly IReactionRepo _reactionRepo;
-
-    public GyMeMapper(IReactionRepo reactionRepo)
-    {
-        _reactionRepo = reactionRepo;
-    }
-
-    public GetCommentDto MaGetCommentDtoMap(Comment comment, Dictionary<string, int> reactionsCount)
+    public GetCommentDto GetCommentDtoMap(Comment comment, int reactionsCount)
         => new GetCommentDto()
         {
             Id = comment.Id,
@@ -24,25 +17,27 @@ public class GyMeMapper : IGyMeMapper
             Message = comment.Message,
             User = new Owner()
             {
-                Id = comment.User.Id,
+                Id = comment.UserId,
                 UserName = comment.User.UserName
             },
             TimeStamp = comment.TimeStamp,
-            GetCommentReactionCountDtos = reactionsCount.Select(x => new GetReactionCountDto(){ ReactionType = x.Key, Count = x.Value })
+            FirstThreeCommentReactionsDto = comment.CommentReactions.Select(x => GetCommentReactionDtoMap(x)),
+            ReactionsCount = reactionsCount
         };
-    
+
     public GetCommentReactionDto GetCommentReactionDtoMap(CommentReaction commentReaction)
         => new GetCommentReactionDto()
         {
             Id = commentReaction.Id,
+            CommentId = commentReaction.CommentId,
             Emoji = commentReaction.Emoji,
+            ReactionTypeDto = commentReaction.ReactionType,
+            TimeStamp = commentReaction.TimeStamp,
             User = new Owner()
             {
-                Id = commentReaction.User.Id,
+                Id = commentReaction.UserId,
                 UserName = commentReaction.User.UserName
-            },
-            CommentId = commentReaction.CommentId,
-            TimeStamp = commentReaction.TimeStamp
+            }
         };
     
     public GetReactionDto GetReactionDtoMap(Reaction reaction)
@@ -53,7 +48,7 @@ public class GyMeMapper : IGyMeMapper
             ImageReaction = reaction.ImageUrl,
             User = new Owner()
             {
-                Id = reaction.User.Id,
+                Id = reaction.UserId,
                 UserName = reaction.User.UserName
             },
             SimpleExerciseId = reaction.SimpleExerciseId,
@@ -71,7 +66,7 @@ public class GyMeMapper : IGyMeMapper
         };
     }
     
-    public GetSimpleExerciseDto GetSimpleExerciseDtoMap(SimpleExercise simpleExercise)
+    public GetSimpleExerciseDto GetSimpleExerciseDtoMap(SimpleExercise simpleExercise, int reactionsCount, int commentsCount)
         => new GetSimpleExerciseDto()
         {
             Id = simpleExercise.Id,
@@ -79,7 +74,8 @@ public class GyMeMapper : IGyMeMapper
             ExerciseId = simpleExercise.ExerciseId,
             Series = simpleExercise.Series.Select(x => GetSeriesDtoMap(x)),
             Description = simpleExercise.Description,
-            ReactionsCount = _reactionRepo.GetReactionsCount(simpleExercise.Id),
+            ReactionsCount = reactionsCount,
+            CommentsCount = commentsCount,
             MaxRep = simpleExercise.Series.OrderByDescending(x => x.Weight).ThenByDescending(x => x.NumberOfRepetitions).First().Weight,
             Score = simpleExercise.Series.Sum(x => (int)Math.Round(x.Weight / (1.0278 - 0.0278 * x.NumberOfRepetitions), 2, MidpointRounding.AwayFromZero)),
             NumberOfRepetitions = simpleExercise.Series.Sum(x => x.NumberOfRepetitions),

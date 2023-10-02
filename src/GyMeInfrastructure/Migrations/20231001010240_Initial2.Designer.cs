@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GymAppInfrastructure.Migrations
 {
     [DbContext(typeof(GyMePostgresContext))]
-    [Migration("20230918125555_Initial1")]
-    partial class Initial1
+    [Migration("20231001010240_Initial2")]
+    partial class Initial2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,8 @@ namespace GymAppInfrastructure.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<Guid>("SimpleExerciseId")
                         .HasColumnType("uuid");
@@ -63,6 +64,10 @@ namespace GymAppInfrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Emoji")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReactionType")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -124,9 +129,9 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<bool>("PrivateAccount")
                         .HasColumnType("boolean");
 
-                    b.Property<byte[]>("ProfilePicturePath")
+                    b.Property<string>("ProfilePictureUrl")
                         .IsRequired()
-                        .HasColumnType("bytea");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId");
 
@@ -142,8 +147,7 @@ namespace GymAppInfrastructure.Migrations
                     b.Property<string>("Emoji")
                         .HasColumnType("text");
 
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
                     b.Property<string>("ReactionType")
@@ -166,6 +170,27 @@ namespace GymAppInfrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reactions");
+                });
+
+            modelBuilder.Entity("GymAppCore.Models.Entities.ResourcesAddresses", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ReactionImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("ResourcesAddresses");
                 });
 
             modelBuilder.Entity("GymAppCore.Models.Entities.Series", b =>
@@ -318,7 +343,7 @@ namespace GymAppInfrastructure.Migrations
             modelBuilder.Entity("GymAppCore.Models.Entities.Comment", b =>
                 {
                     b.HasOne("GymAppCore.Models.Entities.SimpleExercise", "SimpleExercise")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("SimpleExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -394,6 +419,17 @@ namespace GymAppInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GymAppCore.Models.Entities.ResourcesAddresses", b =>
+                {
+                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                        .WithOne("SetResourcesAddresses")
+                        .HasForeignKey("GymAppCore.Models.Entities.ResourcesAddresses", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("GymAppCore.Models.Entities.Series", b =>
                 {
                     b.HasOne("GymAppCore.Models.Entities.SimpleExercise", "SimpleExercise")
@@ -455,6 +491,8 @@ namespace GymAppInfrastructure.Migrations
 
             modelBuilder.Entity("GymAppCore.Models.Entities.SimpleExercise", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Reactions");
 
                     b.Navigation("Series");
@@ -475,6 +513,9 @@ namespace GymAppInfrastructure.Migrations
                     b.Navigation("InverseFriends");
 
                     b.Navigation("Reactions");
+
+                    b.Navigation("SetResourcesAddresses")
+                        .IsRequired();
 
                     b.Navigation("SimpleExercises");
                 });

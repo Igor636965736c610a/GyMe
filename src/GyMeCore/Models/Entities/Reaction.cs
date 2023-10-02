@@ -23,5 +23,5 @@ public class Reaction
     public SimpleExercise SimpleExercise { get; set; }
     public Guid SimpleExerciseId { get; set; }
     public Guid UserId { get; set; }
-    public User User { get; set; }
+    public virtual User User { get; set; }
 }

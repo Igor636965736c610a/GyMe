@@ -2,6 +2,10 @@
 
 public class ResourcesAddresses
 {
+    protected ResourcesAddresses()
+    {
+    }
+    
     public ResourcesAddresses(Guid id, string reactionImageUrl, Guid userId)
     {
         Id = id;

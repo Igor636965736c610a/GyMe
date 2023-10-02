@@ -89,5 +89,6 @@ internal class AccountService : IAccountService
             throw new InvalidProgramException("Something went wrong");
 
         await _userRepo.RemoveUser(user);
+        _gyMeResourceService.RemoveProfilePicture(userIdFromJwt.ToString());
     }
 }

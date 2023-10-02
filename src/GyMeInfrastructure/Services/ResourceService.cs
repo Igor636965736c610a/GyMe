@@ -44,6 +44,17 @@ internal class GyMeResourceService : IGyMeResourceService
         var destinationPath = Path.Combine(userDirectory, userId + ".jpg");
         File.Copy(defaultPhotoPath, destinationPath, overwrite:true);
     }
+
+    public void RemoveProfilePicture(string userId)
+    {
+        var userDirectory = Path.Combine(_webHostEnvironment.WebRootPath, @$"Images\{userId}");
+     
+        var fileToDelete = Directory.GetFiles(userDirectory, userId + ".*").FirstOrDefault();
+        if (fileToDelete is not null)
+        {
+            File.Delete(fileToDelete);
+        }
+    }
     
     public async Task SaveImageOnServer(IFormFile? image, string path)
     {

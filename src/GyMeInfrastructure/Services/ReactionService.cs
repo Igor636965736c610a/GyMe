@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using Stripe.Issuing;
 
 namespace GymAppInfrastructure.Services;
 
@@ -110,12 +109,13 @@ internal class ReactionService : IReactionService
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        var reactionsSource = await _reactionRepo.GetAll(simpleExercise.Id, page, size);
+        var reactionsSource = _reactionRepo.GetAll(simpleExercise.Id, page, size);
         if (reactionType is null)
         {
             var reactions = await reactionsSource
                 .OrderBy(x => x.ReactionType == ReactionType.Image.ToStringFast())
                 .ThenBy(x => x.ReactionType)
+                .ThenBy(x => x.TimeStamp)
                 .Skip(page * size)
                 .Take(size)
                 .ToListAsync();
@@ -128,6 +128,7 @@ internal class ReactionService : IReactionService
         {
             var reactions = await reactionsSource
                 .Where(x => x.ReactionType == reactionType.ToString())
+                .OrderBy(x => x.TimeStamp)
                 .Skip(page * size)
                 .Take(size)
                 .ToListAsync();
@@ -138,7 +139,7 @@ internal class ReactionService : IReactionService
         }
     }
 
-    public async Task<IEnumerable<GetReactionCountDto>> GetReactionsCount(Guid simpleExerciseId)
+    public async Task<IEnumerable<GetReactionCountDto>> GetSpecificReactionsCount(Guid simpleExerciseId)
     {
         var userIdFromJwt = _userContextService.UserId;
 
@@ -149,7 +150,7 @@ internal class ReactionService : IReactionService
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        var reactionsCount = await _reactionRepo.GetConcreteReactionsCount(simpleExerciseId);
+        var reactionsCount = await _reactionRepo.GetSpecificReactionsCount(simpleExerciseId);
 
         var reactionsCountDto = reactionsCount.Select(x => new GetReactionCountDto()
         {

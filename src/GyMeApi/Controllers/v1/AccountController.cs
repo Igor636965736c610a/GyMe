@@ -72,7 +72,7 @@ public class AccountController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost(ApiRoutes.Account.SendResetPasswordToken)]
-    public async Task<IActionResult> SendResetPasswordToken([FromQuery] string email)
+    public async Task<IActionResult> SendResetPasswordToken([FromQuery]string email)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -87,7 +87,7 @@ public class AccountController : ControllerBase
     
     [AllowAnonymous]
     [HttpPost(ApiRoutes.Account.ResetPassword)]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPassword model)
+    public async Task<IActionResult> ResetPassword([FromBody]ResetPassword model)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -103,7 +103,7 @@ public class AccountController : ControllerBase
     
     [AllowAnonymous]
     [HttpGet(ApiRoutes.Account.ConfirmEmail)]
-    public async Task<IActionResult> ConfirmEmail([FromQuery]string userId,[FromQuery] string code)
+    public async Task<IActionResult> ConfirmEmail([FromQuery]string userId,[FromQuery]string code)
     {
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
         {
@@ -171,7 +171,7 @@ public class AccountController : ControllerBase
 
     [Authorize(Policy = "SSO")]
     [HttpPut(ApiRoutes.Account.UpdateUser)]
-    public async Task<IActionResult> UpdateUser([FromBody] PutUserDto putUserDto)
+    public async Task<IActionResult> UpdateUser([FromBody]PutUserDto putUserDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -184,7 +184,7 @@ public class AccountController : ControllerBase
     [Authorize(Policy = "SSO")]
     [SkipValidAccountCheck]
     [HttpPost(ApiRoutes.Account.ActivateUser)]
-    public async Task<IActionResult> ActivateUser([FromBody] ActivateAccountModel activateAccountModel) 
+    public async Task<IActionResult> ActivateUser([FromBody]ActivateAccountModel activateAccountModel) 
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

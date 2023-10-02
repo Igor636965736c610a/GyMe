@@ -7,11 +7,11 @@ public class UserFriendConfig : IEntityTypeConfiguration<UserFriend>
 {
     public void Configure(EntityTypeBuilder<UserFriend> builder)
     {
+        builder.HasKey(x => new { x.UserId, x.FriendId });
         builder.Property(p => p.FriendStatus).IsRequired();
         builder.Property(p => p.UserId).IsRequired();
         builder.Property(p => p.FriendId).IsRequired();
         
-        builder.HasKey(x => new { x.UserId, x.FriendId });
         builder
             .HasOne(e => e.User)
             .WithMany(e => e.Friends)

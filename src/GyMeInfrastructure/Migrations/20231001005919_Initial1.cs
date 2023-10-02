@@ -66,7 +66,7 @@ namespace GymAppInfrastructure.Migrations
                 {
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
-                    ProfilePicturePath = table.Column<byte[]>(type: "bytea", nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "text", nullable: false),
                     PrivateAccount = table.Column<bool>(type: "boolean", nullable: false),
                     Premium = table.Column<bool>(type: "boolean", nullable: false),
                     ImportancePremium = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -77,6 +77,25 @@ namespace GymAppInfrastructure.Migrations
                     table.PrimaryKey("PK_ExtendedUsers", x => x.UserId);
                     table.ForeignKey(
                         name: "FK_ExtendedUsers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ResourcesAddresses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ReactionImageUrl = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResourcesAddresses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ResourcesAddresses_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -141,7 +160,7 @@ namespace GymAppInfrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Message = table.Column<string>(type: "text", nullable: false),
+                    Message = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SimpleExerciseId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
@@ -169,7 +188,7 @@ namespace GymAppInfrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Emoji = table.Column<string>(type: "text", nullable: true),
-                    ImagePath = table.Column<string>(type: "text", nullable: false),
+                    ImageUrl = table.Column<string>(type: "text", nullable: true),
                     ReactionType = table.Column<string>(type: "text", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SimpleExerciseId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -218,6 +237,7 @@ namespace GymAppInfrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Emoji = table.Column<string>(type: "text", nullable: false),
+                    ReactionType = table.Column<string>(type: "text", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CommentId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
@@ -275,6 +295,12 @@ namespace GymAppInfrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ResourcesAddresses_UserId",
+                table: "ResourcesAddresses",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Series_SimpleExerciseId",
                 table: "Series",
                 column: "SimpleExerciseId");
@@ -306,6 +332,9 @@ namespace GymAppInfrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reactions");
+
+            migrationBuilder.DropTable(
+                name: "ResourcesAddresses");
 
             migrationBuilder.DropTable(
                 name: "Series");

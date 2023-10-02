@@ -19,7 +19,7 @@ public class ErrorHandlerMiddleware : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        string errorMessage = "CRITICAL";
+        var errorMessage = "CRITICAL";
         try
         {
             await next(context);

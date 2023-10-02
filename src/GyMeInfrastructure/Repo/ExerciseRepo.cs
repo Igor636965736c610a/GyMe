@@ -14,7 +14,7 @@ internal class ExerciseRepo : IExerciseRepo
     }
     
     public async Task<Exercise?> Get(Guid exerciseId)
-        => await _gyMePostgresContext.Exercises.FirstOrDefaultAsync(x => x.Id == exerciseId);
+        => await _gyMePostgresContext.Exercises.Include(x => x.ConcreteExercise).FirstOrDefaultAsync(x => x.Id == exerciseId);
 
     public async Task<Exercise?> Get(Guid userId, ExercisesType exercisesType)
         => await _gyMePostgresContext.Exercises.FirstOrDefaultAsync(x =>
@@ -56,9 +56,11 @@ internal class ExerciseRepo : IExerciseRepo
 
     public async Task<IEnumerable<int>> GetScore(Guid exerciseId, int period,
         Func<IEnumerable<Series>, int> calculate)
-        => await Task.FromResult(_gyMePostgresContext.SimpleExercises
+        => await _gyMePostgresContext.SimpleExercises
             .Where(x => x.ExerciseId == exerciseId)
-            .OrderBy(e => e.Date).Take(period).Select(e => calculate(e.Series)));
+            .OrderBy(e => e.Date).Take(period)
+            .Select(e => calculate(e.Series))
+            .ToListAsync();
 
     public async Task<Dictionary<Guid, IEnumerable<int>>> GetScores(IEnumerable<Guid> exercisesId, int period,
         Func<IEnumerable<Series>, int> calculate)

@@ -28,4 +28,9 @@ public static class EntitiesConfig
         public const int NumberOfRepetitionsMaxLenght = 1000;
         public const int NumberOfRepetitionsMinLenght = 1;
     }
+    
+    public static class CommentConf
+    {
+        public const int MessageMaxLenght = 1000;
+    }
 }

@@ -15,22 +15,24 @@ builder.Services.AddControllers()
         var converter = new JsonStringEnumConverter();
         x.JsonSerializerOptions.Converters.Add(converter);
     });
-builder.Services.BindOptions(builder.Configuration);
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddDb(builder.Configuration);
-builder.Services.AddValidations();
-builder.Services.ConfigureRefit();
-builder.Services.AddCorsPolicy();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddServices();
-builder.Services.AddRepositories();
-builder.Services.AddMiddlewares();
-builder.Services.AddAuthentication(builder.Configuration);
-builder.Services.AddAuthorizationSet();
-builder.Services.AddSwaggerConfig();
-builder.Services.AddSingleton(AutoMapperConfig.Initialize());
-builder.Services.AddCookies();
-builder.Services.AddHttpContextAccessor();
+
+builder.Services
+    .BindOptions(builder.Configuration)
+    .AddFluentValidationAutoValidation()
+    .AddDb(builder.Configuration)
+    .AddValidations()
+    .ConfigureRefit()
+    .AddCorsPolicy()
+    .AddEndpointsApiExplorer()
+    .AddServices()
+    .AddRepositories()
+    .AddMiddlewares()
+    .AddAuthentication(builder.Configuration)
+    .AddAuthorizationSet()
+    .AddSwaggerConfig()
+    .AddSingleton(AutoMapperConfig.Initialize())
+    .AddCookies()
+    .AddHttpContextAccessor();
 
 var app = builder.Build();
 

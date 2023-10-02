@@ -24,13 +24,15 @@ public class GyMePostgresContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfigurationsFromAssembly(typeof(UserFriendConfig).Assembly);
-        builder.ApplyConfigurationsFromAssembly(typeof(EntitiesConfig).Assembly);
-        builder.ApplyConfigurationsFromAssembly(typeof(SimpleExerciseConfig).Assembly);
-        builder.ApplyConfigurationsFromAssembly(typeof(UserConfig).Assembly);
-        builder.ApplyConfigurationsFromAssembly(typeof(ExtendedUser).Assembly);
-        builder.ApplyConfigurationsFromAssembly(typeof(CommentConfig).Assembly);
-        builder.ApplyConfigurationsFromAssembly(typeof(CommentReactionConfig).Assembly);
-        builder.ApplyConfigurationsFromAssembly(typeof(ReactionConfig).Assembly);
+        builder
+            .ApplyConfigurationsFromAssembly(typeof(UserFriendConfig).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(EntitiesConfig).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(SimpleExerciseConfig).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(UserConfig).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(ExtendedUser).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(CommentConfig).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(CommentReactionConfig).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(ReactionConfig).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(ResourcesAddressesConfig).Assembly);
     }
 }

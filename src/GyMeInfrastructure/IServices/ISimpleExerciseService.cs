@@ -9,5 +9,5 @@ public interface ISimpleExerciseService
     Task Update(Guid id, PutSimpleExerciseDto putExerciseDto);
     Task Remove(Guid id);
     Task<GetSimpleExerciseDto> Get(Guid id);
-    Task<IEnumerable<GetSimpleExerciseDto>> Get(Guid userId, Guid exerciseId, int page, int size);
+    Task<IEnumerable<GetSimpleExerciseDto>> Get(Guid exerciseId, int page, int size);
 }
