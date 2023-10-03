@@ -31,7 +31,7 @@ internal class ExerciseService : IExerciseService
         
         postExerciseDto.Position ??= 0;
 
-        var exerciseType = (ExercisesType)postExerciseDto.ExercisesType;
+        var exerciseType = postExerciseDto.ExercisesTypeDto.ToStringFast();
         var existingExercise = await _exerciseRepo.Get(userIdFromJwt, exerciseType);
         if (existingExercise is not null)
             throw new InvalidOperationException("Exercise already exist");
@@ -110,7 +110,7 @@ internal class ExerciseService : IExerciseService
         var exerciseDto = new GetExerciseDto()
         {
             Id = exercise.Id,
-            ExercisesType = _mapper.Map<ExercisesType, ExercisesTypeDto>(exercise.ExercisesType),
+            ExercisesType = exercise.ExercisesType,
             MaxRep = maxRepSeriesDto,
         };
 
@@ -134,7 +134,7 @@ internal class ExerciseService : IExerciseService
         var exercisesDto = exercises.Select(x => new GetExerciseDto()
         {
             Id = x.Id,
-            ExercisesType = _mapper.Map<ExercisesType, ExercisesTypeDto>(x.ExercisesType),
+            ExercisesType = x.ExercisesType,
             MaxRep = _mapper.Map<Series, GetSeriesDto>(maxReps[x.Id])
         });
 

@@ -57,7 +57,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize(Policy = "SSO")]
+    [Authorize(Policy = "AppSys")]
     [RequestSizeLimit(1000*1024)]
     [HttpPost(ApiRoutes.Account.SetProfilePicture)]
     public async Task<IActionResult> SetProfilePicture([FromForm]IFormFile image)
@@ -169,7 +169,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize(Policy = "SSO")]
+    [Authorize(Policy = "AppSys")]
     [HttpPut(ApiRoutes.Account.UpdateUser)]
     public async Task<IActionResult> UpdateUser([FromBody]PutUserDto putUserDto)
     {
@@ -181,7 +181,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [Authorize(Policy = "SSO")]
+    [Authorize(Policy = "AppSys")]
     [SkipValidAccountCheck]
     [HttpPost(ApiRoutes.Account.ActivateUser)]
     public async Task<IActionResult> ActivateUser([FromBody]ActivateAccountModel activateAccountModel) 
@@ -194,7 +194,7 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize(Policy = "SSO")]
+    [Authorize(Policy = "AppSys")]
     [HttpDelete(ApiRoutes.Account.RemoveUser)]
     public async Task<IActionResult> RemoveUser()
     {
@@ -206,7 +206,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [Authorize(Policy = "SSO")]
+    [Authorize(Policy = "AppSys")]
     [SkipValidAccountCheck]
     [HttpGet(ApiRoutes.Account.GetAccountInformation)]
     public async Task<IActionResult> GetAccountInformation()

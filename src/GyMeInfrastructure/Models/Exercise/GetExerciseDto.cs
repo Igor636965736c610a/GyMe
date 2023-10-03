@@ -7,6 +7,6 @@ namespace GymAppInfrastructure.Models.Exercise;
 public class GetExerciseDto
 {
     public Guid Id { get; set; }
-    public ExercisesTypeDto ExercisesType { get; set; }
+    public string ExercisesType { get; set; }
     public GetSeriesDto? MaxRep { get; set; }
 }

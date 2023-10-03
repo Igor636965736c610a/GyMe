@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GymAppApi.Controllers.v1;
 
-[Authorize(Policy = "SSO")]
+[Authorize(Policy = "AppSys")]
 [Route("[controller]")]
 public class UserController : ControllerBase
 {

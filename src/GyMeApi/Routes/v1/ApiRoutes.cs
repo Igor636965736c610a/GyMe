@@ -83,4 +83,10 @@ public static class ApiRoutes
         public const string UpdateComment = "update";
         public const string RemoveComment = "remove";
     }
+    
+    public static class MainPage
+    {
+        public const string GetNewSimpleExerciseElements = "get/new";
+        public const string GetPastSimpleExerciseElements = "get/past";
+    }
 }

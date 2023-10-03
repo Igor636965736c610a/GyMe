@@ -5,7 +5,7 @@ namespace GymAppCore.Models.Entities;
 public class ExtendedUser
 {
     public Guid UserId { get; set; }
-    public Gender Gender { get; set; }
+    public string Gender { get; set; }
     public string ProfilePictureUrl { get; set; }
     public bool PrivateAccount { get; set; }
     public bool Premium { get; set; } 

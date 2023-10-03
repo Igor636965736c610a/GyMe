@@ -37,7 +37,7 @@ internal class AccountService : IAccountService
         
         if (user.ExtendedUser is not null)
         {
-            accountInf.Gender = (GenderDto)user.ExtendedUser.Gender;
+            accountInf.Gender = user.ExtendedUser.Gender;
             accountInf.ProfilePictureUrl = user.ExtendedUser.ProfilePictureUrl;
         }
         

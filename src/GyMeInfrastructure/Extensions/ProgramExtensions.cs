@@ -44,6 +44,7 @@ public static class ProgramExtensions
             .AddScoped<ICommentService, CommentService>()
             .AddScoped<IGyMeResourceService, GyMeResourceService>()
             .AddScoped<ICommentReactionService, CommentReactionService>()
+            .AddScoped<IMainPageService, MainPageService>()
             .AddScoped<IGyMeMapper, GyMeMapper>()
             .AddSingleton<ErrorService>()
             .AddSingleton<PaymentMessagesService>()
@@ -101,7 +102,7 @@ public static class ProgramExtensions
         services.AddSingleton<IAuthorizationHandler, SourceRequirementHandler>();
         services.AddAuthorization(options =>
         {
-            options.AddPolicy("SSO", policyBuilder =>
+            options.AddPolicy("AppSys", policyBuilder =>
             {
                 policyBuilder.Requirements.Add(new SourceRequirement());
             });

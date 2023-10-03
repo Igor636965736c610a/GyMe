@@ -4,6 +4,6 @@ namespace GymAppInfrastructure.Models.Exercise;
 
 public class PostExerciseDto
 {
-    public ExercisesTypeDto ExercisesType { get; set; }
+    public ExercisesTypeDto ExercisesTypeDto { get; set; }
     public int? Position { get; set; }
 }

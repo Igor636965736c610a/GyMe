@@ -70,9 +70,11 @@ public class GyMeMapper : IGyMeMapper
         => new GetSimpleExerciseDto()
         {
             Id = simpleExercise.Id,
-            Date = simpleExercise.Date,
+            Date = simpleExercise.TimeStamp,
             ExerciseId = simpleExercise.ExerciseId,
+            ExercisesTypeDto = simpleExercise.ExerciseType,
             Series = simpleExercise.Series.Select(x => GetSeriesDtoMap(x)),
+            UserId = simpleExercise.UserId,
             Description = simpleExercise.Description,
             ReactionsCount = reactionsCount,
             CommentsCount = commentsCount,
@@ -94,10 +96,10 @@ public class GyMeMapper : IGyMeMapper
             LastName = user.LastName,
             UserName = user.UserName,
             PrivateAccount = user.ExtendedUser.PrivateAccount,
-            Gender = (GenderDto)user.ExtendedUser.Gender,
+            Gender = user.ExtendedUser.Gender,
             ProfilePictureUrl = user.ExtendedUser.ProfilePictureUrl,
             Description = user.ExtendedUser.Description,
-            FriendStatus = friendStatus.HasValue ? (FriendStatusDto)friendStatus : null
+            FriendStatus = friendStatus?.ToStringFast()
         };
 
     public IEnumerable<GetUserDto> GetUserDtoMap(IEnumerable<UserFriend> userFriends)

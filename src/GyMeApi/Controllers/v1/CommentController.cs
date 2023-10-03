@@ -3,16 +3,15 @@ using GymAppInfrastructure.IServices;
 using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Crypto.Generators;
 
 namespace GymAppApi.Controllers.v1;
 
-[Authorize(Policy = "SSO")]
+[Authorize(Policy = "AppSys")]
 [Route("[controller]")]
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
-
+    
     public CommentController(ICommentService commentService)
     {
         _commentService = commentService;

@@ -77,7 +77,7 @@ internal class UserService : IUserService
 
         var friendStatus = await _userRepo.GetFriend(userIdFromJwt, id);
         if (friendStatus is not null)
-            userDto.FriendStatus = (FriendStatusDto)friendStatus.FriendStatus;
+            userDto.FriendStatus = friendStatus.FriendStatus.ToStringFast();
         
         return userDto;
     }

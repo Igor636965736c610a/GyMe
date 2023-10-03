@@ -10,7 +10,7 @@ using Stripe.Checkout;
 
 namespace GymAppApi.Controllers.v1;
 
-[Authorize(Policy = "SSO")]
+[Authorize(Policy = "AppSys")]
 [Route("[controller]")]
 public class PaymentsController : ControllerBase
 {

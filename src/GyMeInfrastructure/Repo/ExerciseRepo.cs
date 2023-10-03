@@ -16,7 +16,7 @@ internal class ExerciseRepo : IExerciseRepo
     public async Task<Exercise?> Get(Guid exerciseId)
         => await _gyMePostgresContext.Exercises.Include(x => x.ConcreteExercise).FirstOrDefaultAsync(x => x.Id == exerciseId);
 
-    public async Task<Exercise?> Get(Guid userId, ExercisesType exercisesType)
+    public async Task<Exercise?> Get(Guid userId, string exercisesType)
         => await _gyMePostgresContext.Exercises.FirstOrDefaultAsync(x =>
             x.UserId == userId && x.ExercisesType == exercisesType);
 
@@ -33,7 +33,7 @@ internal class ExerciseRepo : IExerciseRepo
     public async Task<List<Exercise>> GetAll(Guid userId)
         => await _gyMePostgresContext.Exercises.Where(x => x.UserId == userId).OrderBy(x => x.Position).ToListAsync();
 
-    public async Task<List<Exercise>> GetAll(Guid userId, IEnumerable<ExercisesType> exercisesType)
+    public async Task<List<Exercise>> GetAll(Guid userId, IEnumerable<string> exercisesType)
         => await _gyMePostgresContext.Exercises.Where(x => x.UserId == userId && exercisesType.Contains(x.ExercisesType)).OrderBy(x => x.Position).ToListAsync();
 
     public async Task<Dictionary<Guid, Series>> GetMaxReps(IEnumerable<Guid> exercisesId)
@@ -58,7 +58,7 @@ internal class ExerciseRepo : IExerciseRepo
         Func<IEnumerable<Series>, int> calculate)
         => await _gyMePostgresContext.SimpleExercises
             .Where(x => x.ExerciseId == exerciseId)
-            .OrderBy(e => e.Date).Take(period)
+            .OrderBy(e => e.TimeStamp).Take(period)
             .Select(e => calculate(e.Series))
             .ToListAsync();
 
@@ -68,17 +68,17 @@ internal class ExerciseRepo : IExerciseRepo
             .Where(x => exercisesId.Contains(x.Id))
             .Select(x => new
             {
-                Value = x.ConcreteExercise.OrderBy(e => e.Date).Take(period).Select(e => e.Series),
+                Value = x.ConcreteExercise.OrderBy(e => e.TimeStamp).Take(period).Select(e => e.Series),
                 Key = x.Id
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
 
-    public async Task<Dictionary<string, IEnumerable<int>>> GetScores(IEnumerable<ExercisesType> exercisesType, Guid userId, int period, Func<IEnumerable<Series>, int> calculate)
+    public async Task<Dictionary<string, IEnumerable<int>>> GetScores(IEnumerable<string> exercisesType, Guid userId, int period, Func<IEnumerable<Series>, int> calculate)
         => await _gyMePostgresContext.Exercises
             .Where(x => x.UserId == userId && exercisesType.Contains(x.ExercisesType))
             .Select(x => new
             {
-                Value = x.ConcreteExercise.OrderBy(e => e.Date).Take(period).Select(e => e.Series),
+                Value = x.ConcreteExercise.OrderBy(e => e.TimeStamp).Take(period).Select(e => e.Series),
                 Key = x.ExercisesType.ToString()
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));

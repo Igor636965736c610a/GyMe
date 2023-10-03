@@ -12,7 +12,7 @@ public class SourceRequirementHandler : AuthorizationHandler<SourceRequirement>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, SourceRequirement requirement)
     {
-        var claim = context.User.FindFirst(x => x.Type == "SSO");
+        var claim = context.User.FindFirst(x => x.Type == "AppSys");
         if (claim is not null)
             context.Succeed(requirement);
 

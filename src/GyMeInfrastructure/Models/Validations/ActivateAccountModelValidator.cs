@@ -10,7 +10,7 @@ public class ActivateAccountModelValidator : AbstractValidator<ActivateAccountMo
     {
         RuleFor(x => x.UserName).Length(EntitiesConfig.UserConf.UserNameMinLenght, EntitiesConfig.UserConf.UserNameMaxLength).NotEmpty();
         RuleFor(x => x.Description).MaximumLength(EntitiesConfig.ExtendedUserConf.DescriptionMaxLenght);
-        RuleFor(x => x.Gender).NotNull();
+        RuleFor(x => x.GenderDto).NotNull();
         RuleFor(x => x.PrivateAccount).NotNull();
     }
 }

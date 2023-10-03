@@ -1,5 +1,8 @@
-﻿namespace GymAppInfrastructure.Models.User;
+﻿using NetEscapades.EnumGenerators;
 
+namespace GymAppInfrastructure.Models.User;
+
+[EnumExtensions]
 public enum GenderDto
 {
     Male,

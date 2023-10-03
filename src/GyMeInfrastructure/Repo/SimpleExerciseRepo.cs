@@ -27,7 +27,7 @@ internal class SimpleExerciseRepo : ISimpleExerciseRepo
 
     public async Task<List<SimpleExercise>> GetAll(Guid exerciseId, int page, int size)
         => await _gyMePostgresContext.SimpleExercises.Where(x => x.ExerciseId == exerciseId)
-            .OrderBy(x => x.Date)
+            .OrderBy(x => x.TimeStamp)
             .Include(x => x.Series)
             .Include(x => x.Reactions
                 .OrderBy(z => z.ReactionType == ReactionType.Image.ToStringFast())

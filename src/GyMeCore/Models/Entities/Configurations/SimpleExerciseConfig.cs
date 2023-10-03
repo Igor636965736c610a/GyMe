@@ -10,7 +10,7 @@ public class SimpleExerciseConfig : IEntityTypeConfiguration<SimpleExercise>
         builder.HasKey(x => x.Id);
         builder.Property(p => p.Id).IsRequired();
         builder.Property(p => p.ExerciseId).IsRequired();
-        builder.Property(p => p.Date).IsRequired();
+        builder.Property(p => p.TimeStamp).IsRequired();
         builder.Property(x => x.UserId).IsRequired();
         builder.Property(p => p.Description).HasMaxLength(EntitiesConfig.SimpleExerciseConf.DescriptionMaxLength);
 

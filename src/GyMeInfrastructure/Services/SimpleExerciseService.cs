@@ -49,7 +49,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
 
         var series = _mapper.Map<IEnumerable<BaseSeriesDto>, IEnumerable<Series>>(postSimpleExerciseDto.SeriesDto).ToList();
 
-        var simpleExercise = new SimpleExercise(userIdFromJwt, exercise, series, exercise.ExercisesType, postSimpleExerciseDto.Description);
+        var simpleExercise = new SimpleExercise(userIdFromJwt, exercise, series, postSimpleExerciseDto.Description);
 
         await _simpleExerciseRepo.Create(simpleExercise);
     }

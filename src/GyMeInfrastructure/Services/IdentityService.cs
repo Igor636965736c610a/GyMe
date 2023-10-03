@@ -86,8 +86,6 @@ internal class IdentityService : IIdentityService
                 Messages = new[] { "You are already registered into our app by facebook. We have sent a password token to your e-mail address" }
             };
         }
-
-        var gender = registerUserDto.IsChlopak ? Gender.Male : Gender.Female;
         var id = Guid.NewGuid();
 
         var newUser = new User
@@ -103,7 +101,7 @@ internal class IdentityService : IIdentityService
             ExtendedUser = new ExtendedUser()
             {
                 PrivateAccount = registerUserDto.PrivateAccount,
-                Gender = gender,
+                Gender = registerUserDto.GenderDto.ToStringFast(),
                 ProfilePictureUrl = _gyMeResourceService.GenerateUrlToPhoto(id.ToString(), id.ToString()) + ".jpg",
                 Description = registerUserDto.Description,
                 Premium = false
@@ -229,7 +227,7 @@ internal class IdentityService : IIdentityService
         var imageUrl = _gyMeResourceService.GenerateUrlToPhoto(user.Id.ToString(), user.Id.ToString()) + ".jpg";
         var extendedUser = new ExtendedUser()
         {
-            Gender = (Gender)activateAccountModel.Gender,
+            Gender = activateAccountModel.GenderDto.ToStringFast(),
             PrivateAccount = activateAccountModel.PrivateAccount,
             ProfilePictureUrl = imageUrl,
             Description = activateAccountModel.Description,
@@ -346,7 +344,7 @@ internal class IdentityService : IIdentityService
                 new Claim("id", user.Id.ToString()),
                 new Claim("validAccount", user.Valid.ToString()),
                 new Claim("EmailConfirmed", user.EmailConfirmed.ToString()),
-                new Claim("SSO", "SSO")
+                new Claim("AppSys", "AppSys")
             }),
             Expires = DateTime.UtcNow.AddHours(2),
             SigningCredentials =

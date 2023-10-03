@@ -10,7 +10,7 @@ public class GetAccountInfModel
     public string UserName { get; set; }
     public bool PrivateAccount { get; set; }
     public bool Valid { get; set; }
-    public GenderDto Gender { get; set; }
+    public string Gender { get; set; }
     public string ProfilePictureUrl { get; set; }
     public string? Description { get; set; }
     public bool Premium { get; set; }
