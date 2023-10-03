@@ -1,7 +1,7 @@
-﻿using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.SimpleExercise;
+﻿using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.SimpleExercise;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface ISimpleExerciseService
 {

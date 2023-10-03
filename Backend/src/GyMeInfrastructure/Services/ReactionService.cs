@@ -1,19 +1,19 @@
 ﻿using System.Configuration.Provider;
 using System.Transactions;
-using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Exceptions;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.ReactionsAndComments;
-using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
-using GymAppInfrastructure.MyMapper;
+using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.ReactionsAndComments.BodyRequest;
+using GyMeInfrastructure.Exceptions;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.ReactionsAndComments;
+using GyMeInfrastructure.MyMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class ReactionService : IReactionService
 {

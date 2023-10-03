@@ -1,14 +1,14 @@
-﻿using GymAppApi.Routes.v1;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.InternalManagement;
-using GymAppInfrastructure.Options;
+﻿using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.InternalManagement;
+using GyMeInfrastructure.Options;
+using GyMeApi.Routes.v1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
 
-namespace GymAppApi.Controllers.v1;
+namespace GyMeApi.Controllers.v1;
 
 [Authorize(Policy = "AppSys")]
 [Route("[controller]")]

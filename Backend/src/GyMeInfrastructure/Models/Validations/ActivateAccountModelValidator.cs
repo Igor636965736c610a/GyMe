@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using GymAppCore.Models.Entities.Configurations;
-using GymAppInfrastructure.Models.Account;
+using GyMeCore.Models.Entities.Configurations;
+using GyMeInfrastructure.Models.Account;
 
-namespace GymAppInfrastructure.Models.Validations;
+namespace GyMeInfrastructure.Models.Validations;
 
 public class ActivateAccountModelValidator : AbstractValidator<ActivateAccountModel>
 {

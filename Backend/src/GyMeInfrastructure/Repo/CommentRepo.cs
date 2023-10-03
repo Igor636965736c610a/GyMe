@@ -1,10 +1,10 @@
-﻿using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Options;
+﻿using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.Linq;
 
-namespace GymAppInfrastructure.Repo;
+namespace GyMeInfrastructure.Repo;
 
 public class CommentRepo : ICommentRepo
 {

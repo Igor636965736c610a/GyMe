@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Models.InternalManagement;
+﻿namespace GyMeInfrastructure.Models.InternalManagement;
 
 public class Opinion
 {

@@ -1,11 +1,11 @@
-﻿using GymAppCore.Models;
-using GymAppInfrastructure.Models.Account;
-using GymAppInfrastructure.Models.User;
-using GymAppInfrastructure.Results;
-using GymAppInfrastructure.Results.Authorization;
+﻿using GyMeCore.Models;
+using GyMeInfrastructure.Models.Account;
+using GyMeInfrastructure.Models.User;
+using GyMeInfrastructure.Results;
+using GyMeInfrastructure.Results.Authorization;
 using Microsoft.AspNetCore.Http;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface IIdentityService
 {

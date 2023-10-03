@@ -5,9 +5,9 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
       <UserSecretsId>24f10627-63bc-4ace-9927-ef967ae52c83</UserSecretsId>
-      <RootNamespace>GymAppApi</RootNamespace>
+      <RootNamespace>GyMeApi</RootNamespace>
   </PropertyGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="7.0.9" />

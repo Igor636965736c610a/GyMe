@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using System.Text.Json;
-using GymAppInfrastructure.Exceptions;
-using GymAppInfrastructure.Models.InternalManagement;
-using GymAppInfrastructure.Services.InternalManagement;
+using GyMeInfrastructure.Exceptions;
+using GyMeInfrastructure.Models.InternalManagement;
+using GyMeInfrastructure.Services.InternalManagement;
 
-namespace GymAppApi.Middleware;
+namespace GyMeApi.Middleware;
 
 public class ErrorHandlerMiddleware : IMiddleware
 {

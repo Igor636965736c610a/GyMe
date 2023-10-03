@@ -1,14 +1,14 @@
 ﻿using System.Linq.Expressions;
-using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.ReactionsAndComments;
-using GymAppInfrastructure.Models.Series;
-using GymAppInfrastructure.MyMapper;
-using GymAppInfrastructure.Options;
+using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.ReactionsAndComments;
+using GyMeInfrastructure.Models.Series;
+using GyMeInfrastructure.MyMapper;
+using GyMeInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 public class MainPageService : IMainPageService
 {

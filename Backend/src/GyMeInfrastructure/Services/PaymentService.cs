@@ -1,12 +1,12 @@
-﻿using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.InternalManagement;
-using GymAppInfrastructure.Options;
-using GymAppInfrastructure.Services.InternalManagement;
+﻿using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.InternalManagement;
+using GyMeInfrastructure.Options;
+using GyMeInfrastructure.Services.InternalManagement;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class PaymentService : IPaymentService
 {

@@ -1,7 +1,7 @@
-﻿using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.Series;
+﻿using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.Series;
 
-namespace GymAppInfrastructure.Models.SimpleExercise;
+namespace GyMeInfrastructure.Models.SimpleExercise;
 
 public class PostSimpleExerciseDto
 {

@@ -1,10 +1,10 @@
-﻿using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.Series;
+﻿using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.Series;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal static class UtilsServices
 {

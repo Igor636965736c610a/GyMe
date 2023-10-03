@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.IServices;
+﻿namespace GyMeInfrastructure.IServices;
 
 public interface ICommentReactionService
 {

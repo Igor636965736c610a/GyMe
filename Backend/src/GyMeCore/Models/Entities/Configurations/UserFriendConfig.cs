@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GymAppCore.Models.Entities.Configurations;
+namespace GyMeCore.Models.Entities.Configurations;
 
 public class UserFriendConfig : IEntityTypeConfiguration<UserFriend>
 {

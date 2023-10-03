@@ -1,7 +1,7 @@
-﻿using GymAppCore.Models.Entities;
-using GymAppCore.Models.Entities.Configurations;
+﻿using GyMeCore.Models.Entities.Configurations;
+using GyMeCore.Models.Entities;
 
-namespace GymAppCore.Models.Results;
+namespace GyMeCore.Models.Results;
 
 public class CommonFriendsResult
 {

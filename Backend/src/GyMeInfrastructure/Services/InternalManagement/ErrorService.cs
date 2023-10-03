@@ -1,9 +1,9 @@
-﻿using GymAppInfrastructure.Options;
-using GymAppInfrastructure.Models.InternalManagement;
+﻿using GyMeInfrastructure.Models.InternalManagement;
+using GyMeInfrastructure.Options;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace GymAppInfrastructure.Services.InternalManagement;
+namespace GyMeInfrastructure.Services.InternalManagement;
 
 public class ErrorService
 {

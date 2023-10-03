@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Options;
+﻿namespace GyMeInfrastructure.Options;
 
 public class MongoDbSettings
 {

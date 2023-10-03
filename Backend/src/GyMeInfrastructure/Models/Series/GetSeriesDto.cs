@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Models.Series;
+﻿namespace GyMeInfrastructure.Models.Series;
 
 public class GetSeriesDto
 {

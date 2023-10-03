@@ -1,4 +1,4 @@
-﻿namespace GymAppCore.Models.Results;
+﻿namespace GyMeCore.Models.Results;
 
 public class ReactionsCountResult
 {

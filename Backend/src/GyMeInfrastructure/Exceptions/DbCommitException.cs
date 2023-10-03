@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Exceptions;
+﻿namespace GyMeInfrastructure.Exceptions;
 
 public class DbCommitException : Exception
 {

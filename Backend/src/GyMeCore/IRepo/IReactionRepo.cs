@@ -1,7 +1,7 @@
-﻿using GymAppCore.Models.Entities;
-using GymAppCore.Models.Results;
+﻿using GyMeCore.Models.Entities;
+using GyMeCore.Models.Results;
 
-namespace GymAppCore.IRepo;
+namespace GyMeCore.IRepo;
 
 public interface IReactionRepo
 {

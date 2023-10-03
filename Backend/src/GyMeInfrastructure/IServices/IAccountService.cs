@@ -1,8 +1,8 @@
-﻿using GymAppInfrastructure.Models.Account;
-using GymAppInfrastructure.Models.User;
+﻿using GyMeInfrastructure.Models.Account;
+using GyMeInfrastructure.Models.User;
 using Microsoft.AspNetCore.Http;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface IAccountService
 {

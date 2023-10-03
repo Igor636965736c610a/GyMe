@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 internal interface IGyMeResourceService
 {

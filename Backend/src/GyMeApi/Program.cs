@@ -1,10 +1,10 @@
 using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
-using GymAppApi.Middleware;
-using GymAppApi.Middleware.Extension;
-using GymAppInfrastructure.AutoMapper;
-using GymAppInfrastructure.Extensions;
-using GymAppInfrastructure.Options;
+using GyMeApi.Middleware;
+using GyMeApi.Middleware.Extension;
+using GyMeInfrastructure.AutoMapper;
+using GyMeInfrastructure.Extensions;
+using GyMeInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

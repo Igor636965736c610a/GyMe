@@ -1,10 +1,10 @@
 ﻿using System.Transactions;
-using GymAppInfrastructure.Options;
-using GymAppInfrastructure.Exceptions;
+using GyMeInfrastructure.Options;
+using GyMeInfrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace GymAppApi.Middleware;
+namespace GyMeApi.Middleware;
 
 public class DbTransactionMiddleware : IMiddleware
 {

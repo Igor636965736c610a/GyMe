@@ -1,10 +1,10 @@
-﻿using GymAppApi.Controllers.HelperAttributes;
-using GymAppInfrastructure.ApiResponses;
-using GymAppInfrastructure.IServices;
+﻿using GyMeInfrastructure.ApiResponses;
+using GyMeInfrastructure.IServices;
+using GyMeApi.Controllers.HelperAttributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GymAppApi.Controllers.v1;
+namespace GyMeApi.Controllers.v1;
 
 [SkipValidAccountCheck]
 [Route("[controller]")]

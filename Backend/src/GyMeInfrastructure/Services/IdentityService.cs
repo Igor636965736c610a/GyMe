@@ -6,15 +6,15 @@ using System.Text;
 using System.Transactions;
 using FluentEmail.Core;
 using FluentEmail.Mailgun;
-using GymAppCore.IRepo;
-using GymAppCore.Models;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.User;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.Account;
-using GymAppInfrastructure.Options;
-using GymAppInfrastructure.Results;
-using GymAppInfrastructure.Results.Authorization;
+using GyMeCore.IRepo;
+using GyMeCore.Models;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.Account;
+using GyMeInfrastructure.Models.User;
+using GyMeInfrastructure.Options;
+using GyMeInfrastructure.Results;
+using GyMeInfrastructure.Results.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Headers;
@@ -28,7 +28,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using RestSharp;
 using RestSharp.Authenticators;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class IdentityService : IIdentityService
 {

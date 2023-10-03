@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using GymAppCore.Models.Entities;
-using GymAppCore.Models.Results;
-using GymAppInfrastructure.Models.Account;
-using GymAppInfrastructure.Models.Exercise;
-using GymAppInfrastructure.Models.Series;
-using GymAppInfrastructure.Models.SimpleExercise;
-using GymAppInfrastructure.Models.User;
+using GyMeCore.Models.Entities;
+using GyMeCore.Models.Results;
+using GyMeInfrastructure.Models.Account;
+using GyMeInfrastructure.Models.Exercise;
+using GyMeInfrastructure.Models.Series;
+using GyMeInfrastructure.Models.SimpleExercise;
+using GyMeInfrastructure.Models.User;
 
-namespace GymAppInfrastructure.AutoMapper;
+namespace GyMeInfrastructure.AutoMapper;
 
 public static class AutoMapperConfig
 {

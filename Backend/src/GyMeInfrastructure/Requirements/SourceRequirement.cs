@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Authorization;
 
-namespace GymAppInfrastructure.Requirements;
+namespace GyMeInfrastructure.Requirements;
 
 public class SourceRequirement : IAuthorizationRequirement
 {

@@ -1,14 +1,14 @@
 ﻿using System.Transactions;
 using AutoMapper;
-using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.Account;
-using GymAppInfrastructure.Models.User;
-using GymAppInfrastructure.Exceptions;
-using GymAppInfrastructure.IServices;
+using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Exceptions;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.Account;
+using GyMeInfrastructure.Models.User;
 using Microsoft.AspNetCore.Http;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class AccountService : IAccountService
 {

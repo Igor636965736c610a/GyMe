@@ -1,11 +1,11 @@
-﻿using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.ReactionsAndComments;
-using GymAppInfrastructure.Models.Series;
-using GymAppInfrastructure.Models.SimpleExercise;
-using GymAppInfrastructure.Models.User;
+﻿using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.ReactionsAndComments;
+using GyMeInfrastructure.Models.Series;
+using GyMeInfrastructure.Models.SimpleExercise;
+using GyMeInfrastructure.Models.User;
 
-namespace GymAppInfrastructure.MyMapper;
+namespace GyMeInfrastructure.MyMapper;
 
 public class GyMeMapper : IGyMeMapper
 {

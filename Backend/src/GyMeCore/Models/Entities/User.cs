@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
-namespace GymAppCore.Models.Entities;
+namespace GyMeCore.Models.Entities;
 
 public class User : IdentityUser<Guid>
 {

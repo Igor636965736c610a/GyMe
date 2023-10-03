@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface IUserContextService
 {

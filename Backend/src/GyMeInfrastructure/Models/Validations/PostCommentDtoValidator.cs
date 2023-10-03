@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using GymAppCore.Models.Entities.Configurations;
-using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
+using GyMeCore.Models.Entities.Configurations;
+using GyMeInfrastructure.Models.ReactionsAndComments.BodyRequest;
 
-namespace GymAppInfrastructure.Models.Validations;
+namespace GyMeInfrastructure.Models.Validations;
 
 public class PostCommentDtoValidator : AbstractValidator<PostCommentDto>
 {

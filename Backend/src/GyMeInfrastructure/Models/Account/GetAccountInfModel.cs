@@ -1,6 +1,6 @@
-﻿using GymAppInfrastructure.Models.User;
+﻿using GyMeInfrastructure.Models.User;
 
-namespace GymAppInfrastructure.Models.Account;
+namespace GyMeInfrastructure.Models.Account;
 
 public class GetAccountInfModel
 {

@@ -1,6 +1,6 @@
-﻿using GymAppCore.Models.Entities;
+﻿using GyMeCore.Models.Entities;
 
-namespace GymAppCore.IRepo;
+namespace GyMeCore.IRepo;
 
 public interface IExerciseRepo
 {

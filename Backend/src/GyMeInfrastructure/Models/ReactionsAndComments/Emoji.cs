@@ -1,6 +1,6 @@
 ﻿using NetEscapades.EnumGenerators;
 
-namespace GymAppInfrastructure.Models.ReactionsAndComments;
+namespace GyMeInfrastructure.Models.ReactionsAndComments;
 
 [EnumExtensions]
 public enum Emoji

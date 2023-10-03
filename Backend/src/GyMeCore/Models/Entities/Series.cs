@@ -1,4 +1,4 @@
-﻿namespace GymAppCore.Models.Entities;
+﻿namespace GyMeCore.Models.Entities;
 
 public class Series
 {

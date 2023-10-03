@@ -1,9 +1,9 @@
-﻿using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Options;
+﻿using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 
-namespace GymAppInfrastructure.Repo;
+namespace GyMeInfrastructure.Repo;
 
 internal class ExerciseRepo : IExerciseRepo
 {

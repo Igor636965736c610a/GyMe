@@ -1,12 +1,12 @@
-﻿using GymAppApi.Routes.v1;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.User;
+﻿using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.User;
+using GyMeApi.Routes.v1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace GymAppApi.Controllers.v1;
+namespace GyMeApi.Controllers.v1;
 
 [Authorize(Policy = "AppSys")]
 [Route("[controller]")]

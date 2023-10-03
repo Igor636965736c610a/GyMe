@@ -1,8 +1,8 @@
-﻿using GymAppInfrastructure.IServices;
+﻿using GyMeInfrastructure.IServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class GyMeResourceService : IGyMeResourceService
 {

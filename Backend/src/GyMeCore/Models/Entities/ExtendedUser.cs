@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GymAppCore.Models.Entities;
+namespace GyMeCore.Models.Entities;
 
 public class ExtendedUser
 {

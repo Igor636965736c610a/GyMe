@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using GymAppCore.Models.Entities.Configurations;
-using GymAppInfrastructure.Models.Series;
+using GyMeCore.Models.Entities.Configurations;
+using GyMeInfrastructure.Models.Series;
 
-namespace GymAppInfrastructure.Models.Validations;
+namespace GyMeInfrastructure.Models.Validations;
 
 public class BaseSeriesDtoValidator : AbstractValidator<BaseSeriesDto>
 {

@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Models.ReactionsAndComments;
+﻿namespace GyMeInfrastructure.Models.ReactionsAndComments;
 
 public class GetReactionCountDto
 {

@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppCore.Models.Results;
-using GymAppInfrastructure.Models.User;
-using GymAppInfrastructure.Exceptions;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.MyMapper;
-using GymAppInfrastructure.Options;
+using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeCore.Models.Results;
+using GyMeInfrastructure.Exceptions;
+using GyMeInfrastructure.Options;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.User;
+using GyMeInfrastructure.MyMapper;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class UserService : IUserService
 {

@@ -1,10 +1,10 @@
-﻿using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppCore.Models.Results;
-using GymAppInfrastructure.Options;
+﻿using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeCore.Models.Results;
+using GyMeInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 
-namespace GymAppInfrastructure.Repo;
+namespace GyMeInfrastructure.Repo;
 
 public class CommentReactionRepo : ICommentReactionRepo
 {

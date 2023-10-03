@@ -1,4 +1,4 @@
-﻿namespace GymAppCore.Models.Entities.Configurations;
+﻿namespace GyMeCore.Models.Entities.Configurations;
 
 public static class EntitiesConfig
 {

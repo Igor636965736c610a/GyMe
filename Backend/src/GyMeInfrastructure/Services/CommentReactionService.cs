@@ -1,6 +1,6 @@
-﻿using GymAppInfrastructure.IServices;
+﻿using GyMeInfrastructure.IServices;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class CommentReactionService : ICommentReactionService
 {

@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Models.User;
+﻿namespace GyMeInfrastructure.Models.User;
 
 public class PutUserDto
 {

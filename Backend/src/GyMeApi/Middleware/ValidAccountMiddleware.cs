@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using GymAppApi.Controllers.HelperAttributes;
-using GymAppApi.Routes.v1;
+using GyMeApi.Routes.v1;
+using GyMeApi.Controllers.HelperAttributes;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace GymAppApi.Middleware;
+namespace GyMeApi.Middleware;
 
 public class ValidAccountMiddleware : IMiddleware
 {

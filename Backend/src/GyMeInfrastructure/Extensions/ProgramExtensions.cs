@@ -2,17 +2,17 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using FluentValidation;
-using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.InternalManagement;
-using GymAppInfrastructure.Models.Validations;
-using GymAppInfrastructure.MyMapper;
-using GymAppInfrastructure.Options;
-using GymAppInfrastructure.Repo;
-using GymAppInfrastructure.Requirements;
-using GymAppInfrastructure.Services;
-using GymAppInfrastructure.Services.InternalManagement;
+using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.InternalManagement;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.Validations;
+using GyMeInfrastructure.MyMapper;
+using GyMeInfrastructure.Options;
+using GyMeInfrastructure.Repo;
+using GyMeInfrastructure.Requirements;
+using GyMeInfrastructure.Services;
+using GyMeInfrastructure.Services.InternalManagement;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +25,7 @@ using Microsoft.OpenApi.Models;
 using Refit;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace GymAppInfrastructure.Extensions;
+namespace GyMeInfrastructure.Extensions;
 
 public static class ProgramExtensions
 {

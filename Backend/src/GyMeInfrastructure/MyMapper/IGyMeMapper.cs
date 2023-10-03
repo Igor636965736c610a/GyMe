@@ -1,11 +1,11 @@
-﻿using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.ReactionsAndComments;
-using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
-using GymAppInfrastructure.Models.Series;
-using GymAppInfrastructure.Models.SimpleExercise;
-using GymAppInfrastructure.Models.User;
+﻿using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.ReactionsAndComments.BodyRequest;
+using GyMeInfrastructure.Models.ReactionsAndComments;
+using GyMeInfrastructure.Models.Series;
+using GyMeInfrastructure.Models.SimpleExercise;
+using GyMeInfrastructure.Models.User;
 
-namespace GymAppInfrastructure.MyMapper;
+namespace GyMeInfrastructure.MyMapper;
 
 public interface IGyMeMapper
 {

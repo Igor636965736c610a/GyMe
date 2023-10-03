@@ -1,12 +1,12 @@
-﻿using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppCore.Models.Results;
-using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
-using GymAppInfrastructure.Options;
+﻿using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeCore.Models.Results;
+using GyMeInfrastructure.Models.ReactionsAndComments.BodyRequest;
+using GyMeInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.Linq;
 
-namespace GymAppInfrastructure.Repo;
+namespace GyMeInfrastructure.Repo;
 
 public class ReactionRepo : IReactionRepo
 {

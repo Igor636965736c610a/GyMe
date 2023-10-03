@@ -1,11 +1,11 @@
-﻿using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.ReactionsAndComments;
-using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
-using GymAppInfrastructure.Options;
+﻿using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.ReactionsAndComments.BodyRequest;
+using GyMeInfrastructure.Models.ReactionsAndComments;
+using GyMeInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 
-namespace GymAppInfrastructure.Repo;
+namespace GyMeInfrastructure.Repo;
 
 internal class SimpleExerciseRepo : ISimpleExerciseRepo
 {

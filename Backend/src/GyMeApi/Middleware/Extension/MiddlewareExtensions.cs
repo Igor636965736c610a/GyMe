@@ -1,4 +1,4 @@
-﻿namespace GymAppApi.Middleware.Extension;
+﻿namespace GyMeApi.Middleware.Extension;
 
 public static class MiddlewareExtensions
 {

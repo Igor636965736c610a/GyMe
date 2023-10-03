@@ -1,8 +1,8 @@
-﻿using GymAppInfrastructure.Models.Exercise;
-using GymAppInfrastructure.Models.ReactionsAndComments;
-using GymAppInfrastructure.Models.Series;
+﻿using GyMeInfrastructure.Models.Exercise;
+using GyMeInfrastructure.Models.ReactionsAndComments;
+using GyMeInfrastructure.Models.Series;
 
-namespace GymAppInfrastructure.Models.SimpleExercise;
+namespace GyMeInfrastructure.Models.SimpleExercise;
 
 public class GetSimpleExerciseDto
 {

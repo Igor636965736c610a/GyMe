@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using GymAppCore.Models.Entities.Configurations;
-using GymAppInfrastructure.Models.SimpleExercise;
+using GyMeCore.Models.Entities.Configurations;
+using GyMeInfrastructure.Models.SimpleExercise;
 
-namespace GymAppInfrastructure.Models.Validations;
+namespace GyMeInfrastructure.Models.Validations;
 
 public class PutSimpleExerciseDtoValidator : AbstractValidator<PutSimpleExerciseDto>
 {

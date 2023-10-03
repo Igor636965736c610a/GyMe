@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Models.Exercise;
+﻿namespace GyMeInfrastructure.Models.Exercise;
 
 public class PutExerciseDto
 {

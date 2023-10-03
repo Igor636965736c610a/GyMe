@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace GymAppInfrastructure.Migrations
+namespace GyMeInfrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Initial2 : Migration

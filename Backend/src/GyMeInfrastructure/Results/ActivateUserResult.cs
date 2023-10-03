@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.Results;
+﻿namespace GyMeInfrastructure.Results;
 
 public class ActivateUserResult
 {

@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.User;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Models.User;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface IUserService
 {

@@ -1,15 +1,15 @@
 ﻿using System.Security.Policy;
 using AutoMapper;
-using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.Series;
-using GymAppInfrastructure.Models.SimpleExercise;
-using GymAppInfrastructure.Exceptions;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.MyMapper;
+using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Exceptions;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.Series;
+using GyMeInfrastructure.Models.SimpleExercise;
+using GyMeInfrastructure.MyMapper;
 
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class SimpleExerciseService : ISimpleExerciseService
 {

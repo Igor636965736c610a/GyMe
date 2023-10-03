@@ -1,14 +1,14 @@
 ﻿using System.Net.NetworkInformation;
 using AutoMapper;
 using FluentEmail.Core;
-using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.Exercise;
-using GymAppInfrastructure.Models.Series;
-using GymAppInfrastructure.Exceptions;
-using GymAppInfrastructure.IServices;
+using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Exceptions;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.Exercise;
+using GyMeInfrastructure.Models.Series;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class ExerciseService : IExerciseService
 {

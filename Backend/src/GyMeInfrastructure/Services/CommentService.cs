@@ -1,12 +1,12 @@
-﻿using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Exceptions;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.ReactionsAndComments;
-using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
-using GymAppInfrastructure.MyMapper;
+﻿using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Exceptions;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.ReactionsAndComments;
+using GyMeInfrastructure.Models.ReactionsAndComments.BodyRequest;
+using GyMeInfrastructure.MyMapper;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class CommentService : ICommentService
 {

@@ -1,6 +1,6 @@
-﻿using GymAppInfrastructure.Services;
+﻿using GyMeInfrastructure.Services;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface IMainPageService
 {

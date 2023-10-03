@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using GymAppInfrastructure.Models.InternalManagement;
+using GyMeInfrastructure.Models.InternalManagement;
 
-namespace GymAppInfrastructure.Models.Validations;
+namespace GyMeInfrastructure.Models.Validations;
 
 public class OpinionRequestBodyValidator : AbstractValidator<OpinionRequestBody>
 {

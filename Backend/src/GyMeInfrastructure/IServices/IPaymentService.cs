@@ -1,7 +1,7 @@
-﻿using GymAppInfrastructure.Models.InternalManagement;
+﻿using GyMeInfrastructure.Models.InternalManagement;
 using Stripe.Checkout;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface IPaymentService
 {

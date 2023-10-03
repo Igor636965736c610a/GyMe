@@ -1,7 +1,7 @@
-﻿using GymAppInfrastructure.Models.Exercise;
-using GymAppInfrastructure.Options;
+﻿using GyMeInfrastructure.Models.Exercise;
+using GyMeInfrastructure.Options;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface IChartService
 {

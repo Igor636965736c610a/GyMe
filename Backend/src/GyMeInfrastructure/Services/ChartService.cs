@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using AutoMapper;
-using GymAppCore.IRepo;
-using GymAppCore.Models.Entities;
-using GymAppInfrastructure.Models.Exercise;
-using GymAppInfrastructure.Exceptions;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Options;
+using GyMeCore.IRepo;
+using GyMeCore.Models.Entities;
+using GyMeInfrastructure.Exceptions;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.Exercise;
+using GyMeInfrastructure.Options;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class ChartService : IChartService
 {

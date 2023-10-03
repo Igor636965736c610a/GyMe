@@ -1,4 +1,4 @@
-﻿namespace GymAppApi.Routes.v1;
+﻿namespace GyMeApi.Routes.v1;
 
 public static class ApiRoutes
 {

@@ -1,7 +1,7 @@
-﻿using GymAppInfrastructure.ApiResponses;
+﻿using GyMeInfrastructure.ApiResponses;
 using Refit;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface IJokeApiService
 {

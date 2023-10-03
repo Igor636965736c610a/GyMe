@@ -1,6 +1,6 @@
 ﻿using NetEscapades.EnumGenerators;
 
-namespace GymAppInfrastructure.Models.User;
+namespace GyMeInfrastructure.Models.User;
 
 [EnumExtensions]
 public enum FriendStatusDto

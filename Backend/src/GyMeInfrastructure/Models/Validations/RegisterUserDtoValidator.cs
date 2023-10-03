@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using GymAppCore.Models.Entities.Configurations;
-using GymAppInfrastructure.Models.User;
+using GyMeCore.Models.Entities.Configurations;
+using GyMeInfrastructure.Models.User;
 
-namespace GymAppInfrastructure.Models.Validations;
+namespace GyMeInfrastructure.Models.Validations;
 
 public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
 {

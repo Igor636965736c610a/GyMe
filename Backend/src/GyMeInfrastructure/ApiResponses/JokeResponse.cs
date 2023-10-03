@@ -1,4 +1,4 @@
-﻿namespace GymAppInfrastructure.ApiResponses;
+﻿namespace GyMeInfrastructure.ApiResponses;
 
 public class JokeResponse
 {

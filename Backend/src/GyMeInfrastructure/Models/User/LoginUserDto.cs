@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GymAppInfrastructure.Models.User;
+namespace GyMeInfrastructure.Models.User;
 
 public class LoginUserDto
 {

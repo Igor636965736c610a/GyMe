@@ -3,12 +3,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using GymAppApi.Controllers.HelperAttributes;
-using GymAppApi.Routes.v1;
-using GymAppInfrastructure.Models.User;
-using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.Account;
-using GymAppInfrastructure.Results;
+using GyMeInfrastructure.Models.User;
+using GyMeInfrastructure.IServices;
+using GyMeInfrastructure.Models.Account;
+using GyMeInfrastructure.Results;
+using GyMeApi.Controllers.HelperAttributes;
+using GyMeApi.Routes.v1;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +19,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using Image = SixLabors.ImageSharp.Image;
 
 
-namespace GymAppApi.Controllers.v1;
+namespace GyMeApi.Controllers.v1;
 
 [Route("[controller]")]
 public class AccountController : ControllerBase

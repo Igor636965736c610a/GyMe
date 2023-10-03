@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
-using GymAppInfrastructure.IServices;
+using GyMeInfrastructure.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace GymAppInfrastructure.Services;
+namespace GyMeInfrastructure.Services;
 
 internal class UserContextService : IUserContextService
 {

@@ -1,7 +1,7 @@
-﻿using GymAppInfrastructure.Models.ReactionsAndComments;
-using GymAppInfrastructure.Models.ReactionsAndComments.BodyRequest;
+﻿using GyMeInfrastructure.Models.ReactionsAndComments;
+using GyMeInfrastructure.Models.ReactionsAndComments.BodyRequest;
 
-namespace GymAppInfrastructure.IServices;
+namespace GyMeInfrastructure.IServices;
 
 public interface ICommentService
 {
