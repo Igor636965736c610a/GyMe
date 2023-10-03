@@ -63,8 +63,8 @@ public class MainPageService : IMainPageService
     {
     
         var timeStampCondition = isPastExercises
-            ? (Expression<Func<SimpleExercise, bool>>)(x => x.TimeStamp > user.LastRefreshMainPage)
-            : (Expression<Func<SimpleExercise, bool>>)(x => x.TimeStamp < user.LastRefreshMainPage);
+            ? (Expression<Func<SimpleExercise, bool>>)(x => x.TimeStamp < user.LastRefreshMainPage)
+            : (Expression<Func<SimpleExercise, bool>>)(x => x.TimeStamp > user.LastRefreshMainPage);
     
         var simpleExercises = await _gyMePostgresContext.UserFriends
             .Where(x => x.UserId == user.Id && x.FriendStatus == FriendStatus.Friend)
