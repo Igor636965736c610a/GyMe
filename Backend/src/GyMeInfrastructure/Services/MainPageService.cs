@@ -2,10 +2,8 @@
 using GymAppCore.IRepo;
 using GymAppCore.Models.Entities;
 using GymAppInfrastructure.IServices;
-using GymAppInfrastructure.Models.Exercise;
 using GymAppInfrastructure.Models.ReactionsAndComments;
 using GymAppInfrastructure.Models.Series;
-using GymAppInfrastructure.Models.User;
 using GymAppInfrastructure.MyMapper;
 using GymAppInfrastructure.Options;
 using Microsoft.EntityFrameworkCore;
