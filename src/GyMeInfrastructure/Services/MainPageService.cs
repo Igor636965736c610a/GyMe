@@ -34,29 +34,40 @@ public class MainPageService : IMainPageService
 
     public async Task<IEnumerable<SimpleExercisePageElement>> GetNewSimpleExercisesForMainPage(int page, int size)
     {
-        return await GetSimpleExercisesForMainPage(page, size, false);
+        var userIdFromJwt = _userContextService.UserId;
+
+        var user = await _userRepo.Get(userIdFromJwt);
+        if (user is null)
+            throw new InvalidProgramException("Something went wrong");
+
+        var simpleExercisesForMainPage = await GetSimpleExercisesForMainPage(page, size, false, user);
+        user.LastRefreshMainPage = DateTime.UtcNow;
+
+        await _userRepo.Update(user);
+        return simpleExercisesForMainPage;
     }
 
     public async Task<IEnumerable<SimpleExercisePageElement>> GetPastSimpleExercisesForMainPage(int page, int size)
     {
-        return await GetSimpleExercisesForMainPage(page, size, true);
-    }
-    
-    private async Task<IEnumerable<SimpleExercisePageElement>> GetSimpleExercisesForMainPage(
-        int page, int size, bool isPastExercises)
-    {
         var userIdFromJwt = _userContextService.UserId;
-    
+
         var user = await _userRepo.Get(userIdFromJwt);
         if (user is null)
             throw new InvalidProgramException("Something went wrong");
+        
+        return await GetSimpleExercisesForMainPage(page, size, true, user);
+    }
+    
+    private async Task<IEnumerable<SimpleExercisePageElement>> GetSimpleExercisesForMainPage(
+        int page, int size, bool isPastExercises, User user)
+    {
     
         var timeStampCondition = isPastExercises
             ? (Expression<Func<SimpleExercise, bool>>)(x => x.TimeStamp > user.LastRefreshMainPage)
             : (Expression<Func<SimpleExercise, bool>>)(x => x.TimeStamp < user.LastRefreshMainPage);
     
         var simpleExercises = await _gyMePostgresContext.UserFriends
-            .Where(x => x.UserId == userIdFromJwt && x.FriendStatus == FriendStatus.Friend)
+            .Where(x => x.UserId == user.Id && x.FriendStatus == FriendStatus.Friend)
             .Include(x => x.Friend.SimpleExercises)
             .SelectMany(x => x.Friend.SimpleExercises)
             .Where(timeStampCondition)
