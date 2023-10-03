@@ -64,6 +64,7 @@ public class MainPageService : IMainPageService
             .Skip(page * size)
             .Take(size)
             .Include(x => x.User)
+            .ThenInclude(x => x.ExtendedUser)
             .Include(x => x.Reactions
                 .OrderBy(z => z.ReactionType == ReactionType.Image.ToStringFast())
                 .ThenBy(z => z.TimeStamp)

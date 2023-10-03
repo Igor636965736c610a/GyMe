@@ -20,13 +20,13 @@ public class ReactionRepo : IReactionRepo
     public async Task Create(Reaction reaction)
     {
         await _gyMePostgresContext.Reactions.AddAsync(reaction);
-        await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
     public async Task Update(Reaction reaction)
     {
         _gyMePostgresContext.Reactions.Update(reaction); 
-        await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
     public async Task<Reaction?> Get(Guid id)
@@ -44,7 +44,7 @@ public class ReactionRepo : IReactionRepo
     public async Task Remove(Reaction reaction)
     {
         _gyMePostgresContext.Reactions.Remove(reaction);
-        await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
     
     public async Task<IEnumerable<ReactionsCountResult>> GetSpecificReactionsCount(Guid simpleExerciseId)
@@ -67,10 +67,4 @@ public class ReactionRepo : IReactionRepo
             .Where(x => simpleExercisesId.Contains(x.Id))
             .Include(x => x.Reactions)
             .ToDictionaryAsync(x => x.Id, x => x.Reactions.Count);
-    
-    // public async Task<Dictionary<Guid, int>> GetReactionsCount(IEnumerable<Guid> simpleExercisesId)
-    //     => await _gyMePostgresContext.Reactions
-    //         .Where(x => simpleExercisesId.Contains(x.SimpleExerciseId))
-    //         .GroupBy(x => x.SimpleExerciseId)
-    //         .ToDictionaryAsync(x => x.Key, x => x.Count());
 }

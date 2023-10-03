@@ -18,7 +18,7 @@ public class CommentRepo : ICommentRepo
     public async Task Create(Comment comment)
     {
         await _gyMePostgresContext.Comments.AddAsync(comment);
-        await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
     public async Task<Comment?> Get(Guid id)
@@ -59,13 +59,13 @@ public class CommentRepo : ICommentRepo
     public async Task Update(Comment comment)
     {
         _gyMePostgresContext.Comments.Update(comment);
-        await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
     public async Task Remove(Comment comment)
     {
         _gyMePostgresContext.Comments.Remove(comment);
-        await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
     
     public async Task<int> GetCommentsCount(Guid simpleExerciseId)
@@ -77,10 +77,4 @@ public class CommentRepo : ICommentRepo
             .Where(x => simpleExercisesId.Contains(x.Id))
             .Include(x => x.Comments)
             .ToDictionaryAsync(x => x.Id, x => x.Comments.Count);
-    
-    // public async Task<Dictionary<Guid, int>> GetCommentsCount(IEnumerable<Guid> simpleExercisesId)
-    //     => await _gyMePostgresContext.Comments
-    //         .Where(x => simpleExercisesId.Contains(x.SimpleExerciseId))
-    //         .GroupBy(x => x.SimpleExerciseId)
-    //         .ToDictionaryAsync(x => x.Key, x => x.Count());
 }

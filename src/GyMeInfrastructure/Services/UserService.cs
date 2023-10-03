@@ -162,6 +162,7 @@ internal class UserService : IUserService
             {
                 friendStatus1.FriendStatus = FriendStatus.Friend;
                 friendStatus2.FriendStatus = FriendStatus.Friend;
+                await _userRepo.UpdateFriendsStatus(new[] { friendStatus1, friendStatus2 });
                 break;
             }
             case FriendStatus.Friend:

@@ -38,21 +38,21 @@ internal class SimpleExerciseRepo : ISimpleExerciseRepo
             .Take(size)
             .ToListAsync();
 
-    public async Task<bool> Create(SimpleExercise exercise)
+    public async Task Create(SimpleExercise exercise)
     {
         await _gyMePostgresContext.SimpleExercises.AddAsync(exercise);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
-    public async Task<bool> Update(SimpleExercise exercise)
+    public async Task Update(SimpleExercise exercise)
     {
         _gyMePostgresContext.SimpleExercises.Update(exercise);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
-    public async Task<bool> Remove(SimpleExercise exercise)
+    public async Task Remove(SimpleExercise exercise)
     {
         _gyMePostgresContext.SimpleExercises.Remove(exercise);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 }

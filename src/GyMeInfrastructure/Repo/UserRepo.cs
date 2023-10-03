@@ -60,34 +60,40 @@ internal class UserRepo : IUserRepo
             })
             .ToListAsync();
 
-    public async Task<bool> AddFriend(IEnumerable<UserFriend> userFriend)
+    public async Task AddFriend(IEnumerable<UserFriend> userFriend)
     {
         await _gyMePostgresContext.UserFriends.AddRangeAsync(userFriend);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
-    public async Task<bool> RemoveFriend(UserFriend userFriend)
+    public async Task RemoveFriend(UserFriend userFriend)
     {
         _gyMePostgresContext.UserFriends.Remove(userFriend);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
     
-    public async Task<bool> RemoveFriend(IEnumerable<UserFriend> userFriend)
+    public async Task RemoveFriend(IEnumerable<UserFriend> userFriend)
     {
         _gyMePostgresContext.UserFriends.RemoveRange(userFriend);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
-    public async Task<bool> Update(User user)
+    public async Task Update(User user)
     {
         _gyMePostgresContext.Users.Update(user);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
-    public async Task<bool> RemoveUser(User user)
+    public async Task UpdateFriendsStatus(IEnumerable<UserFriend> userFriends)
+    {
+        _gyMePostgresContext.UserFriends.UpdateRange(userFriends);
+        await _gyMePostgresContext.SaveChangesAsync();
+    }
+
+    public async Task RemoveUser(User user)
     {
         _gyMePostgresContext.Users.Remove(user);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
     public async Task<ResourcesAddresses?> GetResourcesAddresses(Guid userId)
@@ -99,6 +105,6 @@ internal class UserRepo : IUserRepo
         await _gyMePostgresContext.ResourcesAddresses
             .AddAsync(resourcesAddresses);
 
-        await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 }

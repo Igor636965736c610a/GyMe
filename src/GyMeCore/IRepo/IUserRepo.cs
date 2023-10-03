@@ -12,11 +12,12 @@ public interface IUserRepo
     Task<List<UserFriend>> GetFriends(Guid id, FriendStatus friendStatus, int page, int size);
     Task<UserFriend?> GetFriend(Guid userId, Guid friendId);
     Task<IEnumerable<CommonFriendsResult>> GetCommonFriendsSortedByCount(Guid userId, int page, int size = 50);
-    Task<bool> AddFriend(IEnumerable<UserFriend> userFriend);
-    Task<bool> RemoveFriend(UserFriend userFriend);
-    Task<bool> RemoveFriend(IEnumerable<UserFriend> userFriend);
-    Task<bool> Update(User user);
-    Task<bool> RemoveUser(User user);
+    Task AddFriend(IEnumerable<UserFriend> userFriend);
+    Task RemoveFriend(UserFriend userFriend);
+    Task RemoveFriend(IEnumerable<UserFriend> userFriend);
+    Task Update(User user);
+    Task UpdateFriendsStatus(IEnumerable<UserFriend> userFriends);
+    Task RemoveUser(User user);
     Task<ResourcesAddresses?> GetResourcesAddresses(Guid userId);
     Task AddResourcesAddresses(ResourcesAddresses resourcesAddresses);
 }

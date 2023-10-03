@@ -18,8 +18,8 @@ public interface IExerciseRepo
         Func<IEnumerable<Series>, int> calculate);
     Task<Dictionary<string, IEnumerable<int>>> GetScores(IEnumerable<string> exercisesType, Guid userId, int period,
         Func<IEnumerable<Series>, int> calculate);
-    Task<bool> Create(Exercise exercise);
-    Task<bool> Update(Exercise exercise);
-    Task<bool> Update(List<Exercise> exercises);
-    Task<bool> Remove(Exercise exercise);
+    Task Create(Exercise exercise);
+    Task Update(Exercise exercise);
+    Task Update(List<Exercise> exercises);
+    Task Remove(Exercise exercise);
 }

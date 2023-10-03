@@ -83,27 +83,27 @@ internal class ExerciseRepo : IExerciseRepo
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value.Select(y => calculate(y)));
 
-    public async Task<bool> Create(Exercise exercise)
+    public async Task Create(Exercise exercise)
     {
         await _gyMePostgresContext.Exercises.AddAsync(exercise);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
-    public async Task<bool> Update(Exercise exercise)
+    public async Task Update(Exercise exercise)
     {
         await Task.FromResult(_gyMePostgresContext.Update(exercise));
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
-    public async Task<bool> Update(List<Exercise> exercises)
+    public async Task Update(List<Exercise> exercises)
     {
         _gyMePostgresContext.UpdateRange(exercises);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 
-    public async Task<bool> Remove(Exercise exercise)
+    public async Task Remove(Exercise exercise)
     {
         _gyMePostgresContext.Remove(exercise);
-        return await UtilsRepo.SaveDatabaseChanges(_gyMePostgresContext);
+        await _gyMePostgresContext.SaveChangesAsync();
     }
 }
