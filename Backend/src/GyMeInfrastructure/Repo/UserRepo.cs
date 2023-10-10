@@ -46,13 +46,13 @@ internal class UserRepo : IUserRepo
         => await _gyMePostgresContext.UserFriends
             .Where(x => x.UserId == userId)
             .Include(x => x.Friend.Friends)
-            .ThenInclude(x => x.Friend.ExtendedUser)
             .SelectMany(x => x.Friend.Friends)
             .Where(x => x.FriendId != userId && x.FriendStatus == FriendStatus.Friend)
             .GroupBy(x => x.Friend)
             .OrderBy(x => x.Count())
             .Skip(page*size)
             .Take(size)
+            .Include(x => x.Key.ExtendedUser)
             .Select(group => new CommonFriendsResult
             {
                 User = group.Key,
