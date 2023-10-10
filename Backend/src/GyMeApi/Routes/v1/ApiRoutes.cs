@@ -89,4 +89,12 @@ public static class ApiRoutes
         public const string GetNewSimpleExerciseElements = "get/new";
         public const string GetPastSimpleExerciseElements = "get/past";
     }
+    
+    public static class CommentReaction
+    {
+        public const string AddCommentReaction = "add";
+        public const string GetCommentReactions = "get";
+        public const string GetSpecificCommentReactionsCount = "get/count";
+        public const string RemoveCommentReaction = "remove/{commentReactionId}";
+    }
 }

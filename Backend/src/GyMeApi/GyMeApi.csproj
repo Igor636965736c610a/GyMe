@@ -40,6 +40,7 @@
       <_ContentIncludedByDefault Remove="wwwroot\Images\e091c0e0-fb84-45b3-810c-585ee383abda\e091c0e0-fb84-45b3-810c-585ee383abda.jpg" />
       <_ContentIncludedByDefault Remove="wwwroot\Images\346d096f-85ea-41ed-9b35-a7a37de48cba\346d096f-85ea-41ed-9b35-a7a37de48cba.jpg" />
       <_ContentIncludedByDefault Remove="wwwroot\Images\1cb328c9-d846-44ca-b1a1-9ce732a36295\1cb328c9-d846-44ca-b1a1-9ce732a36295.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\Images\5a729ee5-6a98-44c6-8d9a-a673bf27de9f\5a729ee5-6a98-44c6-8d9a-a673bf27de9f.jpg" />
     </ItemGroup>
 
 </Project>

@@ -3,7 +3,8 @@
 namespace GyMeInfrastructure.Models.ReactionsAndComments;
 
 [EnumExtensions]
-public enum Emoji
+public enum CommentReactionType
 {
-    Emoji1Chars
+    HeartEyes,
+    Like
 }

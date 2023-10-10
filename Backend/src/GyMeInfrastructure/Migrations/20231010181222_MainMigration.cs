@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GyMeInfrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial1 : Migration
+    public partial class MainMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,6 +22,7 @@ namespace GyMeInfrastructure.Migrations
                     Email = table.Column<string>(type: "text", nullable: false),
                     Valid = table.Column<bool>(type: "boolean", nullable: false),
                     AccountProvider = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    LastRefreshMainPage = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     NormalizedUserName = table.Column<string>(type: "text", nullable: true),
                     NormalizedEmail = table.Column<string>(type: "text", nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
@@ -46,7 +47,7 @@ namespace GyMeInfrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ExercisesType = table.Column<int>(type: "integer", nullable: false),
+                    ExercisesType = table.Column<string>(type: "text", nullable: false),
                     Position = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -65,7 +66,7 @@ namespace GyMeInfrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Gender = table.Column<int>(type: "integer", nullable: false),
+                    Gender = table.Column<string>(type: "text", nullable: false),
                     ProfilePictureUrl = table.Column<string>(type: "text", nullable: false),
                     PrivateAccount = table.Column<bool>(type: "boolean", nullable: false),
                     Premium = table.Column<bool>(type: "boolean", nullable: false),
@@ -133,8 +134,8 @@ namespace GyMeInfrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    ExerciseType = table.Column<int>(type: "integer", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExerciseType = table.Column<string>(type: "text", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ExerciseId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },

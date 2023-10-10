@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GyMeInfrastructure.Migrations
 {
     [DbContext(typeof(GyMePostgresContext))]
-    [Migration("20231003045808_Initial3")]
-    partial class Initial3
+    [Migration("20231010181222_MainMigration")]
+    partial class MainMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace GyMeInfrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Comment", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.CommentReaction", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.CommentReaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,7 +86,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("CommentReactions");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Exercise", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Exercise", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +109,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.ExtendedUser", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.ExtendedUser", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -140,7 +140,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("ExtendedUsers");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Reaction", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Reaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -174,7 +174,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("Reactions");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.ResourcesAddresses", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.ResourcesAddresses", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,7 +195,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("ResourcesAddresses");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Series", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Series", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -219,7 +219,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("Series");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.SimpleExercise", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.SimpleExercise", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -251,7 +251,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("SimpleExercises");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.User", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -328,7 +328,7 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.UserFriend", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.UserFriend", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -346,15 +346,15 @@ namespace GyMeInfrastructure.Migrations
                     b.ToTable("UserFriends");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Comment", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Comment", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.SimpleExercise", "SimpleExercise")
+                    b.HasOne("GyMeCore.Models.Entities.SimpleExercise", "SimpleExercise")
                         .WithMany("Comments")
                         .HasForeignKey("SimpleExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                    b.HasOne("GyMeCore.Models.Entities.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -365,15 +365,15 @@ namespace GyMeInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.CommentReaction", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.CommentReaction", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.Comment", "Comment")
+                    b.HasOne("GyMeCore.Models.Entities.Comment", "Comment")
                         .WithMany("CommentReactions")
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                    b.HasOne("GyMeCore.Models.Entities.User", "User")
                         .WithMany("CommentReactions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -384,9 +384,9 @@ namespace GyMeInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Exercise", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Exercise", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                    b.HasOne("GyMeCore.Models.Entities.User", "User")
                         .WithMany("Exercises")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -395,26 +395,26 @@ namespace GyMeInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.ExtendedUser", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.ExtendedUser", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                    b.HasOne("GyMeCore.Models.Entities.User", "User")
                         .WithOne("ExtendedUser")
-                        .HasForeignKey("GymAppCore.Models.Entities.ExtendedUser", "UserId")
+                        .HasForeignKey("GyMeCore.Models.Entities.ExtendedUser", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Reaction", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Reaction", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.SimpleExercise", "SimpleExercise")
+                    b.HasOne("GyMeCore.Models.Entities.SimpleExercise", "SimpleExercise")
                         .WithMany("Reactions")
                         .HasForeignKey("SimpleExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                    b.HasOne("GyMeCore.Models.Entities.User", "User")
                         .WithMany("Reactions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -425,20 +425,20 @@ namespace GyMeInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.ResourcesAddresses", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.ResourcesAddresses", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                    b.HasOne("GyMeCore.Models.Entities.User", "User")
                         .WithOne("SetResourcesAddresses")
-                        .HasForeignKey("GymAppCore.Models.Entities.ResourcesAddresses", "UserId")
+                        .HasForeignKey("GyMeCore.Models.Entities.ResourcesAddresses", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Series", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Series", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.SimpleExercise", "SimpleExercise")
+                    b.HasOne("GyMeCore.Models.Entities.SimpleExercise", "SimpleExercise")
                         .WithMany("Series")
                         .HasForeignKey("SimpleExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -447,15 +447,15 @@ namespace GyMeInfrastructure.Migrations
                     b.Navigation("SimpleExercise");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.SimpleExercise", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.SimpleExercise", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.Exercise", "Exercise")
+                    b.HasOne("GyMeCore.Models.Entities.Exercise", "Exercise")
                         .WithMany("ConcreteExercise")
                         .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                    b.HasOne("GyMeCore.Models.Entities.User", "User")
                         .WithMany("SimpleExercises")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -466,15 +466,15 @@ namespace GyMeInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.UserFriend", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.UserFriend", b =>
                 {
-                    b.HasOne("GymAppCore.Models.Entities.User", "Friend")
+                    b.HasOne("GyMeCore.Models.Entities.User", "Friend")
                         .WithMany("InverseFriends")
                         .HasForeignKey("FriendId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GymAppCore.Models.Entities.User", "User")
+                    b.HasOne("GyMeCore.Models.Entities.User", "User")
                         .WithMany("Friends")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -485,17 +485,17 @@ namespace GyMeInfrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Comment", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Comment", b =>
                 {
                     b.Navigation("CommentReactions");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.Exercise", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.Exercise", b =>
                 {
                     b.Navigation("ConcreteExercise");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.SimpleExercise", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.SimpleExercise", b =>
                 {
                     b.Navigation("Comments");
 
@@ -504,7 +504,7 @@ namespace GyMeInfrastructure.Migrations
                     b.Navigation("Series");
                 });
 
-            modelBuilder.Entity("GymAppCore.Models.Entities.User", b =>
+            modelBuilder.Entity("GyMeCore.Models.Entities.User", b =>
                 {
                     b.Navigation("CommentReactions");
 

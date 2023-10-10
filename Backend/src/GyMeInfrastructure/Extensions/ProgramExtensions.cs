@@ -218,7 +218,8 @@ public static class ProgramExtensions
             .AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>()
             .AddValidatorsFromAssemblyContaining<PostCommentDtoValidator>()
             .AddValidatorsFromAssemblyContaining<PutCommentDtoValidator>()
-            .AddValidatorsFromAssemblyContaining<PostReactionDtoValidator>();
+            .AddValidatorsFromAssemblyContaining<PostReactionDtoValidator>()
+            .AddValidatorsFromAssemblyContaining<PostCommentReactionValidator>();
 
         return services;
     }

@@ -6,10 +6,11 @@ public class CommentReaction
     {
     }
 
-    public CommentReaction(Guid id, string emoji, Guid commentId, Guid userId)
+    public CommentReaction(Guid id, string reactionType, string emoji, Guid commentId, Guid userId)
     {
         Id = id;
         Emoji = emoji;
+        ReactionType = reactionType;
         CommentId = commentId;
         UserId = userId;
     }

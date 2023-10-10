@@ -12,6 +12,6 @@ public class CommentReactionConfig : IEntityTypeConfiguration<CommentReaction>
         builder.Property(x => x.Emoji).IsRequired();
         builder.Property(x => x.TimeStamp).IsRequired();
         builder.Property(x => x.CommentId).IsRequired();
-        builder.Property(x => x.UserId);
+        builder.Property(x => x.UserId).IsRequired();
     }
 }
