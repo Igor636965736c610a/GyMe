@@ -9,7 +9,7 @@ public interface IReactionRepo
     Task Update(Reaction reaction);
     Task<Reaction?> Get(Guid id);
     Task<Reaction?> Get(Guid simpleExerciseId, Guid userId);
-    IQueryable<Reaction> GetAll(Guid simpleExerciseId, int page, int size);
+    IQueryable<Reaction> GetAll(Guid simpleExerciseId);
     Task Remove(Reaction reaction);
     Task<IEnumerable<ReactionsCountResult>> GetSpecificReactionsCount(Guid simpleExerciseId);
     Task<int> GetReactionsCount(Guid simpleExerciseId);

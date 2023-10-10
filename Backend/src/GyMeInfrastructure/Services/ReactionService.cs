@@ -109,7 +109,7 @@ internal class ReactionService : IReactionService
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        var reactionsSource = _reactionRepo.GetAll(simpleExercise.Id, page, size);
+        var reactionsSource = _reactionRepo.GetAll(simpleExercise.Id);
         if (reactionType is null)
         {
             var reactions = await reactionsSource

@@ -4,7 +4,7 @@ using GyMeInfrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace GyMeApi.Middleware;
+namespace GyMeApi.Middlewares;
 
 public class DbTransactionMiddleware : IMiddleware
 {

@@ -4,7 +4,7 @@ using GyMeInfrastructure.Exceptions;
 using GyMeInfrastructure.Models.InternalManagement;
 using GyMeInfrastructure.Services.InternalManagement;
 
-namespace GyMeApi.Middleware;
+namespace GyMeApi.Middlewares;
 
 public class ErrorHandlerMiddleware : IMiddleware
 {

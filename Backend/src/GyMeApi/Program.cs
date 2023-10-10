@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
-using GyMeApi.Middleware;
-using GyMeApi.Middleware.Extension;
+using GyMeApi.Middlewares;
+using GyMeApi.Middlewares.Extension;
 using GyMeInfrastructure.AutoMapper;
 using GyMeInfrastructure.Extensions;
 using GyMeInfrastructure.Options;

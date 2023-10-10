@@ -14,6 +14,7 @@ internal static class UtilsServices
             return true;
 
         var friendStatus = await userRepo.GetFriend(userIdFromJwt, userIdFromResource);
+        
         var user = await userRepo.GetOnlyValid(userIdFromResource);
 
         if (user is { ExtendedUser.PrivateAccount: true })

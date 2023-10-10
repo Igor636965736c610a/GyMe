@@ -1,4 +1,4 @@
-﻿namespace GyMeApi.Middleware.Extension;
+﻿namespace GyMeApi.Middlewares.Extension;
 
 public static class MiddlewareExtensions
 {

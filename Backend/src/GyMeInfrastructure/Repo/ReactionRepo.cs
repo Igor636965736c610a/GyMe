@@ -36,7 +36,7 @@ public class ReactionRepo : IReactionRepo
         => await _gyMePostgresContext.Reactions.Include(x => x.User).FirstOrDefaultAsync(x =>
             x.SimpleExerciseId == simpleExerciseId && x.UserId == userId);
 
-    public IQueryable<Reaction> GetAll(Guid simpleExerciseId, int page, int size)
+    public IQueryable<Reaction> GetAll(Guid simpleExerciseId)
         => _gyMePostgresContext.Reactions
             .Include(x => x.User)
             .Where(x => x.SimpleExerciseId == simpleExerciseId);

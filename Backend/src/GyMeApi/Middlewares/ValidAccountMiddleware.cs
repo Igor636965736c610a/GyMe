@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace GyMeApi.Middleware;
+namespace GyMeApi.Middlewares;
 
 public class ValidAccountMiddleware : IMiddleware
 {
