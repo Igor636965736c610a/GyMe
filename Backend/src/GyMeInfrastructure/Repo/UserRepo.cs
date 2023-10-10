@@ -45,10 +45,10 @@ internal class UserRepo : IUserRepo
     public async Task<IEnumerable<CommonFriendsResult>> GetCommonFriendsSortedByCount(Guid userId, int page, int size = 20)
         => await _gyMePostgresContext.UserFriends
             .Where(x => x.UserId == userId)
-            .SelectMany(x => x.Friend.Friends)
-            .Where(x => x.FriendId != userId && x.FriendStatus == FriendStatus.Friend)
             .Include(x => x.Friend.Friends)
             .ThenInclude(x => x.Friend.ExtendedUser)
+            .SelectMany(x => x.Friend.Friends)
+            .Where(x => x.FriendId != userId && x.FriendStatus == FriendStatus.Friend)
             .GroupBy(x => x.Friend)
             .OrderBy(x => x.Count())
             .Skip(page*size)
