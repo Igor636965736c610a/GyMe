@@ -14,6 +14,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.Property(p => p.UserName).IsRequired().HasMaxLength(EntitiesConfig.UserConf.UserNameMaxLength);
         builder.Property(p => p.Valid).IsRequired();
         builder.Property(p => p.AccountProvider).IsRequired().HasMaxLength(EntitiesConfig.UserConf.AccountProviderMaxLength);
+        builder.Property(x => x.Premium).IsRequired();
 
         builder
             .HasMany(e => e.SimpleExercises)

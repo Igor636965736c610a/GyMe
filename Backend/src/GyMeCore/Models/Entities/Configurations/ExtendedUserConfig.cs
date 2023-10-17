@@ -11,7 +11,6 @@ public class ExtendedUserConfig : IEntityTypeConfiguration<ExtendedUser>
         builder.Property(x => x.Gender).IsRequired();
         builder.Property(x => x.ProfilePictureUrl).IsRequired();
         builder.Property(x => x.UserId).IsRequired();
-        builder.Property(x => x.Premium).IsRequired();
         builder.Property(x => x.Description).HasMaxLength(EntitiesConfig.ExtendedUserConf.DescriptionMaxLenght);
     }
 }

@@ -2,9 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GyMeCore", "GyMeCore\GyMeCore.csproj", "{1B2355F5-23CF-410B-BA4A-BC5C8272C07E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GyMeInfrastructure", "GyMeInfrastructure\GyMeInfrastructure.csproj", "{0A5B3DBE-0A19-423B-A927-808D08C457D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GyMeApplication", "GyMeApplication\GyMeApplication.csproj", "{0A5B3DBE-0A19-423B-A927-808D08C457D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GyMeApi", "GyMeApi\GyMeApi.csproj", "{E0B0F265-166E-42CC-836B-C92C9B41385C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GyMeWebApi", "GyMeWebApi\GyMeWebApi.csproj", "{E0B0F265-166E-42CC-836B-C92C9B41385C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

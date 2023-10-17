@@ -12,6 +12,8 @@ public class User : IdentityUser<Guid>
     public override string Email { get; set; }
     public bool Valid { get; set; }
     public string AccountProvider { get; set; }
+    public bool Premium { get; set; }
+    public DateTime? ImportancePremium { get; set; }
     public DateTime LastRefreshMainPage { get; set; } = DateTime.UtcNow;
     public ResourcesAddresses SetResourcesAddresses { get; set; }
     public ExtendedUser? ExtendedUser { get; set; }
