@@ -5,7 +5,7 @@ namespace GyMeApplication.IServices;
 
 public interface IExerciseService
 {
-    Task Create(PostExerciseDto postExerciseDto);
+    Task<Guid> Create(PostExerciseDto postExerciseDto);
     Task Update(Guid exerciseId, PutExerciseDto putExerciseDto);
     Task Remove(Guid exerciseId);
     Task<GetExerciseDto> Get(Guid exerciseId);

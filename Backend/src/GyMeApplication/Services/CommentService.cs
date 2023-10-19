@@ -28,7 +28,7 @@ internal class CommentService : ICommentService
         _commentReactionRepo = commentReactionRepo;
     }
 
-    public async Task AddComment(PostCommentDto postCommentDto)
+    public async Task<Guid> AddComment(PostCommentDto postCommentDto)
     {
         var userIdFromJwt = _userContextService.UserId;
 
@@ -38,11 +38,12 @@ internal class CommentService : ICommentService
      
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, simpleExercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
-
+        
         var comment = new Comment(Guid.NewGuid(), postCommentDto.Message, postCommentDto.SimpleExerciseId,
             userIdFromJwt);
 
         await _commentRepo.Create(comment);
+        return comment.Id;
     }
 
     public async Task<GetCommentDto> GetComment(Guid commentId)

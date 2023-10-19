@@ -24,9 +24,9 @@ public class ReactionController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _reactionService.AddEmojiReaction(postReactionDto.SimpleExerciseId, postReactionDto.ReactionType);
+        var reactionId = await _reactionService.AddReaction(postReactionDto.SimpleExerciseId, postReactionDto.ReactionType);
 
-        return Ok();
+        return Ok(reactionId.ToString());
     }
 
     [HttpPost(ApiRoutes.Reaction.SetImageReaction)]

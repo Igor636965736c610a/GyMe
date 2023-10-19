@@ -24,7 +24,7 @@ internal class ExerciseService : IExerciseService
         _gyMeMapper = gyMeMapper;
     }
     
-    public async Task Create(PostExerciseDto postExerciseDto)
+    public async Task<Guid> Create(PostExerciseDto postExerciseDto)
     {
         var userIdFromJwt = _userContextService.UserId;
         
@@ -40,12 +40,14 @@ internal class ExerciseService : IExerciseService
             postExerciseDto.Position = 0;
         if (postExerciseDto.Position > exercises.Count)
             postExerciseDto.Position = exercises.Count;
-        var exercise = new Exercise(exerciseType, postExerciseDto.Position.Value, userIdFromJwt);
+        
+        var exercise = new Exercise(Guid.NewGuid(), exerciseType, postExerciseDto.Position.Value, userIdFromJwt);
 
         UpdateExercisesPositionUp(exercise.Position, exercises);
 
         await _exerciseRepo.Create(exercise);
         await _exerciseRepo.Update(exercises);
+        return exercise.Id;
     }
 
     public async Task Update(Guid exerciseId, PutExerciseDto putExerciseDto)
@@ -102,15 +104,13 @@ internal class ExerciseService : IExerciseService
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, exercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
-        var maxRepSeries = await _exerciseRepo.GetMaxRep(exerciseId);
-        GetSeriesDto? maxRepSeriesDto = null;
-        if (maxRepSeries is not null)
-            maxRepSeriesDto = _gyMeMapper.GetSeriesDtoMap(maxRepSeries);
-        
+        var maxRepSeriesDto = await MaxRepSeriesDto(exerciseId);
+
         var exerciseDto = _gyMeMapper.GetExerciseDtoMap(exercise, maxRepSeriesDto);
         
         return exerciseDto;
     }
+
 
     public async Task<IEnumerable<GetExerciseDto>> Get(Guid userId, int page, int size)
     {
@@ -126,8 +126,9 @@ internal class ExerciseService : IExerciseService
 
         var ids = exercises.Select(x => x.Id);
         var maxReps = await _exerciseRepo.GetMaxReps(ids);
+        var maxRepsDto = maxReps.ToDictionary(x => x.Key, x => _gyMeMapper.GetSeriesDtoMap(x.Value));
 
-        var exercisesDto = exercises.Select(x => _gyMeMapper.GetExerciseDtoMap(x, _gyMeMapper.GetSeriesDtoMap(maxReps[x.Id])));
+        var exercisesDto = exercises.Select(x => _gyMeMapper.GetExerciseDtoMap(x, maxRepsDto[x.Id]));
 
         return exercisesDto;
     }
@@ -137,4 +138,13 @@ internal class ExerciseService : IExerciseService
     
     private static void UpdateExercisesPositionDown(int position, IEnumerable<Exercise> exercises)
         => exercises.Where(x => x.Position >= position).ForEach(x => x.Position -= 1);
+    
+    private async Task<GetSeriesDto?> MaxRepSeriesDto(Guid exerciseId)
+    {
+        var maxRepSeries = await _exerciseRepo.GetMaxRep(exerciseId);
+        GetSeriesDto? maxRepSeriesDto = null;
+        if (maxRepSeries is not null)
+            maxRepSeriesDto = _gyMeMapper.GetSeriesDtoMap(maxRepSeries);
+        return maxRepSeriesDto;
+    }
 }

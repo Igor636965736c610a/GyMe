@@ -22,9 +22,9 @@ public class SimpleExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _simpleExerciseService.Create(postSimpleExerciseDto);
+        var simpleExerciseId = await _simpleExerciseService.Create(postSimpleExerciseDto);
 
-        return Ok();
+        return Ok(simpleExerciseId.ToString());
     }
 
     [HttpPut(ApiRoutes.SimpleExercise.Update)]

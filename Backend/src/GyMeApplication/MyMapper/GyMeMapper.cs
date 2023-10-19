@@ -82,11 +82,8 @@ public class GyMeMapper : IGyMeMapper
             TimeStamp = reaction.TimeStamp
         };
 
-    public GetSeriesDto? GetSeriesDtoMap(Series? series)
+    public GetSeriesDto GetSeriesDtoMap(Series series)
     {
-        if (series is null)
-            return null;
-        
         return new()
         {
             Id = series.Id,
@@ -132,9 +129,9 @@ public class GyMeMapper : IGyMeMapper
             FirstName = user.FirstName,
             LastName = user.LastName,
             UserName = user.UserName,
-            PrivateAccount = user.ExtendedUser.PrivateAccount,
-            Gender = user.ExtendedUser.Gender,
-            ProfilePictureUrl = user.ExtendedUser.ProfilePictureUrl,
+            PrivateAccount = user.ExtendedUser!.PrivateAccount,
+            Gender = user.ExtendedUser!.Gender,
+            ProfilePictureUrl = user.ExtendedUser!.ProfilePictureUrl,
             Description = user.ExtendedUser.Description,
             FriendStatus = friendStatus?.ToStringFast()
         };

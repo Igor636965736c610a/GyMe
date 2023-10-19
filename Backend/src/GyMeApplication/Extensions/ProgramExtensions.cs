@@ -37,7 +37,7 @@ public static class ProgramExtensions
             .AddScoped<IUserService, UserService>()
             .AddScoped<IUserService, UserService>()
             .AddScoped<IAccountService, AccountService>()
-            .AddScoped<IChartService, ChartService>()
+            .AddScoped<IChartGeneratorService, ChartGeneratorService>()
             .AddScoped<IUserContextService, UserContextService>()
             .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<IReactionService, ReactionService>()

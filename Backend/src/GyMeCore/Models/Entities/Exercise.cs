@@ -5,8 +5,9 @@ public class Exercise
     protected Exercise()
     {
     }
-    public Exercise(string exercisesType, int position, Guid userId)
+    public Exercise(Guid id, string exercisesType, int position, Guid userId)
     {
+        Id = id;
         ExercisesType = exercisesType;
         Position = position;
         UserId = userId;

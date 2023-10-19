@@ -23,9 +23,9 @@ public class CommentController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _commentService.AddComment(postCommentDto);
+        var commentId = await _commentService.AddComment(postCommentDto);
 
-        return Ok();
+        return Ok(commentId.ToString());
     }
     
     [HttpGet(ApiRoutes.Comments.GetComment)]
@@ -34,9 +34,9 @@ public class CommentController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _commentService.GetComment(Guid.Parse(id));
+        var commentDto = await _commentService.GetComment(Guid.Parse(id));
 
-        return Ok();
+        return Ok(commentDto);
     }
 
     [HttpGet(ApiRoutes.Comments.GetCommentsSortedByPubTime)]
@@ -45,9 +45,9 @@ public class CommentController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _commentService.GetCommentsSortedByPubTime(simpleExerciseId, page, size);
+        var comments = await _commentService.GetCommentsSortedByPubTime(simpleExerciseId, page, size);
 
-        return Ok();
+        return Ok(comments);
     }
     
     [HttpGet(ApiRoutes.Comments.GetCommentsSortedByReactionsCount)]
@@ -55,10 +55,9 @@ public class CommentController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+        var comments = await _commentService.GetCommentsSortedByReactionsCount(simpleExerciseId, page, size);
 
-        await _commentService.GetCommentsSortedByReactionsCount(simpleExerciseId, page, size);
-
-        return Ok();
+        return Ok(comments);
     }
 
     [HttpPut(ApiRoutes.Comments.UpdateComment)]

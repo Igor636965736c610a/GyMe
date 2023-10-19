@@ -26,7 +26,7 @@ internal class CommentReactionService : ICommentReactionService
         _userRepo = userRepo;
     }
 
-    public async Task AddCommentReaction(PostCommentReactionDto postCommentReactionDto)
+    public async Task<Guid> AddCommentReaction(PostCommentReactionDto postCommentReactionDto)
     {
         var userIdFromJwt = _userContextService.UserId;
 
@@ -44,6 +44,7 @@ internal class CommentReactionService : ICommentReactionService
             commentReaction.TimeStamp = DateTime.UtcNow;
             
             await _commentReactionRepo.Update(commentReaction);
+            return commentReaction.Id;
         }
         else
         {
@@ -51,6 +52,7 @@ internal class CommentReactionService : ICommentReactionService
                 emoji, postCommentReactionDto.CommentId, userIdFromJwt);
 
             await _commentReactionRepo.Create(newCommentReaction);
+            return newCommentReaction.Id;
         }
     }
 

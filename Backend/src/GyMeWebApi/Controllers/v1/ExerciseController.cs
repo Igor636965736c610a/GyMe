@@ -24,9 +24,9 @@ public class ExerciseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _exerciseService.Create(postExerciseDto);
+        var exerciseId = await _exerciseService.Create(postExerciseDto);
 
-        return Ok();   
+        return Ok(exerciseId.ToString());   
     }
 
     [HttpGet(ApiRoutes.Exercise.Get)]

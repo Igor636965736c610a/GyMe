@@ -81,7 +81,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.User.FindUser)]
-    public async Task<IActionResult> FindUser([FromQuery] string key, [FromQuery] int page, [FromQuery] int size)
+    public async Task<IActionResult> FindUser([FromQuery]string key, [FromQuery]int page, [FromQuery]int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -89,5 +89,27 @@ public class UserController : ControllerBase
         var users = await _userService.FindUsers(key, page, size);
 
         return Ok(users);
+    }
+
+    [HttpPost(ApiRoutes.User.BlockUser)]
+    public async Task<IActionResult> BlockUser([FromQuery]string userToBlockId)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await _userService.BlockUser(Guid.Parse(userToBlockId));
+
+        return Ok();
+    }
+
+    [HttpPost(ApiRoutes.User.UnblockUser)]
+    public async Task<IActionResult> UnblockUser([FromQuery]string userToUnblockBlockId)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await _userService.UnblockUser(Guid.Parse(userToUnblockBlockId));
+
+        return Ok();
     }
 }

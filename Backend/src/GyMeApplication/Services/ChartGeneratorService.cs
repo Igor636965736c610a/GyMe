@@ -9,13 +9,13 @@ using GyMeCore.Models.Entities;
 
 namespace GyMeApplication.Services;
 
-internal class ChartService : IChartService
+internal class ChartGeneratorService : IChartGeneratorService
 {
     private readonly IExerciseRepo _exerciseRepo;
     private readonly IUserRepo _userRepo;
     private readonly IUserContextService _userContextService;
 
-    public ChartService(IExerciseRepo exerciseRepo, IUserRepo userRepo, IUserContextService userContextService)
+    public ChartGeneratorService(IExerciseRepo exerciseRepo, IUserRepo userRepo, IUserContextService userContextService)
     {
         _exerciseRepo = exerciseRepo;
         _userRepo = userRepo;
@@ -29,6 +29,7 @@ internal class ChartService : IChartService
         var exercise = await _exerciseRepo.Get(exerciseId);
         if (exercise is null)
             return null;
+        
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, exercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
@@ -46,6 +47,7 @@ internal class ChartService : IChartService
         var exercise = await _exerciseRepo.Get(userUd, exerciseType);
         if (exercise is null)
             return null;
+        
         if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, exercise.UserId, _userRepo))
             throw new ForbiddenException("You do not have the appropriate permissions");
 
@@ -55,7 +57,7 @@ internal class ChartService : IChartService
         return chart;
     }
 
-    public async Task<Dictionary<Guid, IEnumerable<int>>?> Get(Guid userId, IEnumerable<Guid> ids, ChartOption option, int period)
+    public async Task<Dictionary<Guid, IEnumerable<int>>> Get(Guid userId, IEnumerable<Guid> ids, ChartOption option, int period)
     {
         var userIdFromJwt = _userContextService.UserId;
         
@@ -68,7 +70,7 @@ internal class ChartService : IChartService
         return charts;
     }
     
-    public async Task<Dictionary<string, IEnumerable<int>>?> Get(Guid userId, IEnumerable<ExercisesTypeDto> exercisesTypeDto, ChartOption option, int period)
+    public async Task<Dictionary<string, IEnumerable<int>>> Get(Guid userId, IEnumerable<ExercisesTypeDto> exercisesTypeDto, ChartOption option, int period)
     {
         var userIdFromJwt = _userContextService.UserId;
 

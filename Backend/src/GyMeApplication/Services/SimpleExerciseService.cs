@@ -33,7 +33,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
         _gyMeMapper = gyMeMapper;
     }
 
-    public async Task Create(PostSimpleExerciseDto postSimpleExerciseDto)
+    public async Task<Guid> Create(PostSimpleExerciseDto postSimpleExerciseDto)
     {
         var userIdFromJwt = _userContextService.UserId;
         
@@ -50,6 +50,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
         var simpleExercise = new SimpleExercise(userIdFromJwt, exercise, series, postSimpleExerciseDto.Description);
         
         await _simpleExerciseRepo.Create(simpleExercise);
+        return simpleExercise.Id;
     }
 
     public async Task Update(Guid id, PutSimpleExerciseDto putSimpleExerciseDto)

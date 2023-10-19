@@ -35,7 +35,7 @@ internal class ReactionService : IReactionService
         _gyMeResourceService = gyMeResourceService;
     }
 
-    public async Task AddEmojiReaction(Guid simpleExerciseId, ReactionType reactionType)
+    public async Task<Guid> AddReaction(Guid simpleExerciseId, ReactionType reactionType)
     {
         var userIdFromJwt = _userContextService.UserId;
 
@@ -67,13 +67,15 @@ internal class ReactionService : IReactionService
             existingReaction.TimeStamp = DateTime.UtcNow;
 
             await _reactionRepo.Update(existingReaction);
-            return;
+            
+            return existingReaction.Id;
         }
 
-        var emojiReaction = new Reaction(Guid.NewGuid(), GetEmoji(reactionType), imageUrl, reactionType.ToStringFast(),
+        var reaction = new Reaction(Guid.NewGuid(), GetEmoji(reactionType), imageUrl, reactionType.ToStringFast(),
             simpleExercise.Id, userIdFromJwt);
 
-        await _reactionRepo.Create(emojiReaction);
+        await _reactionRepo.Create(reaction);
+        return reaction.Id;
     }
     
     public async Task SetImageReaction(IFormFile image)
@@ -179,6 +181,7 @@ internal class ReactionService : IReactionService
     private static string? GetEmoji(ReactionType reactionType) => reactionType switch
     {
         ReactionType.Image => null,
+        ReactionType.HeartEyes => "heartEyes",
         _ => throw new InvalidProgramException("Invalid Server Error")
     };
 }

@@ -24,9 +24,9 @@ public class CommentReactionController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _commentReactionService.AddCommentReaction(postCommentReactionDto);
+        var commentReactionId = await _commentReactionService.AddCommentReaction(postCommentReactionDto);
 
-        return Ok();
+        return Ok(commentReactionId.ToString());
     }
 
     [HttpGet(ApiRoutes.CommentReaction.GetCommentReactions)]
