@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using GyMeApplication.Models.User;
 using GyMeApplication.IServices;
 using GyMeApplication.Models.Account;
@@ -12,11 +8,7 @@ using GyMeWebApi.Routes.v1;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Ocsp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using Image = SixLabors.ImageSharp.Image;
 
 
 namespace GyMeWebApi.Controllers.v1;

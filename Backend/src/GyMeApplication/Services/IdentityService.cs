@@ -12,6 +12,7 @@ using GyMeApplication.Models.User;
 using GyMeApplication.Options;
 using GyMeApplication.Results;
 using GyMeApplication.Results.Authorization;
+using GyMeApplication.Services.InternalManagement;
 using GyMeCore.IRepo;
 using GyMeCore.Models;
 using GyMeCore.Models.Entities;
@@ -34,23 +35,22 @@ internal class IdentityService : IIdentityService
 {
     private readonly UserManager<User> _userManager;
     private readonly JwtSettings _jwtSettings;
-    private readonly EmailOptions _emailOptions;
     private readonly IUserRepo _userRepo;
     private readonly IUserContextService _userContextService;
     private readonly IGyMeResourceService _gyMeResourceService;
+    private readonly IEmailSender _emailSender;
 
     public IdentityService(
-        UserManager<User> userManager, JwtSettings jwtSettings, 
-        IOptionsMonitor<EmailOptions> emailOptions, 
+        UserManager<User> userManager, JwtSettings jwtSettings,
         IUserRepo userRepo, IUserContextService userContextService,
-        IGyMeResourceService gyMeResourceService)
+        IGyMeResourceService gyMeResourceService, IEmailSender emailSender)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;
-        _emailOptions = emailOptions.CurrentValue;
         _userRepo = userRepo;
         _userContextService = userContextService;
         _gyMeResourceService = gyMeResourceService;
+        _emailSender = emailSender;
     }
     
     public async Task<AuthenticationRegisterResult> Register(RegisterUserDto registerUserDto, Func<string, string, string> generateCallbackToken)
@@ -72,7 +72,7 @@ internal class IdentityService : IIdentityService
             var body =
                 $"Registration verification token = {token}";
             var subject = "verify registration";
-            var result = await SendEmail(body, subject, existingUser.Email);
+            var result = await _emailSender.SendEmail(body, subject, existingUser.Email);
             if(!result)
                 return new AuthenticationRegisterResult
                 {
@@ -259,7 +259,7 @@ internal class IdentityService : IIdentityService
         var body = $"Password reset token = {token}";
         var subject = "Reset Password token";
 
-        var result = await SendEmail(body, subject, user.Email);
+        var result = await _emailSender.SendEmail(body, subject, user.Email);
 
         return result;
     }
@@ -296,7 +296,7 @@ internal class IdentityService : IIdentityService
             callbackUrl);
         var subject = "Email Verification ";
 
-        var result = await SendEmail(body, subject, user.Email);
+        var result = await _emailSender.SendEmail(body, subject, user.Email);
         if (!result)
         {
             return new AuthenticationRegisterResult
@@ -353,23 +353,5 @@ internal class IdentityService : IIdentityService
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
-    }
-
-    private async Task<bool> SendEmail(string body, string subject, string email)
-    {
-        var sender = new MailgunSender(
-            _emailOptions.DomainName,
-            _emailOptions.ApiKey);
-        
-        Email.DefaultSender = sender;
-        var emailToSend = Email
-            .From(_emailOptions.From)
-            .To(email)
-            .Subject(subject)
-            .Body(body);
-
-        var response = await emailToSend.SendAsync();
-
-        return response.Successful;
     }
 }

@@ -11,6 +11,7 @@ namespace GyMeWebApi.Controllers.v1;
 public class ExerciseController : ControllerBase
 {
     private readonly IExerciseService _exerciseService;
+    
     public ExerciseController(IExerciseService exerciseService)
     {
         _exerciseService = exerciseService;

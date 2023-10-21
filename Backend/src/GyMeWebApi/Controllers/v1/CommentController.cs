@@ -1,5 +1,4 @@
-﻿using System.Net;
-using GyMeApplication.IServices;
+﻿using GyMeApplication.IServices;
 using GyMeApplication.Models.ReactionsAndComments.BodyRequest;
 using GyMeWebApi.Routes.v1;
 using Microsoft.AspNetCore.Authorization;

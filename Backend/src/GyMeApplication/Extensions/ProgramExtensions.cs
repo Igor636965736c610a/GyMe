@@ -46,6 +46,7 @@ public static class ProgramExtensions
             .AddScoped<ICommentReactionService, CommentReactionService>()
             .AddScoped<IMainPageService, MainPageService>()
             .AddScoped<IGyMeMapper, GyMeMapper>()
+            .AddScoped<IEmailSender, OwnSmtpEmailSender>()
             .AddSingleton<ErrorService>()
             .AddSingleton<PaymentMessagesService>()
             .AddSingleton<OpinionService>();
@@ -229,10 +230,12 @@ public static class ProgramExtensions
         services
             .Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)))
             .Configure<StripeOptions>(configuration.GetSection(nameof(StripeOptions)))
-            .Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)))
+            .Configure<MailgunEmailOptions>(configuration.GetSection(nameof(MailgunEmailOptions)))
+            .Configure<SmtpOptions>(configuration.GetSection(nameof(SmtpOptions)))
             .AddSingleton<MongoDbSettings>()
             .AddSingleton<StripeOptions>()
-            .AddSingleton<EmailOptions>();
+            .AddSingleton<MailgunEmailOptions>()
+            .AddSingleton<SmtpOptions>();
         
         var swaggerSettings = new SwaggerSettings();
         var jwtSettings = new JwtSettings();

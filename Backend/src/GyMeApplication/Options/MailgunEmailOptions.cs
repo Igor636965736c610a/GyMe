@@ -1,6 +1,6 @@
 ﻿namespace GyMeApplication.Options;
 
-public class EmailOptions
+public class MailgunEmailOptions
 {
     public string DomainName { get; set; }
     public string ApiKey { get; set; }
