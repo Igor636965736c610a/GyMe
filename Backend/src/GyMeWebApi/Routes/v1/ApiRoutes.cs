@@ -10,10 +10,10 @@ public static class ApiRoutes
         public const string GetAccountInformation = "get";
         public const string Register = "register";
         public const string ConfirmEmail = "confirmEmail";
-        public const string ActivateUser = "activateUser";
+        public const string ActivateAccount = "activate";
         public const string SetProfilePicture = "setProfilePicture";
         public const string UpdateUser = "update";
-        public const string RemoveUser = "remove";
+        public const string RemoveAccount = "remove";
         public const string SendResetPasswordToken = "resetPassword/sendToken";
         public const string ResetPassword = "resetPassword";
     }
@@ -72,6 +72,7 @@ public static class ApiRoutes
         public const string AddReaction = "add";
         public const string SetImageReaction = "set/imageReaction";
         public const string GetReactions = "get";
+        public const string GetReaction = "get/{id}";
         public const string GetSpecificReactionsCount = "get/count";
         public const string RemoveReaction = "remove";
     }
@@ -95,6 +96,7 @@ public static class ApiRoutes
     public static class CommentReaction
     {
         public const string AddCommentReaction = "add";
+        public const string GetCommentReaction = "get/{id}";
         public const string GetCommentReactions = "get";
         public const string GetSpecificCommentReactionsCount = "get/count";
         public const string RemoveCommentReaction = "remove/{commentReactionId}";

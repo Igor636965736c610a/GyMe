@@ -8,6 +8,6 @@ public interface IAccountService
 {
     Task<GetAccountInfModel> GetInf();
     Task SetUserProfile(IFormFile image);
-    Task Update(PutUserDto putUserDto);
+    Task<GetAccountInfModel> Update(PutUserDto putUserDto);
     Task Remove();
 }

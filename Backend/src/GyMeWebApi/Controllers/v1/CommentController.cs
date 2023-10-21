@@ -1,4 +1,5 @@
-﻿using GyMeApplication.IServices;
+﻿using System.Net;
+using GyMeApplication.IServices;
 using GyMeApplication.Models.ReactionsAndComments.BodyRequest;
 using GyMeWebApi.Routes.v1;
 using Microsoft.AspNetCore.Authorization;
@@ -24,8 +25,10 @@ public class CommentController : ControllerBase
             return BadRequest(ModelState);
 
         var commentId = await _commentService.AddComment(postCommentDto);
+        
+        var location = Url.Action("GetComment",new { id = commentId })!;
 
-        return Ok(commentId.ToString());
+        return Created(location, commentId.ToString());
     }
     
     [HttpGet(ApiRoutes.Comments.GetComment)]
@@ -61,14 +64,14 @@ public class CommentController : ControllerBase
     }
 
     [HttpPut(ApiRoutes.Comments.UpdateComment)]
-    public async Task<IActionResult> UpdateComment([FromRoute] string commentId, [FromBody] PutCommentDto putCommentDto)
+    public async Task<IActionResult> UpdateComment([FromRoute]Guid commentId, [FromBody]PutCommentDto putCommentDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _commentService.UpdateComment(putCommentDto, Guid.Parse(commentId));
+        var comment = await _commentService.UpdateComment(putCommentDto, commentId);
 
-        return Ok();
+        return Ok(comment);
     }
 
     [HttpDelete(ApiRoutes.Comments.RemoveComment)]

@@ -2,9 +2,7 @@
 using GyMeApplication.Models.User;
 using GyMeWebApi.Routes.v1;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GyMeWebApi.Controllers.v1;
 
@@ -20,46 +18,41 @@ public class UserController : ControllerBase
     }
 
     [HttpPost(ApiRoutes.User.AddFriend)]
-    public async Task<IActionResult> AddFriend([FromRoute]string id)
+    public async Task<IActionResult> AddFriend([FromRoute] Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        
-        var userToAddId = Guid.Parse(id);
 
-        await _userService.AddFriend(userToAddId);
+        await _userService.AddFriend(id);
 
         return Ok();
     }
-    
+
     [HttpDelete(ApiRoutes.User.DeleteFriend)]
-    public async Task<IActionResult> DeleteFriend([FromRoute] string id)
+    public async Task<IActionResult> DeleteFriend([FromRoute] Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        
-        var friendRequestToDeleteId = Guid.Parse(id);
 
-        await _userService.RemoveFriend(friendRequestToDeleteId);
+        await _userService.RemoveFriend(id);
 
         return Ok();
     }
 
     [HttpGet(ApiRoutes.User.GetUser)]
-    public async Task<IActionResult> GetUser([FromRoute] string id)
+    public async Task<IActionResult> GetUser([FromRoute] Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        
-        var userId = Guid.Parse(id);
 
-        var result = await _userService.GetUser(userId);
+        var result = await _userService.GetUser(id);
 
         return Ok(result);
     }
 
     [HttpGet(ApiRoutes.User.GetFriends)]
-    public async Task<IActionResult> GetFriends([FromQuery]FriendStatusDto friendStatusDto, [FromQuery]int page, [FromQuery]int size)
+    public async Task<IActionResult> GetFriends([FromQuery] FriendStatusDto friendStatusDto, [FromQuery] int page,
+        [FromQuery] int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -70,7 +63,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.User.GetCommonFriends)]
-    public async Task<IActionResult> GetCommonFriends([FromQuery]int page, [FromQuery]int size)
+    public async Task<IActionResult> GetCommonFriends([FromQuery] int page, [FromQuery] int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -81,7 +74,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.User.FindUser)]
-    public async Task<IActionResult> FindUser([FromQuery]string key, [FromQuery]int page, [FromQuery]int size)
+    public async Task<IActionResult> FindUser([FromQuery] string key, [FromQuery] int page, [FromQuery] int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -92,23 +85,23 @@ public class UserController : ControllerBase
     }
 
     [HttpPost(ApiRoutes.User.BlockUser)]
-    public async Task<IActionResult> BlockUser([FromQuery]string userToBlockId)
+    public async Task<IActionResult> BlockUser([FromQuery] Guid userToBlockId)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _userService.BlockUser(Guid.Parse(userToBlockId));
+        await _userService.BlockUser(userToBlockId);
 
         return Ok();
     }
 
     [HttpPost(ApiRoutes.User.UnblockUser)]
-    public async Task<IActionResult> UnblockUser([FromQuery]string userToUnblockBlockId)
+    public async Task<IActionResult> UnblockUser([FromQuery] Guid userToUnblockBlockId)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _userService.UnblockUser(Guid.Parse(userToUnblockBlockId));
+        await _userService.UnblockUser(userToUnblockBlockId);
 
         return Ok();
     }

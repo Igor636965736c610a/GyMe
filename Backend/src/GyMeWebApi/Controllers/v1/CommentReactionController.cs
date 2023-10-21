@@ -25,41 +25,55 @@ public class CommentReactionController : ControllerBase
             return BadRequest(ModelState);
 
         var commentReactionId = await _commentReactionService.AddCommentReaction(postCommentReactionDto);
+        
+        var location = Url.Action("GetCommentReaction",new { id = commentReactionId })!;
 
-        return Ok(commentReactionId.ToString());
+        return Created(location, commentReactionId.ToString());
     }
-
-    [HttpGet(ApiRoutes.CommentReaction.GetCommentReactions)]
-    public async Task<IActionResult> GetCommentReactions([FromQuery]string commentId, [FromQuery]CommentReactionType? commentReactionType, [FromQuery]int page, [FromQuery]int size)
+    
+    [HttpGet(ApiRoutes.CommentReaction.GetCommentReaction)]
+    public async Task<IActionResult> GetCommentReaction([FromRoute]Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var commentReactions =
-            await _commentReactionService.GetCommentsReactions(Guid.Parse(commentId), commentReactionType, page, size);
+            await _commentReactionService.GetCommentsReaction(id);
+
+        return Ok(commentReactions);
+    }
+
+    [HttpGet(ApiRoutes.CommentReaction.GetCommentReactions)]
+    public async Task<IActionResult> GetCommentReactions([FromQuery]Guid commentId, [FromQuery]CommentReactionType? commentReactionType, [FromQuery]int page, [FromQuery]int size)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var commentReactions =
+            await _commentReactionService.GetCommentsReactions(commentId, commentReactionType, page, size);
 
         return Ok(commentReactions);
     }
 
     [HttpGet(ApiRoutes.CommentReaction.GetSpecificCommentReactionsCount)]
-    public async Task<IActionResult> GetSpecificCommentReactionCount([FromQuery] string commentId)
+    public async Task<IActionResult> GetSpecificCommentReactionCount([FromQuery]Guid commentId)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var specificCommentReactionsCount =
-            await _commentReactionService.GetSpecificCommentReactionCount(Guid.Parse(commentId));
+            await _commentReactionService.GetSpecificCommentReactionCount(commentId);
 
         return Ok(specificCommentReactionsCount);
     }
 
     [HttpDelete(ApiRoutes.CommentReaction.RemoveCommentReaction)]
-    public async Task<IActionResult> RemoveCommentReaction([FromRoute]string commentReactionId)
+    public async Task<IActionResult> RemoveCommentReaction([FromRoute]Guid commentReactionId)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _commentReactionService.RemoveCommentReaction(Guid.Parse(commentReactionId));
+        await _commentReactionService.RemoveCommentReaction(commentReactionId);
 
         return Ok();
     }

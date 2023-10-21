@@ -1,6 +1,5 @@
 ﻿using GyMeApplication.IServices;
 using GyMeApplication.Models.InternalManagement;
-using GyMeApplication.Services;
 using GyMeApplication.Services.InternalManagement;
 using GyMeWebApi.Routes.v1;
 using Microsoft.AspNetCore.Authorization;

@@ -27,7 +27,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost(ApiRoutes.Payments.RedirectToPayment)]
-    public async Task<IActionResult> RedirectToPayment([FromBody] PaymentRequestModel paymentRequest)
+    public async Task<IActionResult> RedirectToPayment([FromBody]PaymentRequestModel paymentRequest)
     {
         if (!ModelState.IsValid)
             return BadRequest("Invalid data");

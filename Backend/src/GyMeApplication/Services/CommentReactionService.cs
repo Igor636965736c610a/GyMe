@@ -56,6 +56,20 @@ internal class CommentReactionService : ICommentReactionService
         }
     }
 
+    public async Task<GetCommentReactionDto> GetCommentsReaction(Guid commentReactionId)
+    {
+        var userIdFromJwt = _userContextService.UserId;
+
+        var commentReaction = await _commentReactionRepo.Get(commentReactionId);
+        if (commentReaction is null)
+            throw new NullReferenceException("Not Found");
+        
+        if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, commentReaction.UserId, _userRepo))
+            throw new ForbiddenException("You do not have the appropriate permissions");
+
+        return _gyMeMapper.GetCommentReactionDtoMap(commentReaction);
+    }
+
     public async Task<IEnumerable<GetCommentReactionDto>> GetCommentsReactions(Guid commentId, CommentReactionType? commentReactionType, int page, int size)
     {
         var userIdFromJwt = _userContextService.UserId;

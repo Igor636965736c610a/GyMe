@@ -39,7 +39,7 @@ internal class AccountService : IAccountService
         return accountInf;
     }
 
-    public async Task Update(PutUserDto putUserDto)
+    public async Task<GetAccountInfModel> Update(PutUserDto putUserDto)
     {
         var userIdFromJwt = _userContextService.UserId;
         
@@ -54,6 +54,8 @@ internal class AccountService : IAccountService
         user.ExtendedUser.PrivateAccount = putUserDto.PrivateAccount;
         
         await _userRepo.Update(user);
+        
+        return _gyMeMapper.GetAccountInfModelDtoMap(user);
     }
     
     public async Task SetUserProfile(IFormFile image)

@@ -10,7 +10,7 @@ public interface IExerciseRepo
     Task<List<Exercise>> GetAll(Guid userId, int page, int size);
     Task<List<Exercise>> GetAll(Guid userId);
     Task<List<Exercise>> GetAll(Guid userId, IEnumerable<string> exercisesType);
-    Task<Dictionary<Guid, Series>> GetMaxReps(IEnumerable<Guid> exercisesId);
+    Task<Dictionary<Guid, Series?>> GetMaxReps(IEnumerable<Guid> exercisesId);
     Task<Series?> GetMaxRep(Guid exerciseId);
     Task<IEnumerable<int>> GetScore(Guid exerciseId, int period,
         Func<IEnumerable<Series>, int> calculate);

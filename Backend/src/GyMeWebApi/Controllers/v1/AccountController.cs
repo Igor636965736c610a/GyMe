@@ -103,9 +103,9 @@ public class AccountController : ControllerBase
     
     [AllowAnonymous]
     [HttpGet(ApiRoutes.Account.ConfirmEmail)]
-    public async Task<IActionResult> ConfirmEmail([FromQuery]string userId,[FromQuery]string code)
+    public async Task<IActionResult> ConfirmEmail([FromQuery]Guid userId,[FromQuery]string code)
     {
-        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
+        if (string.IsNullOrEmpty(code))
         {
             return BadRequest("Invalid token or user id");
         }
@@ -176,15 +176,15 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _accountService.Update(putUserDto);
+        var user = await _accountService.Update(putUserDto);
 
-        return Ok();
+        return Ok(user);
     }
 
     [Authorize(Policy = "AppSys")]
     [SkipValidAccountCheck]
-    [HttpPost(ApiRoutes.Account.ActivateUser)]
-    public async Task<IActionResult> ActivateUser([FromBody]ActivateAccountModel activateAccountModel) 
+    [HttpPost(ApiRoutes.Account.ActivateAccount)]
+    public async Task<IActionResult> ActivateAccount([FromBody]ActivateAccountModel activateAccountModel) 
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -195,8 +195,8 @@ public class AccountController : ControllerBase
     }
 
     [Authorize(Policy = "AppSys")]
-    [HttpDelete(ApiRoutes.Account.RemoveUser)]
-    public async Task<IActionResult> RemoveUser()
+    [HttpDelete(ApiRoutes.Account.RemoveAccount)]
+    public async Task<IActionResult> RemoveAccount()
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

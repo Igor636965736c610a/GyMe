@@ -19,45 +19,45 @@ public class ChartGeneratorController : ControllerBase
     }
 
     [HttpGet(ApiRoutes.Chart.GetById)]
-    public async Task<IActionResult> GetGeneratedChart([FromQuery]string exerciseId, [FromQuery]ChartOption chartOption, [FromQuery]int period)
+    public async Task<IActionResult> GetGeneratedChart([FromQuery]Guid exerciseId, [FromQuery]ChartOption chartOption, [FromQuery]int period)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var chart = await _chartGeneratorService.Get(Guid.Parse(exerciseId), chartOption, period);
+        var chart = await _chartGeneratorService.Get(exerciseId, chartOption, period);
 
         return Ok(chart);
     }
     
     [HttpGet(ApiRoutes.Chart.GetByType)]
-    public async Task<IActionResult> GetGeneratedChart([FromQuery]string userId, [FromQuery]ExercisesTypeDto exercisesTypeDto, [FromQuery]ChartOption chartOption, [FromQuery]int period)
+    public async Task<IActionResult> GetGeneratedChart([FromQuery]Guid userId, [FromQuery]ExercisesTypeDto exercisesTypeDto, [FromQuery]ChartOption chartOption, [FromQuery]int period)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var chart = await _chartGeneratorService.Get(Guid.Parse(userId), exercisesTypeDto, chartOption, period);
+        var chart = await _chartGeneratorService.Get(userId, exercisesTypeDto, chartOption, period);
 
         return Ok(chart);
     }
     
     [HttpGet(ApiRoutes.Chart.GetAllByIds)]
-    public async Task<IActionResult> GetGeneratedCharts([FromQuery]string userId, [FromQuery]IEnumerable<string> exercisesIds, [FromQuery]ChartOption chartOption, [FromQuery]int period)
+    public async Task<IActionResult> GetGeneratedCharts([FromQuery]Guid userId, [FromQuery]IEnumerable<Guid> exercisesIds, [FromQuery]ChartOption chartOption, [FromQuery]int period)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var charts = await _chartGeneratorService.Get(Guid.Parse(userId), exercisesIds.Select(Guid.Parse), chartOption, period);
+        var charts = await _chartGeneratorService.Get(userId, exercisesIds, chartOption, period);
 
         return Ok(charts);
     }
     
     [HttpGet(ApiRoutes.Chart.GetAllByTypes)]
-    public async Task<IActionResult> GetGeneratedCharts([FromQuery]string userId, [FromQuery]IEnumerable<ExercisesTypeDto> exercisesTypeDto, [FromQuery]ChartOption chartOption, [FromQuery]int period)
+    public async Task<IActionResult> GetGeneratedCharts([FromQuery]Guid userId, [FromQuery]IEnumerable<ExercisesTypeDto> exercisesTypeDto, [FromQuery]ChartOption chartOption, [FromQuery]int period)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var charts = await _chartGeneratorService.Get(Guid.Parse(userId), exercisesTypeDto, chartOption, period);
+        var charts = await _chartGeneratorService.Get(userId, exercisesTypeDto, chartOption, period);
 
         return Ok(charts);
     }

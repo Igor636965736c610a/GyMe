@@ -50,7 +50,7 @@ internal class ExerciseService : IExerciseService
         return exercise.Id;
     }
 
-    public async Task Update(Guid exerciseId, PutExerciseDto putExerciseDto)
+    public async Task<GetExerciseDto> Update(Guid exerciseId, PutExerciseDto putExerciseDto)
     {
         var userIdFromJwt = _userContextService.UserId;
         
@@ -73,6 +73,10 @@ internal class ExerciseService : IExerciseService
 
         await _exerciseRepo.Update(exercise);
         await _exerciseRepo.Update(exercises);
+        
+        var maxRepSeriesDto = await MaxRepSeriesDto(exerciseId);
+        
+        return _gyMeMapper.GetExerciseDtoMap(exercise, maxRepSeriesDto);
     }
 
     public async Task Remove(Guid exerciseId)
@@ -126,7 +130,8 @@ internal class ExerciseService : IExerciseService
 
         var ids = exercises.Select(x => x.Id);
         var maxReps = await _exerciseRepo.GetMaxReps(ids);
-        var maxRepsDto = maxReps.ToDictionary(x => x.Key, x => _gyMeMapper.GetSeriesDtoMap(x.Value));
+        var maxRepsDto = maxReps.ToDictionary(x => x.Key, x 
+            => x.Value is not null ? _gyMeMapper.GetSeriesDtoMap(x.Value) : null);
 
         var exercisesDto = exercises.Select(x => _gyMeMapper.GetExerciseDtoMap(x, maxRepsDto[x.Id]));
 

@@ -1,9 +1,7 @@
-﻿using GyMeCore.Models.Entities;
-using GyMeApplication.Models.Exercise;
+﻿using GyMeApplication.Models.Exercise;
 using GyMeApplication.IServices;
 using GyMeWebApi.Routes.v1;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GyMeWebApi.Controllers.v1;
@@ -25,58 +23,52 @@ public class ExerciseController : ControllerBase
             return BadRequest(ModelState);
 
         var exerciseId = await _exerciseService.Create(postExerciseDto);
+        
+        var location = Url.Action("GetExercise",new { id = exerciseId.ToString() })!;
 
-        return Ok(exerciseId.ToString());   
+        return Created(location, exerciseId.ToString());
     }
 
     [HttpGet(ApiRoutes.Exercise.Get)]
-    public async Task<IActionResult> Get([FromRoute] string id)
+    public async Task<IActionResult> GetExercise([FromRoute]Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-
-        var exerciseId = Guid.Parse(id);
         
-        var exercise = await _exerciseService.Get(exerciseId);
+        var exercise = await _exerciseService.Get(id);
         
         return Ok(exercise);
     }
 
     [HttpGet(ApiRoutes.Exercise.GetAll)]
-    public async Task<IActionResult> GetAll([FromQuery] string userId,[FromQuery] int page,[FromQuery] int size)
+    public async Task<IActionResult> GetAll([FromQuery]Guid userId, [FromQuery]int page, [FromQuery]int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        
-        var id =  Guid.Parse(userId);
 
-        var exercises = await _exerciseService.Get(id, page, size);
+        var exercises = await _exerciseService.Get(userId, page, size);
 
         return Ok(exercises);
     }
 
     [HttpPut(ApiRoutes.Exercise.Update)]
-    public async Task<IActionResult> Update([FromBody] PutExerciseDto putExerciseDto, [FromRoute] string id)
+    public async Task<IActionResult> Update([FromBody]PutExerciseDto putExerciseDto, [FromRoute]Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var exerciseId = Guid.Parse(id);
+        var exercise = await _exerciseService.Update(id, putExerciseDto);
         
-        await _exerciseService.Update(exerciseId, putExerciseDto);
-        
-        return Ok();
+        return Ok(exercise);
     }
 
     [HttpDelete(ApiRoutes.Exercise.Remove)]
-    public async Task<IActionResult> Remove([FromRoute] string id)
+    public async Task<IActionResult> Remove([FromRoute]Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var exerciseId = Guid.Parse(id);
-        
-        await _exerciseService.Remove(exerciseId);
+        await _exerciseService.Remove(id);
         
         return Ok();
     }

@@ -17,64 +17,58 @@ public class SimpleExerciseController : ControllerBase
     }
 
     [HttpPost(ApiRoutes.SimpleExercise.Create)]
-    public async Task<IActionResult> CreateSimpleExercise([FromBody] PostSimpleExerciseDto postSimpleExerciseDto)
+    public async Task<IActionResult> CreateSimpleExercise([FromBody]PostSimpleExerciseDto postSimpleExerciseDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var simpleExerciseId = await _simpleExerciseService.Create(postSimpleExerciseDto);
+        
+        var location = Url.Action("GetSimpleExercise",new { id = simpleExerciseId })!;
 
-        return Ok(simpleExerciseId.ToString());
+        return Created(location, simpleExerciseId.ToString());
     }
 
     [HttpPut(ApiRoutes.SimpleExercise.Update)]
-    public async Task<IActionResult> UpdateSimpleExercise([FromRoute] string id, [FromBody] PutSimpleExerciseDto putSimpleExerciseDto)
+    public async Task<IActionResult> UpdateSimpleExercise([FromRoute]Guid id, [FromBody]PutSimpleExerciseDto putSimpleExerciseDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-            
-        var exerciseId = Guid.Parse(id);
 
-        await _simpleExerciseService.Update(exerciseId, putSimpleExerciseDto);
-        
-        return Ok();
+        var simpleExercise = await _simpleExerciseService.Update(id, putSimpleExerciseDto);
+
+        return Ok(simpleExercise);
     }
 
     [HttpGet(ApiRoutes.SimpleExercise.Get)]
-    public async Task<IActionResult> GetSimpleExercise([FromRoute] string id)
+    public async Task<IActionResult> GetSimpleExercise([FromRoute]Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-            
-        var guidExerciseId = Guid.Parse(id);
 
-        var result =  await _simpleExerciseService.Get(guidExerciseId);
+        var result =  await _simpleExerciseService.Get(id);
 
         return Ok(result);
     }
     
     [HttpGet(ApiRoutes.SimpleExercise.GetAll)]
-    public async Task<IActionResult> GetSimpleExercises([FromQuery] string exerciseId,[FromQuery] int page,[FromQuery] int size)
+    public async Task<IActionResult> GetSimpleExercises([FromQuery]Guid exerciseId, [FromQuery]int page, [FromQuery]int size)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-            
-        var parseExerciseId = Guid.Parse(exerciseId);
 
-        var result =  await _simpleExerciseService.Get(parseExerciseId, page, size);
+        var result =  await _simpleExerciseService.Get(exerciseId, page, size);
 
         return Ok(result);
     }
 
     [HttpDelete(ApiRoutes.SimpleExercise.Remove)]
-    public async Task<IActionResult> RemoveSimpleExercise([FromRoute]string id)
+    public async Task<IActionResult> RemoveSimpleExercise([FromRoute]Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-            
-        var exerciseId = Guid.Parse(id);
 
-        await _simpleExerciseService.Remove(exerciseId);
+        await _simpleExerciseService.Remove(id);
 
         return Ok();
     }

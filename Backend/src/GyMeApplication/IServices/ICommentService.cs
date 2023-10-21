@@ -9,6 +9,6 @@ public interface ICommentService
     Task<GetCommentDto> GetComment(Guid commentId);
     Task<IEnumerable<GetCommentDto>> GetCommentsSortedByPubTime(Guid simpleExerciseId, int page, int size);
     Task<IEnumerable<GetCommentDto>> GetCommentsSortedByReactionsCount(Guid simpleExerciseId, int page, int size);
-    Task UpdateComment(PutCommentDto putCommentDto, Guid commentId);
+    Task<GetCommentDto> UpdateComment(PutCommentDto putCommentDto, Guid commentId);
     Task RemoveComment(Guid commentId);
 }

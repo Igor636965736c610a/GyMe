@@ -194,9 +194,9 @@ internal class IdentityService : IIdentityService
         return GenerateAuthenticationResultForUser(newUser);
     }
 
-    public async Task<bool> ConfirmEmail(string userId, string code)
+    public async Task<bool> ConfirmEmail(Guid userId, string code)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user is null)
         {
             throw new NullReferenceException("User not found");

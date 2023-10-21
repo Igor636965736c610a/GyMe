@@ -97,7 +97,8 @@ public class GyMeMapper : IGyMeMapper
         {
             Id = exercise.Id,
             ExercisesType = exercise.ExercisesType,
-            MaxRep = maxRepSeries
+            MaxRep = maxRepSeries,
+            Position = exercise.Position
         };
 
     public GetSimpleExerciseDto GetSimpleExerciseDtoMap(SimpleExercise simpleExercise, int reactionsCount, int commentsCount)

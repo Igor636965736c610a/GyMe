@@ -25,8 +25,10 @@ public class ReactionController : ControllerBase
             return BadRequest(ModelState);
 
         var reactionId = await _reactionService.AddReaction(postReactionDto.SimpleExerciseId, postReactionDto.ReactionType);
+        
+        var location = Url.Action("GetReaction",new { id = reactionId })!;
 
-        return Ok(reactionId.ToString());
+        return Created(location, reactionId.ToString());
     }
 
     [HttpPost(ApiRoutes.Reaction.SetImageReaction)]
@@ -40,36 +42,47 @@ public class ReactionController : ControllerBase
 
         return Ok();
     }
-
-    [HttpGet(ApiRoutes.Reaction.GetReactions)]
-    public async Task<IActionResult> GetReactions([FromQuery]string simpleExerciseId, [FromQuery]int page, [FromQuery]int size, [FromQuery]ReactionType? optionalReactionTypeToSort) 
+    
+    [HttpGet(ApiRoutes.Reaction.GetReaction)]
+    public async Task<IActionResult> GetReaction([FromRoute]Guid id) 
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        var reactions = await _reactionService.GetReactions(Guid.Parse(simpleExerciseId), page, size, optionalReactionTypeToSort);
+        var reactions = await _reactionService.GetReaction(id);
+
+        return Ok(reactions);
+    }
+
+    [HttpGet(ApiRoutes.Reaction.GetReactions)]
+    public async Task<IActionResult> GetReactions([FromQuery]Guid simpleExerciseId, [FromQuery]int page, [FromQuery]int size, [FromQuery]ReactionType? optionalReactionTypeToSort) 
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        var reactions = await _reactionService.GetReactions(simpleExerciseId, page, size, optionalReactionTypeToSort);
 
         return Ok(reactions);
     }
 
     [HttpGet(ApiRoutes.Reaction.GetSpecificReactionsCount)]
-    public async Task<IActionResult> GetSpecificReactionsCount([FromQuery]string simpleExerciseId)
+    public async Task<IActionResult> GetSpecificReactionsCount([FromQuery]Guid simpleExerciseId)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var reactionsCount = await _reactionService.GetSpecificReactionsCount(Guid.Parse(simpleExerciseId));
+        var reactionsCount = await _reactionService.GetSpecificReactionsCount(simpleExerciseId);
 
         return Ok(reactionsCount);
     }
 
     [HttpDelete(ApiRoutes.Reaction.RemoveReaction)]
-    public async Task<IActionResult> RemoveReaction([FromRoute]string reactionId)
+    public async Task<IActionResult> RemoveReaction([FromRoute]Guid reactionId)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await _reactionService.RemoveReaction(Guid.Parse(reactionId));
+        await _reactionService.RemoveReaction(reactionId);
 
         return Ok();
     }

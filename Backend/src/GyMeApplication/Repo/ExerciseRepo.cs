@@ -36,13 +36,13 @@ internal class ExerciseRepo : IExerciseRepo
     public async Task<List<Exercise>> GetAll(Guid userId, IEnumerable<string> exercisesType)
         => await _gyMePostgresContext.Exercises.Where(x => x.UserId == userId && exercisesType.Contains(x.ExercisesType)).OrderBy(x => x.Position).ToListAsync();
 
-    public async Task<Dictionary<Guid, Series>> GetMaxReps(IEnumerable<Guid> exercisesId)
+    public async Task<Dictionary<Guid, Series?>> GetMaxReps(IEnumerable<Guid> exercisesId)
         => await _gyMePostgresContext.Exercises
             .Where(x => exercisesId.Contains(x.Id))
             .Select(x => new
             {
                 Value = x.ConcreteExercise.SelectMany(e => e.Series).OrderByDescending(e => e.Weight)
-                    .ThenByDescending(e => e.NumberOfRepetitions).First(),
+                    .ThenByDescending(e => e.NumberOfRepetitions).FirstOrDefault(),
                 Key = x.Id
             })
             .ToDictionaryAsync(x => x.Key, x => x.Value);

@@ -100,6 +100,22 @@ internal class ReactionService : IReactionService
         await _gyMeResourceService.SaveImageOnServer(image, path);
     }
 
+    public async Task<GetReactionDto> GetReaction(Guid reactionId)
+    {
+        var userIdFromJwt = _userContextService.UserId;
+
+        var reaction = await _reactionRepo.Get(reactionId);
+        if(reaction is null)
+            throw new NullReferenceException("Not Found");
+
+        if(!await UtilsServices.CheckResourceAccessPermissions(userIdFromJwt, reaction.UserId, _userRepo))
+            throw new ForbiddenException("You do not have the appropriate permissions");
+
+        var reactionDto = _gyMeMapper.GetReactionDtoMap(reaction);
+
+        return reactionDto;
+    }
+
     public async Task<IEnumerable<GetReactionDto>> GetReactions(Guid simpleExerciseId, int page, int size, ReactionType? reactionType)
     {
         var userIdFromJwt = _userContextService.UserId;

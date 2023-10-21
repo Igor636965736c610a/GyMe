@@ -53,7 +53,7 @@ internal class SimpleExerciseService : ISimpleExerciseService
         return simpleExercise.Id;
     }
 
-    public async Task Update(Guid id, PutSimpleExerciseDto putSimpleExerciseDto)
+    public async Task<GetSimpleExerciseDto> Update(Guid id, PutSimpleExerciseDto putSimpleExerciseDto)
     {
         var userIdFromJwt = _userContextService.UserId;
         
@@ -71,6 +71,11 @@ internal class SimpleExerciseService : ISimpleExerciseService
         simpleExercise.Series = series;
 
         await _simpleExerciseRepo.Update(simpleExercise);
+        
+        var reactionsCount = await _reactionRepo.GetReactionsCount(simpleExercise.Id);
+        var commentsCount = await _commentRepo.GetCommentsCount(simpleExercise.Id);
+        
+        return _gyMeMapper.GetSimpleExerciseDtoMap(simpleExercise, reactionsCount, commentsCount);
     }
 
     public async Task Remove(Guid id)

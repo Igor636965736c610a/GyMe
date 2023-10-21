@@ -100,7 +100,7 @@ internal class CommentService : ICommentService
         return commentsDto;
     }
 
-    public async Task UpdateComment(PutCommentDto putCommentDto, Guid commentId)
+    public async Task<GetCommentDto> UpdateComment(PutCommentDto putCommentDto, Guid commentId)
     {
         var userIdFromJwt = _userContextService.UserId;
 
@@ -114,6 +114,9 @@ internal class CommentService : ICommentService
         comment.Message = putCommentDto.Message;
 
         await _commentRepo.Update(comment);
+        var commentReactionsCount = await _commentReactionRepo.GetCommentReactionsCount(commentId);
+        
+        return _gyMeMapper.GetCommentDtoMap(comment, commentReactionsCount);
     }
 
     public async Task RemoveComment(Guid commentId)
