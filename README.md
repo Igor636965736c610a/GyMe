@@ -1,6 +1,6 @@
 # GyMe
 ## About
-Application for tracking your and your friends' workout which will be available on Google Play in the future. (Open source code only for cv)
+Application for tracking your and your friends workout which will be available on Google Play in the future. (Open source code only for cv)
 ## Responsibilities
 Backend -> https://github.com/Igor636965736c610a
 <br>
